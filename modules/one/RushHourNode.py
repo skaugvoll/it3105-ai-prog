@@ -29,7 +29,6 @@ class SearchNode:
         if(orientation == 0 and (goal[1] == car[2])): # horizontal goal must be on same row
             if (goal[0] > car[1]): # car must drive right
                 distanse = goal[0] - (car[1]+(size-1)) # 5 - (2 + (1)) = 5 - 3 = 2 steps, (2 + 1) = position or right side of car
-                print("dist: " + str(distanse))
             else:
                 distanse = goal[0] - car[2] # 5 - (2 + (1)) = 5 - 3 = 2 steps
 
