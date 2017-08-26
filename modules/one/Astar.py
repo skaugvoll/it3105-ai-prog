@@ -107,6 +107,9 @@ class Astar:
                 # if searchNode is a solution return (x, SUCCEED)...
                 # generate all successors / children of seachNode (all possible moves) in this state. (move each piece one step, in both available orientation direction (left/right, or up/down))
                 # for each successor do
+                    # check if the successor has been created before
+                    # push the successor to the searchNode kids list.
+                    
 
         # there exist no solution
         except Exception as e:
