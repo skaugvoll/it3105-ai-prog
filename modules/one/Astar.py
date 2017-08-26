@@ -67,16 +67,26 @@ class Astar:
         self.OPEN.sort(self._sortBasedOnFValue(x,y))
 
     def _popFromAgenda(self):
-        self._sortAgenda()
         return self.OPEN.pop(0) # return the first element from the agenda / open list. (the node / state with lowest f-value)
+
+    def _pushToAgenda(self, node):
+        self.OPEN.append(node)
+        self._sortAgenda()
+        # where we should use insertion sort, should speed up the process,
+        # instead of sorting the whole list, every time. or possibly a binary seach, since its going to be "sorted"
+
+    def _pushToDone(self, node):
+        self.CLOSED.append(node)
+
+    def _nodeIsSolution(self,node):
+        car = node.getPlayerPiece()
 
 
 
 
 
     def solve(self):
-        pass
-        # do the inital work.
+        # do the inital work. (much is done in the initialization of Astar)
         # pop the inital state
         node = self.getCurrentState()
         # set g value to 0,
@@ -84,6 +94,24 @@ class Astar:
         # set h value to estimation.
         node.calculateHValue(self.goalState)
         print(node)
+        #push initial node to the agenda (open-list)
+        self.OPEN.append(node)
+        #Agenda loop starts here. While no solution found do:
+        try:
+            while(self._nodeIsSolution(node)):
+                if(len(self.OPEN) < 1):
+                    raise Exception('The agenda is done, but no solution found')
+
+                searchNode = self._popFromAgenda()
+                self._pushToDone(SearchNode)
+                # if searchNode is a solution return (x, SUCCEED)...
+                # generate all successors / children of seachNode (all possible moves) in this state. (move each piece one step, in both available orientation direction (left/right, or up/down))
+                # for each successor do
+
+        # there exist no solution
+        except Exception as e:
+            print(e)
+
 
 
 

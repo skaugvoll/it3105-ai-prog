@@ -11,9 +11,8 @@ class SearchNode:
     def __repr__(self):
         return "state: " + str(self.state) +  " g: " +  str(self.gValue) + " h: " + str(self.hValue) + " f: " + str(self.fValue)
 
-
-    def getFValue(self):
-        return self.fValue
+    def getPlayerPiece(self):
+        return self.state[0]
 
     def setGValue(self, value):
         self.gValue = value
