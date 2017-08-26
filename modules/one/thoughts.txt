@@ -1,0 +1,18 @@
+A piece has the following format ( O, X, Y, S )
+O - orientation
+    0 - horizontal = col
+    1 - vertical = row
+X = column index
+Y = row index
+S = Size, how many cells in the orientation direction the piece takes up.
+
+
+
+###My thoughts, during the implementation
+heuristics could be;
+    - Høyre side av bilen sin distanse til mål + hvor mange blokkerte ruter til mål.
+        - hvor mange trekk som minimum må takes uten hindringer + hvor mange trekk minimum for å klargjøre veien
+        Dette burde gi en ganske nøyaktig vurdering, og aldri overestimere. Bruke manhatten, siden bilen aldri vil kunne
+        flytte seg i flere enn maks en rettning (vertikalt eller horisontalt).
+
+    
