@@ -83,3 +83,24 @@ class RushHourBFS:
         #     pass
         # else:
         #     raise Exception("Cannot be solved, car and goal does not align")
+
+
+    ''' Rember to check if moveing will be outside "board" (use self.boardSize) '''
+    def generateSuccessors(self, node):
+        ''' each piece can move 2 directions, 2 directions * number of pieces === numPiexes ^2 successors at most '''
+        successors = []
+        return successors
+        # a new successor is when we make a legal move on a playing piece. so if one piece can move both one position left or right, one new state is moving left, and one new state is moving right
+        # first we need to know what direction we can move the piece
+        for car in node.getState():
+            direction = car[0]
+            rightSide = car[1] + (car[-1] - 1) # car 0 = dir, 1 = col, 2 = row, 3 = size
+            if(direction == 0): # horisontal direction (we can move left or right)
+                pass
+                # check IF right is blocked, if not, new state
+
+                # check IF left is blocked, if not, new state
+            else: # vertical, move up or down
+                pass
+                # check IF up is blocked, if not, new state
+                # check IF down is blocked, if not, new state

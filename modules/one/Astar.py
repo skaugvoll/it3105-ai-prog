@@ -67,9 +67,17 @@ class Astar:
                 return self._getSolution(SearchNode) # if solution return the path.
 
             # if not solution, generate all successors / children of seachNode (all possible moves) in this state. (move each piece one step, in both available orientation direction (left/right, or up/down))
+            successors = self.bfs.generateSuccessors(searchNode)
                 # for each successor do
-                # check if the successor has been created before
+            for kid in successors:
+                pass
+                # check if the successor has been created before --> check if the kid -list is in the self.states list
                 # push the successor to the searchNode kids list.
+                # if Something:
+                    # attach and eval (add parent and calculate the f,g,h values)
+                # else if Something else:
+                    # attach and eval (add parent and calculate the f,g,h values)
+
 
         # if the while loop could not find a solution
         return False

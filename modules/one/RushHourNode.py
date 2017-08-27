@@ -26,3 +26,12 @@ class SearchNode:
     def getFValue(self):
         self.fValue = self.gValue + self.hValue
         return self.fValue
+
+    def getKids(self):
+        return self.kids
+
+    def getCarNumber(self, number):
+        return self.state[number]
+
+    def getState(self):
+        return self.state
