@@ -37,7 +37,6 @@ class SearchNode:
             playingPiece = self.state[i]
             # if the playingPiece starts / is on the same same row.
             if (playingPiece[2] == goal[1]):
-                print(playingPiece)
                 blocks += 1
             # if piece does not start on same row, but expands multiple rows (vertical orientation), and expands over the goal row
             elif(playingPiece[0] == 1 and (playingPiece[2]+(playingPiece[-1] - 1)) == goal[1]):

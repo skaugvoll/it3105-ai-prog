@@ -78,13 +78,16 @@ class Astar:
     def _pushToDone(self, node):
         self.CLOSED.append(node)
 
-    def _nodeIsSolution(self,node):
+    def _nodeIsSolution(self, node):
         car = node.getPlayerPiece()
 
+    def _getSolution(self, node):
+        pass
 
 
 
 
+    #should return the path, or failure.
     def solve(self):
         # do the inital work. (much is done in the initialization of Astar)
         # pop the inital state
@@ -93,29 +96,24 @@ class Astar:
         node.setGValue(0)
         # set h value to estimation.
         node.calculateHValue(self.goalState)
-        print(node)
+        
         #push initial node to the agenda (open-list)
         self.OPEN.append(node)
         #Agenda loop starts here. While no solution found do:
-        try:
-            while(self._nodeIsSolution(node)):
-                if(len(self.OPEN) < 1):
-                    raise Exception('The agenda is done, but no solution found')
+        while(len(self.OPEN)):
+            searchNode = self._popFromAgenda()
+            self._pushToDone(searchNode)
+            # check if the new node is the goal
+            if(self._nodeIsSolution(searchNode)):
+                return self._getSolution(SearchNode) # if solution return the path.
 
-                searchNode = self._popFromAgenda()
-                self._pushToDone(SearchNode)
-                # if searchNode is a solution return (x, SUCCEED)...
-                # generate all successors / children of seachNode (all possible moves) in this state. (move each piece one step, in both available orientation direction (left/right, or up/down))
+            # if not solution, generate all successors / children of seachNode (all possible moves) in this state. (move each piece one step, in both available orientation direction (left/right, or up/down))
                 # for each successor do
-                    # check if the successor has been created before
-                    # push the successor to the searchNode kids list.
-                    
+                # check if the successor has been created before
+                # push the successor to the searchNode kids list.
 
-        # there exist no solution
-        except Exception as e:
-            print(e)
-
-
+        # if the while loop could not find a solution
+        return False
 
 
 
