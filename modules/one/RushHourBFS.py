@@ -92,9 +92,12 @@ class RushHourBFS:
         return successors
         # a new successor is when we make a legal move on a playing piece. so if one piece can move both one position left or right, one new state is moving left, and one new state is moving right
         # first we need to know what direction we can move the piece
-        for car in node.getState():
+        for pieceNumber in range(len(node.getState())):
+            car = node.getCarNumber(pieceNumber)
             direction = car[0]
-            rightSide = car[1] + (car[-1] - 1) # car 0 = dir, 1 = col, 2 = row, 3 = size
+                # if direction = 0 : right side of car, or if direction = 1, downSide
+            expandedSide = car[1] + (car[-1] - 1) # car 0 = dir, 1 = col, 2 = row, 3 = size
+
             if(direction == 0): # horisontal direction (we can move left or right)
                 pass
                 # check IF right is blocked, if not, new state
