@@ -4,6 +4,7 @@ class RushHourBFS:
     def __init__(self, boardSize):
         self.boardSize = boardSize
         self.board = self.createBoard()
+        self.available = self.createBoard()
 
 
     def createBoard(self):
@@ -103,9 +104,42 @@ class RushHourBFS:
             if(direction == 0): # horisontal direction (we can move left or right)
                 pass
                 # check IF right is blocked, if not, new state
+               
+                move = self.checkIfMoveIsPossible()
 
+                if(move):
+                    successors.append(move)
                 # check IF left is blocked, if not, new state
             else: # vertical, move up or down
                 pass
                 # check IF up is blocked, if not, new state
                 # check IF down is blocked, if not, new state
+
+
+
+
+    def checkIfMoveIsPossible(self, car, direction, state):
+        col = car[1]
+        row = car[2]
+        moveIsPossible = true
+        # if direction is left | up 
+        if (direction == "l" or direction == "u"):
+            # if no other cars are on position car[1] - 1 --> new state
+            for playingPiece in state:
+                if (direction == "l"):  
+                    if (playingPiece[2] == row and (playingPiece[1] + (playingPiece[-1] -1)  == col-1)):
+                        moveISPossible = false
+                    # if piece does not start on same row, but expands multiple rows (vertical orientation), and expands over the goal row
+                    elif(playingPiece[0] == 1 and playingPiece[1] == col-1 and playingPiece[2] <= row and (playingPiece[2]+(playingPiece[-1] -1)) > row):
+                        moveIsPossible = false
+
+        # if direction is right | down:
+        
+
+        
+
+
+
+
+
+
