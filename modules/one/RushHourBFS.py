@@ -126,18 +126,28 @@ class RushHourBFS:
         if (direction == "l" or direction == "u"):
             # if no other cars are on position car[1] - 1 --> new state
             for playingPiece in state:
-                if (direction == "l"):  
-                    if (playingPiece[2] == row and (playingPiece[1] + (playingPiece[-1] -1)  == col-1)):
+                if (direction == "l" or direction == "r"):
+                    hDiff = 0
+                    if(direction == "l"):
+                        hDiff = -1
+                    elif (direction == "r"):
+                        hDiff = 1
+                    if (playingPiece[2] == row and (playingPiece[1] + (playingPiece[-1] -1)  == col + hDiff)):
                         moveIsPossible = false
                     # if piece does not start on same row, but expands multiple rows (vertical orientation), and expands over the goal row
-                    elif(playingPiece[0] == 1 and playingPiece[1] == col-1 and playingPiece[2] <= row and (playingPiece[2]+(playingPiece[-1] -1)) > row):
+                    elif(playingPiece[0] == 1 and playingPiece[1] == col + hDiff and playingPiece[2] <= row and (playingPiece[2]+(playingPiece[-1] -1)) > row):
                         moveIsPossible = false
-                if (direction == "u"): 
+                if (direction == "u" or direction == "d"):
+                    vDiff = 0
+                    if (direction == "u"):
+                        vDiff = -1
+                    elif (direction == "d"):
+                        vDiff = 1
                     # if piece is horisontically alligned over our current playing piece.
-                    if (playingPiece[0] == 0 and playingPiece[2] <= row-1  and (playingPiece[1] <= col) and (playingPiece[1] + (playingPiece[-1] -1) >=  col)):
+                    if (playingPiece[0] == 0 and playingPiece[2] <= row + vDiff  and (playingPiece[1] <= col) and (playingPiece[1] + (playingPiece[-1] -1) >=  col)):
                         moveIsPossible = false
                     # if piece is vertically alligend over our current playing piece.
-                    elif (playingPiece[0] == 0  and (playingPiece[2]+(playingPiece[-1] -1) == row-1)  and (playingPiece[1] == col)):
+                    elif (playingPiece[0] == 0  and (playingPiece[2]+(playingPiece[-1] -1) == row + vDiff)  and (playingPiece[1] == col)):
                         moveIsPossible = false
 
 
