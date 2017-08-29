@@ -74,8 +74,10 @@ class RushHourBFS:
             if (playingPiece[2] == goal[1]):
                 blocks += 1
             # if piece does not start on same row, but expands multiple rows (vertical orientation), and expands over the goal row
-            elif(playingPiece[0] == 1 and (playingPiece[2]+(playingPiece[-1] - 1)) == goal[1]):
+        elif(playingPiece[0] == 1 and playingPiece[1] > car[1] and playingPiece[2] <= goal[1] and (playingPiece[2]+(playingPiece[3] -1)) > goal[1]): 
                 blocks += 1
+
+            # Check if middel of a size 3 car is in the way of goal
 
         return distanse + blocks
 
