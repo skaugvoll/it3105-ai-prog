@@ -128,11 +128,14 @@ class RushHourBFS:
             for playingPiece in state:
                 if (direction == "l" or direction == "r"):
                     hDiff = 0
+                    pDiff = 0
                     if(direction == "l"):
                         hDiff = -1
+                        pDiff = playingPiece[-1] -1
                     elif (direction == "r"):
-                        hDiff = 1
-                    if (playingPiece[2] == row and (playingPiece[1] + (playingPiece[-1] -1)  == col + hDiff)):
+                        hDiff = car[-1]
+                    # if piece is on same row as playing piece, and we want to go left, check that piece ends just left of playing piece, or if right, that it starts just right for playing piece. diff controls this.
+                    if (playingPiece[2] == row and (playingPiece[1] + pDiff  == col + hDiff)):
                         moveIsPossible = false
                     # if piece does not start on same row, but expands multiple rows (vertical orientation), and expands over the goal row
                     elif(playingPiece[0] == 1 and playingPiece[1] == col + hDiff and playingPiece[2] <= row and (playingPiece[2]+(playingPiece[-1] -1)) > row):
