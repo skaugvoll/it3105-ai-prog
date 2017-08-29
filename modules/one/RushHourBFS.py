@@ -128,10 +128,18 @@ class RushHourBFS:
             for playingPiece in state:
                 if (direction == "l"):  
                     if (playingPiece[2] == row and (playingPiece[1] + (playingPiece[-1] -1)  == col-1)):
-                        moveISPossible = false
+                        moveIsPossible = false
                     # if piece does not start on same row, but expands multiple rows (vertical orientation), and expands over the goal row
                     elif(playingPiece[0] == 1 and playingPiece[1] == col-1 and playingPiece[2] <= row and (playingPiece[2]+(playingPiece[-1] -1)) > row):
                         moveIsPossible = false
+                if (direction == "u"): 
+                    # if piece is horisontically alligned over our current playing piece.
+                    if (playingPiece[0] == 0 and playingPiece[2] <= row-1  and (playingPiece[1] <= col) and (playingPiece[1] + (playingPiece[-1] -1) >=  col)):
+                        moveIsPossible = false
+                    # if piece is vertically alligend over our current playing piece.
+                    elif (playingPiece[0] == 0  and (playingPiece[2]+(playingPiece[-1] -1) == row-1)  and (playingPiece[1] == col)):
+                        moveIsPossible = false
+
 
         # if direction is right | down:
         
