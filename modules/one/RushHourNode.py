@@ -30,7 +30,7 @@ class SearchNode:
     def getKids(self):
         return self.kids
 
-    def getCarNumber(self, number):
+    def getCarByNumber(self, number):
         return self.state[number]
 
     def getState(self):

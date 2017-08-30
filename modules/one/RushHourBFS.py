@@ -95,8 +95,9 @@ class RushHourBFS:
         return successors
         # a new successor is when we make a legal move on a playing piece. so if one piece can move both one position left or right, one new state is moving left, and one new state is moving right
         # first we need to know what direction we can move the piece
-        for pieceNumber in range(len(node.getState())):
-            car = node.getCarNumber(pieceNumber)
+        state = node.getState
+        for pieceNumber in range(len(state)):
+            car = node.getCarByNumber(pieceNumber)
             direction = car[0]
                 # if direction = 0 : right side of car, or if direction = 1, downSide
             expandedSide = car[1] + (car[-1] - 1) # car 0 = dir, 1 = col, 2 = row, 3 = size
@@ -107,6 +108,7 @@ class RushHourBFS:
                 for direction in ["l","r"]:
                     move = self.checkIfMoveIsPossible(car, direction, node.getState())
                     if(move):
+                        successorNode = makeMove(state, pieceNumber, direction)
                         successors.append(move)
             else: # vertical, move up or down
                 for direction in ["u","d"]:
@@ -115,20 +117,31 @@ class RushHourBFS:
                         successors.append(move)
 
 
+    def makeMove(self, state, carId, direction):
+        newState = state
+        if(direction == "l"):
+            newState[carId][1] -= 1
+        if(direction == "r"):
+            newState[carId][1] += 1
+        if(direction == "u"):
+            newState[carId][2] -= 1
+        if(direction == "d"):
+            newState[carId][2] += 1
+        return newState
 
 
     def checkIfMoveIsPossible(self, car, direction, state):
         col = car[1]
         row = car[2]
         moveIsPossible = True
- 
+
         # if no other cars are on position car[1] - 1 --> new state
         for playingPiece in state:
             if (direction == "l" or direction == "r"):
                 # check if the playing piece tries to move outside the board
                 hDiff = 0
                 pDiff = 0
-                
+
                 if(direction == "l"):
                     if(col ==  0 ):
                         return False
@@ -163,12 +176,4 @@ class RushHourBFS:
                 elif (playingPiece[0] == 1 and (playingPiece[2] + pDiff == row + vDiff)  and (playingPiece[1] == col)):
                     moveIsPossible = False
         # retrun if move is possible
-        return moveIsPossible        
-
-        
-
-
-
-
-
-
+        return moveIsPossible
