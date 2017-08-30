@@ -7,7 +7,7 @@ class Astar:
     def __init__(self):
         self.bfs = RushHourBFS(6) # should be a sys arg.
         self.CLOSED = [] # visited and expanded
-        self.OPEN = [] # found and to be expanded
+        self.OPEN = [] # found and to be expandedi
         self.states = [self.bfs.getInitalState(sys.argv[1])] # the inital state filename.
         self.goalState = (5,2) # sys.argv[2]
         self.bfs.drawBoard(self.states)
@@ -58,6 +58,7 @@ class Astar:
         print(node)
         #push initial node to the agenda (open-list)
         self.OPEN.append(node)
+        self.knownIds.append(node.getId(), node)
         #Agenda loop starts here. While no solution found do:
         while(len(self.OPEN)):
             searchNode = self._popFromAgenda()
@@ -72,6 +73,8 @@ class Astar:
             for kid in successors:
                 pass
                 # check if the successor has been created before --> check if the kid -list is in the self.states list
+                kid = self.checkIfPreGen(kid, self.OPEN)
+                kid = self.checkIfPreGen(kid, self.CLOSED)
                 # push the successor to the searchNode kids list.
                 # if Something:
                     # attach and eval (add parent and calculate the f,g,h values)
@@ -82,6 +85,12 @@ class Astar:
         # if the while loop could not find a solution
         return False
 
+    def checkIfPrevGen(self, kid, l): 
+        for i in range(len(l)):
+            node = l[i]
+            if (node.getId() == kid.getId()):
+                kid = l.pop(i)
+        return kid
 
 
 def main():

@@ -7,6 +7,16 @@ class SearchNode:
         self.status = status
         self.parent = parent
         self.kids = kids
+        self.rank = self._createId()
+
+    def _createId(self):
+        if(state = None):
+            self.rank = "woopsies"
+        self.rank = str(self.state)
+    
+    def getId(self):
+        return self.rank
+
 
     def __repr__(self):
         return "state: " + str(self.state) +  " g: " +  str(self.gValue) + " h: " + str(self.hValue) + " f: " + str(self.fValue)
