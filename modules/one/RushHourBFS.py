@@ -116,7 +116,7 @@ class RushHourBFS:
                     if(move):
                         successorNode = makeMove(state, pieceNumber, direction)
                         successors.append(successorNode)
-
+        return successors
 
     def makeMove(self, state, carId, direction):
         newState = state
