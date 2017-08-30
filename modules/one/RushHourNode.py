@@ -10,7 +10,7 @@ class SearchNode:
         self.rank = self._createId()
 
     def _createId(self):
-        if(state = None):
+        if(self.state == None):
             self.rank = "woopsies"
         self.rank = str(self.state)
     
@@ -30,18 +30,31 @@ class SearchNode:
     def setHValue(self, value):
         self.hValue = value
 
+    def getGValue(self):
+        return self.gValue
+
     def getHValue(self):
         return self.hValue
 
     def getFValue(self):
-        self.fValue = self.gValue + self.hValue
+        #self.fValue = self.gValue + self.hValue
         return self.fValue
+
+    def setFValue(self):
+        self.fValue = self.gValue + self.hValue
 
     def getKids(self):
         return self.kids
+
+    def addKid(self, kid):
+        self.kids.append(kid)
 
     def getCarByNumber(self, number):
         return self.state[number]
 
     def getState(self):
         return self.state
+
+    def setParent(self, parent):
+        self.parent = parent
+

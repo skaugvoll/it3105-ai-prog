@@ -11,6 +11,7 @@ class Astar:
         self.states = [self.bfs.getInitalState(sys.argv[1])] # the inital state filename.
         self.goalState = (5,2) # sys.argv[2]
         self.bfs.drawBoard(self.states)
+        self.isGen = False
 
     def getCurrentState(self):
         return self.states[-1]
@@ -58,14 +59,13 @@ class Astar:
         print(node)
         #push initial node to the agenda (open-list)
         self.OPEN.append(node)
-        self.knownIds.append(node.getId(), node)
         #Agenda loop starts here. While no solution found do:
         while(len(self.OPEN)):
             searchNode = self._popFromAgenda()
             self._pushToDone(searchNode)
             # check if the new node is the goal
             if(self._nodeIsSolution(searchNode)):
-                return self._getSolution(SearchNode) # if solution return the path.
+                return self._getSolution(searchNode) # if solution return the path.
 
             # if not solution, generate all successors / children of seachNode (all possible moves) in this state. (move each piece one step, in both available orientation direction (left/right, or up/down))
             successors = self.bfs.generateSuccessors(searchNode)
@@ -73,14 +73,20 @@ class Astar:
             for kid in successors:
                 pass
                 # check if the successor has been created before --> check if the kid -list is in the self.states list
+
                 kid = self.checkIfPreGen(kid, self.OPEN)
                 kid = self.checkIfPreGen(kid, self.CLOSED)
                 # push the successor to the searchNode kids list.
-                # if Something:
-                    # attach and eval (add parent and calculate the f,g,h values)
-                # else if Something else:
-                    # attach and eval (add parent and calculate the f,g,h values)
+                self.bfs.addKid(node, kid)
+                if not(self.isGen):
+                    self.attach_and_eval(kid, node)
+                    self._pushToAgenda(kid)
+                elif((node.getGValue() + self.bfs.arc_cost(node, kid)) < (kid.getGValue)):
+                    self.attach_and_eval(kid, node)
+                    if(self.isGen == self.CLOSED):
+                        self.propagate_path_improvement(kid)
 
+                self.isGen = False
 
         # if the while loop could not find a solution
         return False
@@ -90,7 +96,17 @@ class Astar:
             node = l[i]
             if (node.getId() == kid.getId()):
                 kid = l.pop(i)
+                self.isGen = l
         return kid
+
+    def attach_and_eval(self, kid, node):
+        kid.setParent(node)
+        kid.setGValue(node.getGValue() + self.bfs.arc_cost(node, kid)) #Lag arc_cost i bfs
+        kid.setHValue(self.bfs.calculateHValue(kid, self.goalState))
+        kid.setFValue()
+
+    def propagate_path_improvement(self, kid):
+        pass
 
 
 def main():

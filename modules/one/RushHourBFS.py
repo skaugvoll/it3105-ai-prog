@@ -178,3 +178,6 @@ class RushHourBFS:
                     moveIsPossible = False
         # retrun if move is possible
         return moveIsPossible
+
+    def addKid(self, node, kid):
+        node.addKid(kid)
