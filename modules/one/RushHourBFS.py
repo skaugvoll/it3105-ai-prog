@@ -104,17 +104,15 @@ class RushHourBFS:
             if(direction == 0): # horisontal direction (we can move left or right)
                 pass
                 # check IF right is blocked, if not, new state
-               
-                moveLeft = self.checkIfMoveIsPossible(car, "l", node.getState())
-                moveRight = self.checkIfMoveIsPossible(car, "r", node.getState())
-
-                if(move):
-                    successors.append(move)
-                # check IF left is blocked, if not, new state
+                for direction in ["l","r"]:
+                    move = self.checkIfMoveIsPossible(car, direction, node.getState())
+                    if(move):
+                        successors.append(move)
             else: # vertical, move up or down
-                pass
-                # check IF up is blocked, if not, new state
-                # check IF down is blocked, if not, new state
+                for direction in ["u","d"]:
+                    move = self.checkIfMoveIsPossible(car, direction, node.getState())
+                    if(move):
+                        successors.append(move)
 
 
 
