@@ -109,12 +109,13 @@ class RushHourBFS:
                     move = self.checkIfMoveIsPossible(car, direction, node.getState())
                     if(move):
                         successorNode = makeMove(state, pieceNumber, direction)
-                        successors.append(move)
+                        successors.append(successorNode)
             else: # vertical, move up or down
                 for direction in ["u","d"]:
                     move = self.checkIfMoveIsPossible(car, direction, node.getState())
                     if(move):
-                        successors.append(move)
+                        successorNode = makeMove(state, pieceNumber, direction)
+                        successors.append(successorNode)
 
 
     def makeMove(self, state, carId, direction):
