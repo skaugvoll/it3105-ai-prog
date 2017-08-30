@@ -122,7 +122,7 @@ class RushHourBFS:
     def checkIfMoveIsPossible(self, car, direction, state):
         col = car[1]
         row = car[2]
-        moveIsPossible = true
+        moveIsPossible = True
  
         # if no other cars are on position car[1] - 1 --> new state
         for playingPiece in state:
@@ -130,31 +130,40 @@ class RushHourBFS:
                 # check if the playing piece tries to move outside the board
                 hDiff = 0
                 pDiff = 0
+                
                 if(direction == "l"):
+                    if(col ==  0 ):
+                        return False
                     hDiff = -1
                     pDiff = playingPiece[-1] -1
                 elif (direction == "r"):
+                    if(col + (car[-1] - 1)  ==  self.boardSize -1):
+                        return False
                     hDiff = car[-1]
                 # if piece is on same row as playing piece, and we want to go left, check that piece ends just left of playing piece, or if right, that it starts just right for playing piece. diff controls this.
                 if (playingPiece[2] == row and (playingPiece[1] + pDiff  == col + hDiff)):
-                    moveIsPossible = false
+                    moveIsPossible = False
                 # if piece does not start on same row, but expands multiple rows (vertical orientation), and expands over the goal row
                 elif(playingPiece[0] == 1 and playingPiece[1] == col + hDiff and playingPiece[2] <= row and (playingPiece[2]+(playingPiece[-1] -1)) >= row):
-                    moveIsPossible = false
+                    moveIsPossible = False
             elif (direction == "u" or direction == "d"):
                 vDiff = 0
                 pDiff = 0
                 if (direction == "u"):
+                    if(row == 0):
+                        return False
                     vDiff = -1
                     pDiff = playingPiece[-1] -1
                 elif (direction == "d"):
+                    if(row + (car[-1] -1) ==  self.board -1):
+                        return False
                     vDiff = car[-1]
                 # if piece is horisontically alligned over our current playing piece.
                 if (playingPiece[0] == 0 and playingPiece[2] == row + vDiff  and (playingPiece[1] <= col) and (playingPiece[1] + (playingPiece[-1] -1) >=  col)):
-                    moveIsPossible = false
+                    moveIsPossible = False
                 # if piece is vertically alligend over our current playing piece.
                 elif (playingPiece[0] == 1 and (playingPiece[2] + pDiff == row + vDiff)  and (playingPiece[1] == col)):
-                    moveIsPossible = false
+                    moveIsPossible = False
         # retrun if move is possible
         return moveIsPossible        
 
