@@ -15,4 +15,5 @@ heuristics could be;
         Dette burde gi en ganske nøyaktig vurdering, og aldri overestimere. Bruke manhatten, siden bilen aldri vil kunne
         flytte seg i flere enn maks en rettning (vertikalt eller horisontalt).
 
-    
+
+i denne her funksjonen generateSuccessors har vi expanded size. pass inn til checkIfMoveIsPossible, bytt ut alle plasser der størrelsen med epanded size.
