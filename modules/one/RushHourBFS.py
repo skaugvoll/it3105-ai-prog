@@ -119,16 +119,16 @@ class RushHourBFS:
         return successors
 
     def makeMove(self, state, carId, direction):
-        newState = state
+        newState = state[:]
         tupl = newState[carId]
         lst = list(tupl)
         if(direction == "l"):
             lst[1] -= 1
-        if(direction == "r"):
+        elif(direction == "r"):
             lst[1] += 1
-        if(direction == "u"):
+        elif(direction == "u"):
             lst[2] -= 1
-        if(direction == "d"):
+        elif(direction == "d"):
             lst[2] += 1
         tupl = tuple(lst)
         newState[carId] = tupl
@@ -138,7 +138,6 @@ class RushHourBFS:
     def checkIfMoveIsPossible(self, car, direction, state):
         col = car[1]
         row = car[2]
-        moveIsPossible = True
 
         # if no other cars are on position car[1] - 1 --> new state
         for playingPiece in state:
@@ -158,10 +157,10 @@ class RushHourBFS:
                     hDiff = car[-1]
                 # if piece is on same row as playing piece, and we want to go left, check that piece ends just left of playing piece, or if right, that it starts just right for playing piece. diff controls this.
                 if (playingPiece[2] == row and (playingPiece[1] + pDiff  == col + hDiff)):
-                    moveIsPossible = False
+                    return False
                 # if piece does not start on same row, but expands multiple rows (vertical orientation), and expands over the goal row
                 elif(playingPiece[0] == 1 and playingPiece[1] == col + hDiff and playingPiece[2] <= row and (playingPiece[2]+(playingPiece[-1] -1)) >= row):
-                    moveIsPossible = False
+                    return False
             elif (direction == "u" or direction == "d"):
                 vDiff = 0
                 pDiff = 0
@@ -176,12 +175,12 @@ class RushHourBFS:
                     vDiff = car[-1]
                 # if piece is horisontically alligned over our current playing piece.
                 if (playingPiece[0] == 0 and playingPiece[2] == row + vDiff  and (playingPiece[1] <= col) and (playingPiece[1] + (playingPiece[-1] -1) >=  col)):
-                    moveIsPossible = False
+                    return False
                 # if piece is vertically alligend over our current playing piece.
                 elif (playingPiece[0] == 1 and (playingPiece[2] + pDiff == row + vDiff)  and (playingPiece[1] == col)):
-                    moveIsPossible = False
+                    return False
         # retrun if move is possible
-        return moveIsPossible
+        return True
 
     def addKid(self, node, kid):
         node.addKid(kid)

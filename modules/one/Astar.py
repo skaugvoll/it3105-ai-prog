@@ -58,6 +58,7 @@ class Astar:
         node.setGValue(0)
         # set h value to estimation.
         node.setHValue(self.bfs.calculateHValue(node, self.goalState))
+        node.setFValue()
         #print(node)
         #push initial node to the agenda (open-list)
         self.OPEN.append(node)
@@ -83,7 +84,7 @@ class Astar:
                 if not(self.isGen):
                     self.attach_and_eval(kid, node)
                     self._pushToAgenda(kid)
-                elif((node.getGValue() + self.bfs.arc_cost(node, kid)) < (kid.getGValue)):
+                elif((node.getGValue() + self.bfs.arc_cost(node, kid)) < kid.getGValue()):
                     self.attach_and_eval(kid, node)
                     if(self.isGen == self.CLOSED):
                         self.propagate_path_improvement(kid)
@@ -94,11 +95,14 @@ class Astar:
         return False
 
     def checkIfPrevGen(self, kid, l): 
+        if(len(l) == 0):
+            return kid
         for i in range(len(l)):
             node = l[i]
             if (node.getId() == kid.getId()):
                 kid = l.pop(i)
                 self.isGen = l
+                break
         return kid
 
     def attach_and_eval(self, kid, node):

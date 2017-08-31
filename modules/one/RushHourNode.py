@@ -12,7 +12,7 @@ class SearchNode:
     def _createId(self):
         if(self.state == None):
             self.rank = "woopsies"
-        self.rank = str(self.state)
+        return str(self.state)
     
     def getId(self):
         return self.rank
