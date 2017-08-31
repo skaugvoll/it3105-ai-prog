@@ -20,7 +20,7 @@ class Astar:
         return nodeX.getFValue() - nodeY.getFValue()
 
     def _sortAgenda(self):
-        self.OPEN.sort(self._sortBasedOnFValue(x,y))
+        self.OPEN = sorted(self.OPEN, key=lambda x: x.getFValue())
 
     def _popFromAgenda(self):
         return self.OPEN.pop(0) # return the first element from the agenda / open list. (the node / state with lowest f-value)
@@ -33,18 +33,20 @@ class Astar:
 
     def _pushToDone(self, node):
         self.CLOSED.append(node)
+        self.states.append(node)
 
     def _nodeIsSolution(self, node):
         car = node.getPlayerPiece()
         ## for our specific problem, check if right side of playing - car is on goal state
         # if the playing piece is on same row as goal and the right side of the car is on the same column as the goal
-        if(self.goalState[1] == car[2] and (car[1] + (car[-1] - 1) == self.goalState[1])):
+        if(self.goalState[1] == car[2] and (car[1] + (car[-1] - 1) == self.goalState[0])):
             return True # we found a solution!
         # if not solution
         return False
 
     def _getSolution(self, node):
-        pass ## reconstruct path to goal (follow the parent of the goal state, backwords)
+        print("Jeg fant mål!!")
+        ## reconstruct path to goal (follow the parent of the goal state, backwords)
 
 
     '''should return the path, or failure.'''
@@ -56,13 +58,14 @@ class Astar:
         node.setGValue(0)
         # set h value to estimation.
         node.setHValue(self.bfs.calculateHValue(node, self.goalState))
-        print(node)
+        #print(node)
         #push initial node to the agenda (open-list)
         self.OPEN.append(node)
         #Agenda loop starts here. While no solution found do:
         while(len(self.OPEN)):
             searchNode = self._popFromAgenda()
             self._pushToDone(searchNode)
+            print(self.bfs.drawBoard(self.states))
             # check if the new node is the goal
             if(self._nodeIsSolution(searchNode)):
                 return self._getSolution(searchNode) # if solution return the path.
@@ -71,11 +74,10 @@ class Astar:
             successors = self.bfs.generateSuccessors(searchNode)
                 # for each successor do
             for kid in successors:
-                pass
                 # check if the successor has been created before --> check if the kid -list is in the self.states list
 
-                kid = self.checkIfPreGen(kid, self.OPEN)
-                kid = self.checkIfPreGen(kid, self.CLOSED)
+                kid = self.checkIfPrevGen(kid, self.OPEN)
+                kid = self.checkIfPrevGen(kid, self.CLOSED)
                 # push the successor to the searchNode kids list.
                 self.bfs.addKid(node, kid)
                 if not(self.isGen):
@@ -105,8 +107,15 @@ class Astar:
         kid.setHValue(self.bfs.calculateHValue(kid, self.goalState))
         kid.setFValue()
 
-    def propagate_path_improvement(self, kid):
-        pass
+    def propagate_path_improvement(self, node):
+        for kid in node.getKids():
+            pathCost = node.getGValue() + self.bfs.arc_cost(node, kid)
+            if(pathCost < kid.getGValue()):
+                kid.setParent(node)
+                kid.setGValue(pathCost)
+                kid.setFValue()
+                self.propagate_path_improvement(kid)
+
 
 
 def main():

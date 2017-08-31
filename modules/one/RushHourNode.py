@@ -24,6 +24,9 @@ class SearchNode:
     def getPlayerPiece(self):
         return self.state[0]
 
+    def getstate(self):
+        return self.state
+
     def setGValue(self, value):
         self.gValue = value
 

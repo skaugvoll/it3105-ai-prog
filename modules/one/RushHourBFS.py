@@ -12,8 +12,9 @@ class RushHourBFS:
         return board
 
     def drawBoard(self, states):
+        self.board = self.createBoard()
         # place the pieces on the board
-        print(states)
+        # print(states)
         for playingPiece in states[-1].state:
             orientation = playingPiece[0]
             pieceSize = playingPiece[3]
@@ -92,10 +93,9 @@ class RushHourBFS:
     def generateSuccessors(self, node):
         ''' each piece can move 2 directions, 2 directions * number of pieces === numPiexes ^2 successors at most '''
         successors = []
-        return successors
         # a new successor is when we make a legal move on a playing piece. so if one piece can move both one position left or right, one new state is moving left, and one new state is moving right
         # first we need to know what direction we can move the piece
-        state = node.getState
+        state = node.getState()
         for pieceNumber in range(len(state)):
             car = node.getCarByNumber(pieceNumber)
             direction = car[0]
@@ -103,31 +103,35 @@ class RushHourBFS:
             expandedSide = car[1] + (car[-1] - 1) # car 0 = dir, 1 = col, 2 = row, 3 = size
 
             if(direction == 0): # horisontal direction (we can move left or right)
-                pass
                 # check IF right is blocked, if not, new state
                 for direction in ["l","r"]:
                     move = self.checkIfMoveIsPossible(car, direction, node.getState())
                     if(move):
-                        successorNode = makeMove(state, pieceNumber, direction)
+                        newState = self.makeMove(state, pieceNumber, direction)
+                        successorNode = SearchNode(state = newState)
                         successors.append(successorNode)
             else: # vertical, move up or down
                 for direction in ["u","d"]:
                     move = self.checkIfMoveIsPossible(car, direction, node.getState())
                     if(move):
-                        successorNode = makeMove(state, pieceNumber, direction)
+                        successorNode = self.makeMove(state, pieceNumber, direction)
                         successors.append(successorNode)
         return successors
 
     def makeMove(self, state, carId, direction):
         newState = state
+        tupl = newState[carId]
+        lst = list(tupl)
         if(direction == "l"):
-            newState[carId][1] -= 1
+            lst[1] -= 1
         if(direction == "r"):
-            newState[carId][1] += 1
+            lst[1] += 1
         if(direction == "u"):
-            newState[carId][2] -= 1
+            lst[2] -= 1
         if(direction == "d"):
-            newState[carId][2] += 1
+            lst[2] += 1
+        tupl = tuple(lst)
+        newState[carId] = tupl
         return newState
 
 
@@ -167,7 +171,7 @@ class RushHourBFS:
                     vDiff = -1
                     pDiff = playingPiece[-1] -1
                 elif (direction == "d"):
-                    if(row + (car[-1] -1) ==  self.board -1):
+                    if(row + (car[-1] -1) ==  self.boardSize -1):
                         return False
                     vDiff = car[-1]
                 # if piece is horisontically alligned over our current playing piece.
@@ -181,3 +185,6 @@ class RushHourBFS:
 
     def addKid(self, node, kid):
         node.addKid(kid)
+
+    def arc_cost(self, kid, node):
+        return 1
