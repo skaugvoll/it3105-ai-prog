@@ -80,7 +80,7 @@ class Astar:
                 kid = self.checkIfPrevGen(kid, self.OPEN)
                 kid = self.checkIfPrevGen(kid, self.CLOSED)
                 # push the successor to the searchNode kids list.
-                self.bfs.addKid(node, kid)
+                self.bfs.addKid(searchNode, kid)
                 if not(self.isGen):
                     self.attach_and_eval(kid, node)
                     self._pushToAgenda(kid)
