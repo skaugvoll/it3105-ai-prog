@@ -99,8 +99,6 @@ class RushHourBFS:
         for pieceNumber in range(len(state)):
             car = node.getCarByNumber(pieceNumber)
             direction = car[0]
-                # if direction = 0 : right side of car, or if direction = 1, downSide
-            expandedSide = car[1] + (car[-1] - 1) # car 0 = dir, 1 = col, 2 = row, 3 = size
 
             if(direction == 0): # horisontal direction (we can move left or right)
                 # check IF right is blocked, if not, new state
@@ -108,13 +106,14 @@ class RushHourBFS:
                     move = self.checkIfMoveIsPossible(car, direction, node.getState())
                     if(move):
                         newState = self.makeMove(state, pieceNumber, direction)
-                        successorNode = SearchNode(state = newState)
+                        successorNode = SearchNode(state=newState)
                         successors.append(successorNode)
             else: # vertical, move up or down
                 for direction in ["u","d"]:
                     move = self.checkIfMoveIsPossible(car, direction, node.getState())
                     if(move):
-                        successorNode = self.makeMove(state, pieceNumber, direction)
+                        newState = self.makeMove(state, pieceNumber, direction)
+                        successorNode = SearchNode(state=newState)
                         successors.append(successorNode)
         return successors
 

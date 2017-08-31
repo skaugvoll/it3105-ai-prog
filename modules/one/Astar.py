@@ -53,15 +53,15 @@ class Astar:
     def solve(self):
         # do the inital work. (much is done in the initialization of Astar)
         # pop the inital state
-        node = self.getCurrentState()
+        initNode = self.getCurrentState()
         # set g value to 0,
-        node.setGValue(0)
+        initNode.setGValue(0)
         # set h value to estimation.
-        node.setHValue(self.bfs.calculateHValue(node, self.goalState))
-        node.setFValue()
+        initNode.setHValue(self.bfs.calculateHValue(initNode, self.goalState))
+        initNode.setFValue()
         #print(node)
         #push initial node to the agenda (open-list)
-        self.OPEN.append(node)
+        self.OPEN.append(initNode)
         #Agenda loop starts here. While no solution found do:
         while(len(self.OPEN)):
             searchNode = self._popFromAgenda()
@@ -82,10 +82,10 @@ class Astar:
                 # push the successor to the searchNode kids list.
                 self.bfs.addKid(searchNode, kid)
                 if not(self.isGen):
-                    self.attach_and_eval(kid, node)
+                    self.attach_and_eval(kid, searchNode)
                     self._pushToAgenda(kid)
-                elif((node.getGValue() + self.bfs.arc_cost(node, kid)) < kid.getGValue()):
-                    self.attach_and_eval(kid, node)
+                elif((searchNode.getGValue() + self.bfs.arc_cost(searchNode, kid)) < kid.getGValue()):
+                    self.attach_and_eval(kid, searchNode)
                     if(self.isGen == self.CLOSED):
                         self.propagate_path_improvement(kid)
 
@@ -94,7 +94,7 @@ class Astar:
         # if the while loop could not find a solution
         return False
 
-    def checkIfPrevGen(self, kid, l): 
+    def checkIfPrevGen(self, kid, l):
         if(len(l) == 0):
             return kid
         for i in range(len(l)):
