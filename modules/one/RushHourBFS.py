@@ -15,19 +15,21 @@ class RushHourBFS:
         self.board = self.createBoard()
         # place the pieces on the board
         # print(states)
-        for playingPiece in states[-1].state:
+        lastAddedState = states[-1].state
+        for i in range(len(lastAddedState)):
+            playingPiece = lastAddedState[i]
             orientation = playingPiece[0]
             pieceSize = playingPiece[3]
             # x = 1 = col, y = 2 = row
-            self.board[playingPiece[2]][playingPiece[1]] = "x"
+            self.board[playingPiece[2]][playingPiece[1]] = str(i)
             if(orientation == 0): # horizontal = col
                 for size in range(pieceSize):
-                    self.board[playingPiece[2]][playingPiece[1]+(size)] = "x"
+                    self.board[playingPiece[2]][playingPiece[1]+(size)] = str(i)
 
                 # self.board[playingPiece[2]][playingPiece[1]+(pieceSize-1)] = "x"
             elif(orientation == 1): # vertical = row
                 for size in range(pieceSize):
-                    self.board[playingPiece[2]+(size)][playingPiece[1]] = "x"
+                    self.board[playingPiece[2]+(size)][playingPiece[1]] = str(i)
 
         # print the board
         for row in self.board:
@@ -35,7 +37,6 @@ class RushHourBFS:
             for column in row:
                 string += str(column)
             print(string)
-
 
     def getInitalState(self, file):
         state = []
@@ -186,3 +187,22 @@ class RushHourBFS:
 
     def arc_cost(self, kid, node):
         return 1
+
+
+    # def drawBoard(self, states):
+    #     self.board = self.createBoard()
+    #     # place the pieces on the board
+    #     # print(states)
+    #     for playingPiece in states[-1].state:
+    #         orientation = playingPiece[0]
+    #         pieceSize = playingPiece[3]
+    #         # x = 1 = col, y = 2 = row
+    #         self.board[playingPiece[2]][playingPiece[1]] = "x"
+    #         if(orientation == 0): # horizontal = col
+    #             for size in range(pieceSize):
+    #                 self.board[playingPiece[2]][playingPiece[1]+(size)] = "x"
+    #
+    #             # self.board[playingPiece[2]][playingPiece[1]+(pieceSize-1)] = "x"
+    #         elif(orientation == 1): # vertical = row
+    #             for size in range(pieceSize):
+    #                 self.board[playingPiece[2]+(size)][playingPiece[1]] = "x"

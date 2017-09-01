@@ -66,7 +66,8 @@ class Astar:
         while(len(self.OPEN)):
             searchNode = self._popFromAgenda()
             self._pushToDone(searchNode)
-            print(self.bfs.drawBoard(self.states))
+            print()
+            self.bfs.drawBoard(self.states)
             # check if the new node is the goal
             if(self._nodeIsSolution(searchNode)):
                 return self._getSolution(searchNode) # if solution return the path.
