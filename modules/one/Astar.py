@@ -12,6 +12,7 @@ class Astar:
         self.goalState = (5,2) # sys.argv[2]
         self.bfs.drawBoard(self.states)
         self.isGen = False
+        self.moves = 0
 
     def getCurrentState(self):
         return self.states[-1]
@@ -46,6 +47,8 @@ class Astar:
 
     def _getSolution(self, node):
         print("Jeg fant mål!!")
+        print(len(self.states) -1) # -1 because 1 state is generated twice
+
         ## reconstruct path to goal (follow the parent of the goal state, backwords)
 
 
@@ -93,6 +96,7 @@ class Astar:
                 self.isGen = False
 
         # if the while loop could not find a solution
+        
         return False
 
     def checkIfPrevGen(self, kid, l):
