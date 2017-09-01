@@ -11,13 +11,12 @@ class RushHourBFS:
         board = [ [ "-" for c in range(self.boardSize) ] for r in range(self.boardSize) ]
         return board
 
-    def drawBoard(self, states):
+    def drawBoard(self, state):
         self.board = self.createBoard()
         # place the pieces on the board
         # print(states)
-        lastAddedState = states[-1].state
-        for i in range(len(lastAddedState)):
-            playingPiece = lastAddedState[i]
+        for i in range(len(state)):
+            playingPiece = state[i]
             orientation = playingPiece[0]
             pieceSize = playingPiece[3]
             # x = 1 = col, y = 2 = row

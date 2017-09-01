@@ -49,7 +49,6 @@ class Astar:
 
     def _traversePath(self, solution, node):
         if (node.getParent() == None):
-            solution.append(node)
             return solution
 
         else:
@@ -87,8 +86,7 @@ class Astar:
         while(len(self.OPEN)):
             searchNode = self._popFromAgenda()
             self._pushToDone(searchNode)
-            print()
-            self.bfs.drawBoard(self.states)
+            self.bfs.drawBoard(searchNode.getState())
             # check if the new node is the goal
             if(self._nodeIsSolution(searchNode)):
                 return self._getSolution(searchNode) # if solution return the path.
