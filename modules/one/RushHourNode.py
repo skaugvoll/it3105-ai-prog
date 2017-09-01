@@ -61,3 +61,6 @@ class SearchNode:
     def setParent(self, parent):
         self.parent = parent
 
+    def getParent(self):
+        return self.parent
+

@@ -8,9 +8,10 @@ class Astar:
         self.bfs = RushHourBFS(6) # should be a sys arg.
         self.CLOSED = [] # visited and expanded
         self.OPEN = [] # found and to be expandedi
-        self.states = [self.bfs.getInitalState(sys.argv[1])] # the inital state filename.
+        # self.states = [self.bfs.getInitalState(sys.argv[1])] # the inital state filename.
+        self.states = [] # the inital state filename.
         self.goalState = (5,2) # sys.argv[2]
-        self.bfs.drawBoard(self.states)
+        # self.bfs.drawBoard(self.states)
         self.isGen = False
         self.moves = 0
 
@@ -45,18 +46,35 @@ class Astar:
         # if not solution
         return False
 
-    def _getSolution(self, node):
-        print("Jeg fant mål!!")
-        print(len(self.states) -1) # -1 because 1 state is generated twice
 
+    def _traversePath(self, solution, node):
+        if (node.getParent() == None):
+            solution.append(node)
+            return solution
+
+        else:
+            parent = node.getParent()
+            solution.append(parent)
+            return self._traversePath(solution, parent)
+
+
+    def _getSolution(self, node):
+        solution = self._traversePath([], node)
+        solution.reverse()
         ## reconstruct path to goal (follow the parent of the goal state, backwords)
+
+        print(len(self.states) - 1)  # -1 because 1 state is generated twice
+        print("solution", solution)
+        print("Num steps", len(solution))
+        return solution  # the nodes / states that generate the goal state
 
 
     '''should return the path, or failure.'''
     def solve(self):
         # do the inital work. (much is done in the initialization of Astar)
         # pop the inital state
-        initNode = self.getCurrentState()
+        # initNode = self.getCurrentState()
+        initNode = self.bfs.getInitalState(sys.argv[1])
         # set g value to 0,
         initNode.setGValue(0)
         # set h value to estimation.
