@@ -86,6 +86,7 @@ class Astar:
         while(len(self.OPEN)):
             searchNode = self._popFromAgenda()
             self._pushToDone(searchNode)
+            print() #Space between boards
             self.bfs.drawBoard(searchNode.getState())
             # check if the new node is the goal
             if(self._nodeIsSolution(searchNode)):
