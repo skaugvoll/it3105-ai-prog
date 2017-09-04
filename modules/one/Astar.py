@@ -20,9 +20,6 @@ class Astar:
     def getCurrentState(self):
         return self.states[-1]
 
-    def _sortBasedOnFValue(self, nodeX, nodeY):
-        return nodeX.getFValue() - nodeY.getFValue()
-
     def _sortAgenda(self):
         self.OPEN = sorted(self.OPEN, key=lambda x: x.getFValue())
 
@@ -94,9 +91,10 @@ class Astar:
         while(len(self.OPEN)):
             searchNode = self._popFromAgenda()
             self._pushToDone(searchNode)
-            # print("\n"*2) #Space between boards
-            # print(searchNode)
-            # self.bfs.drawBoard(searchNode.getState())
+            print("\n"*2) #Space between boards
+            print(searchNode)
+            self.bfs.drawBoard(searchNode.getState())
+            print(self.OPEN)
 
             # check if the new node is the goal
             if(self._nodeIsSolution(searchNode)):
