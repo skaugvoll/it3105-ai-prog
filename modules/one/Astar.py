@@ -3,6 +3,8 @@ import sys
 from RushHourBFS import RushHourBFS
 
 # commandline parameters: initalStateFile, goalState, boardSize,
+
+
 class Astar:
     def __init__(self):
         self.bfs = RushHourBFS(6) # should be a sys arg.
@@ -63,8 +65,13 @@ class Astar:
         ## reconstruct path to goal (follow the parent of the goal state, backwords)
 
         print(len(self.states) - 1)  # -1 because 1 state is generated twice
-        print("solution", solution)
-        print("Num steps", len(solution))
+        print("\n" * 5)
+        print("::::: SOLUTION :::::")
+        for step in solution:
+            print(step)
+            self.bfs.drawBoard(step.state)
+            print("\n"*2)
+        print("Num steps", len(solution) -1 ) # -1 because the first / inital state is not a move.
         return solution  # the nodes / states that generate the goal state
 
 
@@ -86,7 +93,7 @@ class Astar:
         while(len(self.OPEN)):
             searchNode = self._popFromAgenda()
             self._pushToDone(searchNode)
-            print() #Space between boards
+            print("\n"*2) #Space between boards
             self.bfs.drawBoard(searchNode.getState())
             # check if the new node is the goal
             if(self._nodeIsSolution(searchNode)):
@@ -100,6 +107,7 @@ class Astar:
 
                 kid = self.checkIfPrevGen(kid, self.OPEN)
                 kid = self.checkIfPrevGen(kid, self.CLOSED)
+
                 # push the successor to the searchNode kids list.
                 self.bfs.addKid(searchNode, kid)
                 if not(self.isGen):
@@ -117,7 +125,7 @@ class Astar:
         return False
 
     def checkIfPrevGen(self, kid, l):
-        if(len(l) == 0):
+        if (len(l) == 0):
             return kid
         for i in range(len(l)):
             node = l[i]
@@ -129,7 +137,7 @@ class Astar:
 
     def attach_and_eval(self, kid, node):
         kid.setParent(node)
-        kid.setGValue(node.getGValue() + self.bfs.arc_cost(node, kid)) #Lag arc_cost i bfs
+        kid.setGValue(node.getGValue() + self.bfs.arc_cost(node, kid))
         kid.setHValue(self.bfs.calculateHValue(kid, self.goalState))
         kid.setFValue()
 
