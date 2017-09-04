@@ -1,4 +1,3 @@
-from termcolor import colored
 from RushHourNode import SearchNode
 
 class RushHourBFS:
@@ -12,42 +11,6 @@ class RushHourBFS:
         board = [ [ "-" for c in range(self.boardSize) ] for r in range(self.boardSize) ]
         return board
 
-    def _getColor(self, carNumber):
-        if carNumber == 0:
-            return "red"
-        elif carNumber == 1:
-            return "green"
-        elif carNumber == 2:
-            return "blue"
-        elif carNumber == 3:
-            return "yellow"
-        elif carNumber == 4:
-            return "magenta"
-        elif carNumber == 5:
-            return "cyan"
-        elif carNumber == 6:
-            return "white"
-        # elif carNumber == 7:
-        #     return "blue"
-        # elif carNumber == 8:
-        #     return "blue"
-        # elif carNumber == 9:
-        #     return "blue"
-        # elif carNumber == 10:
-        #     return "blue"
-        # elif carNumber == 11:
-        #     return "blue"
-        # elif carNumber == 12:
-        #     return "blue"
-        # elif carNumber == 13:
-        #     return "blue"
-        # elif carNumber == 14:
-        #     return "blue"
-        # elif carNumber == 15:
-        #     return "blue"
-        else:
-            return "grey"
-
 
     def drawBoard(self, state):
         self.board = self.createBoard()
@@ -58,15 +21,15 @@ class RushHourBFS:
             orientation = playingPiece[0]
             pieceSize = playingPiece[3]
             # x = 1 = col, y = 2 = row
-            self.board[playingPiece[2]][playingPiece[1]] = colored(str(i), self._getColor(i))
+            self.board[playingPiece[2]][playingPiece[1]] = str(i)
             if(orientation == 0): # horizontal = col
                 for size in range(pieceSize):
-                    self.board[playingPiece[2]][playingPiece[1]+(size)] = colored(str(i), self._getColor(i))
+                    self.board[playingPiece[2]][playingPiece[1]+(size)] = str(i)
 
                 # self.board[playingPiece[2]][playingPiece[1]+(pieceSize-1)] = "x"
             elif(orientation == 1): # vertical = row
                 for size in range(pieceSize):
-                    self.board[playingPiece[2]+(size)][playingPiece[1]] = colored(str(i), self._getColor(i))
+                    self.board[playingPiece[2]+(size)][playingPiece[1]] = str(i)
 
         # print the board
         for row in self.board:

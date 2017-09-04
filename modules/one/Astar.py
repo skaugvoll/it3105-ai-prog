@@ -12,7 +12,7 @@ class Astar:
         self.OPEN = [] # found and to be expandedi
         # self.states = [self.bfs.getInitalState(sys.argv[1])] # the inital state filename.
         self.states = [] # the inital state filename.
-        self.goalState = (5,2) # sys.argv[2]
+        self.goalState = (5, 2) # sys.argv[2]
         # self.bfs.drawBoard(self.states)
         self.isGen = False
         self.moves = 0
@@ -62,13 +62,14 @@ class Astar:
     def _getSolution(self, node):
         solution = self._traversePath([], node)
         solution.reverse()
+        solution.append(node)
         ## reconstruct path to goal (follow the parent of the goal state, backwords)
 
         print(len(self.states) - 1)  # -1 because 1 state is generated twice
         print("\n" * 5)
         print("::::: SOLUTION :::::")
         for step in solution:
-            print(step)
+            # print(step)
             self.bfs.drawBoard(step.state)
             print("\n"*2)
         print("Num steps", len(solution) -1 ) # -1 because the first / inital state is not a move.
@@ -93,10 +94,13 @@ class Astar:
         while(len(self.OPEN)):
             searchNode = self._popFromAgenda()
             self._pushToDone(searchNode)
-            print("\n"*2) #Space between boards
-            self.bfs.drawBoard(searchNode.getState())
+            # print("\n"*2) #Space between boards
+            # print(searchNode)
+            # self.bfs.drawBoard(searchNode.getState())
+
             # check if the new node is the goal
             if(self._nodeIsSolution(searchNode)):
+
                 return self._getSolution(searchNode) # if solution return the path.
 
             # if not solution, generate all successors / children of seachNode (all possible moves) in this state. (move each piece one step, in both available orientation direction (left/right, or up/down))
@@ -104,12 +108,12 @@ class Astar:
                 # for each successor do
             for kid in successors:
                 # check if the successor has been created before --> check if the kid -list is in the self.states list
-
                 kid = self.checkIfPrevGen(kid, self.OPEN)
                 kid = self.checkIfPrevGen(kid, self.CLOSED)
 
                 # push the successor to the searchNode kids list.
-                self.bfs.addKid(searchNode, kid)
+                searchNode.addKid(kid)
+
                 if not(self.isGen):
                     self.attach_and_eval(kid, searchNode)
                     self._pushToAgenda(kid)
@@ -130,7 +134,7 @@ class Astar:
         for i in range(len(l)):
             node = l[i]
             if (node.getId() == kid.getId()):
-                kid = l.pop(i)
+                kid = l[i]
                 self.isGen = l
                 break
         return kid
