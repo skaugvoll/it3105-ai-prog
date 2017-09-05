@@ -94,7 +94,6 @@ class Astar:
             print("\n"*2) #Space between boards
             print(searchNode)
             self.bfs.drawBoard(searchNode.getState())
-            print(self.OPEN)
 
             # check if the new node is the goal
             if(self._nodeIsSolution(searchNode)):
@@ -123,7 +122,9 @@ class Astar:
                 self.isGen = False
 
         # if the while loop could not find a solution
-        
+        print("open is now: ", len(self.OPEN))
+        print("close is now: ", len(self.CLOSED))
+        print("states is now: ", len(self.states))
         return False
 
     def checkIfPrevGen(self, kid, l):
