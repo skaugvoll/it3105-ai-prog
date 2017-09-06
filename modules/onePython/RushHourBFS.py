@@ -92,7 +92,7 @@ class RushHourBFS:
     def generateSuccessors(self, node):
         ''' each piece can move 2 directions, 2 directions * number of pieces === numPiexes ^2 successors at most '''
         successors = []
-        # a new successor is when we make a legal move on a playing piece. so if one piece can move both one position left or right, one new state is moving left, and one new state is moving right
+        # a new successor is when we make a legal move on a playing piece. so if onePython piece can move both onePython position left or right, onePython new state is moving left, and onePython new state is moving right
         # first we need to know what direction we can move the piece
         state = node.getState()
         for pieceNumber in range(len(state)):
