@@ -97,7 +97,6 @@ class Astar:
 
             # check if the new node is the goal
             if(self._nodeIsSolution(searchNode)):
-
                 return self._getSolution(searchNode) # if solution return the path.
 
             # if not solution, generate all successors / children of seachNode (all possible moves) in this state. (move each piece one step, in both available orientation direction (left/right, or up/down))
@@ -105,8 +104,13 @@ class Astar:
                 # for each successor do
             for kid in successors:
                 # check if the successor has been created before --> check if the kid -list is in the self.states list
-                kid = self.checkIfPrevGen(kid, self.OPEN)
-                kid = self.checkIfPrevGen(kid, self.CLOSED)
+
+                if(self.checkIfPrevGen(kid, self.OPEN) or self.checkIfPrevGen(kid, self.CLOSED)):
+                    if (self.isGen[0] == self.CLOSED):
+                        kid = self.CLOSED.pop(self.isGen[1])
+                    else:
+                        kid = self.OPEN[self.isGen[1]]
+
 
                 # push the successor to the searchNode kids list.
                 searchNode.addKid(kid)
@@ -129,14 +133,14 @@ class Astar:
 
     def checkIfPrevGen(self, kid, l):
         if (len(l) == 0):
-            return kid
+            return False
         for i in range(len(l)):
             node = l[i]
             if (node.getId() == kid.getId()):
-                kid = l[i]
-                self.isGen = l
-                break
-        return kid
+                # kid = l[i]
+                self.isGen = (l, i)
+                return True
+        return False
 
     def attach_and_eval(self, kid, node):
         kid.setParent(node)
