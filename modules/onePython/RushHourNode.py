@@ -9,7 +9,7 @@ class SearchNode:
         self.rank = self._createId()
 
     def _createId(self):
-        if(self.state == None):
+        if self.state == None:
             self.rank = "woopsies"
         return str(self.state)
     
@@ -39,7 +39,6 @@ class SearchNode:
         return self.hValue
 
     def getFValue(self):
-        #self.fValue = self.gValue + self.hValue
         return self.fValue
 
     def setFValue(self):

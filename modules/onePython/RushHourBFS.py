@@ -8,7 +8,7 @@ class RushHourBFS:
 
 
     def createBoard(self):
-        board = [ [ "-" for c in range(self.boardSize) ] for r in range(self.boardSize) ]
+        board = [["-" for c in range(self.boardSize)] for r in range(self.boardSize)]
         return board
 
 
@@ -22,12 +22,12 @@ class RushHourBFS:
             pieceSize = playingPiece[3]
             # x = 1 = col, y = 2 = row
             self.board[playingPiece[2]][playingPiece[1]] = str(i)
-            if(orientation == 0): # horizontal = col
+            if orientation == 0: # horizontal = col
                 for size in range(pieceSize):
                     self.board[playingPiece[2]][playingPiece[1]+(size)] = str(i)
 
                 # self.board[playingPiece[2]][playingPiece[1]+(pieceSize-1)] = "x"
-            elif(orientation == 1): # vertical = row
+            elif orientation == 1: # vertical = row
                 for size in range(pieceSize):
                     self.board[playingPiece[2]+(size)][playingPiece[1]] = str(i)
 
@@ -38,10 +38,10 @@ class RushHourBFS:
                 string += str(column)
             print(string)
 
-    def getInitalState(self, file):
+    def getInitalState(self, fileWithInitState):
         state = []
         try:
-            initialState = open(file, 'r')
+            initialState = open(fileWithInitState, 'r')
             for line in initialState: # for each playing piece
                 line = line.replace('\n','') # remove unvalid character
                 line = line.split(',') # create a list of coordinates / meta data
@@ -62,30 +62,24 @@ class RushHourBFS:
         car = node.state[0]
         orientation = car[0]
         size = car[-1]
-        if(orientation == 0 and (goal[1] == car[2])): # horizontal goal must be on same row
-            if (goal[0] > car[1]): # car must drive right
+        if orientation == 0 and (goal[1] == car[2]): # horizontal goal must be on same row
+            if goal[0] > car[1]: # car must drive right
                 distanse = goal[0] - (car[1]+(size-1)) # 5 - (2 + (1)) = 5 - 3 = 2 steps, (2 + 1) = position or right side of car
             else:
                 distanse = goal[0] - car[2] # 5 - (2 + (1)) = 5 - 3 = 2 steps
 
         # Find how many pieces blocks the road.
-        for i in range(1,len(node.state)): # doent count the car we play
+        for i in range(1, len(node.state)): # doent count the car we play
             # if the piece "touches" the same row as the goal, it's a obsticle
             playingPiece = node.state[i]
             # if the playingPiece starts / is on the same same row.
-            if (playingPiece[2] == goal[1] and playingPiece[1] > (car[1]+(size -1))):
+            if playingPiece[2] == goal[1] and playingPiece[1] > (car[1]+(size -1)):
                 blocks += 1
             # if piece does not start on same row, but expands multiple rows (vertical orientation), and expands over the goal row
-            elif(playingPiece[0] == 1 and playingPiece[1] > car[1] and playingPiece[2] <= goal[1] and (playingPiece[2]+(playingPiece[-1] -1)) >= goal[1]):
+            elif playingPiece[0] == 1 and playingPiece[1] > car[1] and playingPiece[2] <= goal[1] and (playingPiece[2]+(playingPiece[-1] -1)) >= goal[1]:
                 blocks += 1
 
-
         return distanse + blocks
-
-        # elif(orientation == 1 and (goal[0] == car[1])): # vertical goal must be on same col
-        #     pass
-        # else:
-        #     raise Exception("Cannot be solved, car and goal does not align")
 
 
     ''' Rember to check if moveing will be outside "board" (use self.boardSize) '''
@@ -99,18 +93,18 @@ class RushHourBFS:
             car = node.getCarByNumber(pieceNumber)
             direction = car[0]
 
-            if(direction == 0): # horisontal direction (we can move left or right)
+            if direction == 0: # horisontal direction (we can move left or right)
                 # check IF right is blocked, if not, new state
                 for direction in ["l","r"]:
                     move = self.checkIfMoveIsPossible(car, direction, node.getState())
-                    if(move):
+                    if move:
                         newState = self.makeMove(state, pieceNumber, direction)
                         successorNode = SearchNode(state=newState)
                         successors.append(successorNode)
             else: # vertical, move up or down
                 for direction in ["u","d"]:
                     move = self.checkIfMoveIsPossible(car, direction, node.getState())
-                    if(move):
+                    if move:
                         newState = self.makeMove(state, pieceNumber, direction)
                         successorNode = SearchNode(state=newState)
                         successors.append(successorNode)
@@ -120,13 +114,13 @@ class RushHourBFS:
         newState = state[:]
         tupl = newState[carId]
         lst = list(tupl)
-        if(direction == "l"):
+        if direction == "l":
             lst[1] -= 1
-        elif(direction == "r"):
+        elif direction == "r":
             lst[1] += 1
-        elif(direction == "u"):
+        elif direction == "u":
             lst[2] -= 1
-        elif(direction == "d"):
+        elif direction == "d":
             lst[2] += 1
         tupl = tuple(lst)
         newState[carId] = tupl
@@ -139,43 +133,43 @@ class RushHourBFS:
 
         # if no other cars are on position car[1] - 1 --> new state
         for playingPiece in state:
-            if (direction == "l" or direction == "r"):
+            if direction == "l" or direction == "r":
                 # check if the playing piece tries to move outside the board
                 hDiff = 0
                 pDiff = 0
 
-                if(direction == "l"):
-                    if(col ==  0 ):
+                if direction == "l":
+                    if col ==  0 :
                         return False
                     hDiff = -1
                     pDiff = playingPiece[-1] -1
-                elif (direction == "r"):
-                    if(col + (car[-1] - 1)  ==  self.boardSize -1):
+                elif direction == "r":
+                    if col + (car[-1] - 1)  ==  self.boardSize -1:
                         return False
                     hDiff = car[-1]
                 # if piece is on same row as playing piece, and we want to go left, check that piece ends just left of playing piece, or if right, that it starts just right for playing piece. diff controls this.
-                if (playingPiece[2] == row and (playingPiece[1] + pDiff  == col + hDiff)):
+                if playingPiece[0] == 0 and playingPiece[2] == row and (playingPiece[1] + pDiff  == col + hDiff):
                     return False
                 # if piece does not start on same row, but expands multiple rows (vertical orientation), and expands over the goal row
-                elif(playingPiece[0] == 1 and playingPiece[1] == col + hDiff and playingPiece[2] <= row and (playingPiece[2]+(playingPiece[-1] -1)) >= row):
+                elif playingPiece[0] == 1 and playingPiece[1] == col + hDiff and playingPiece[2] <= row and (playingPiece[2]+(playingPiece[-1] -1)) >= row:
                     return False
-            elif (direction == "u" or direction == "d"):
+            elif direction == "u" or direction == "d":
                 vDiff = 0
                 pDiff = 0
-                if (direction == "u"):
-                    if(row == 0):
+                if direction == "u":
+                    if row == 0:
                         return False
                     vDiff = -1
                     pDiff = playingPiece[-1] -1
-                elif (direction == "d"):
-                    if(row + (car[-1] -1) ==  self.boardSize -1):
+                elif direction == "d":
+                    if row + (car[-1] -1) ==  self.boardSize -1:
                         return False
                     vDiff = car[-1]
                 # if piece is horisontically alligned over our current playing piece.
-                if (playingPiece[0] == 0 and playingPiece[2] == row + vDiff  and (playingPiece[1] <= col) and (playingPiece[1] + (playingPiece[-1] -1) >=  col)):
+                if playingPiece[0] == 0 and playingPiece[2] == row + vDiff  and (playingPiece[1] <= col) and (playingPiece[1] + (playingPiece[-1] -1) >=  col):
                     return False
                 # if piece is vertically alligend over our current playing piece.
-                elif (playingPiece[0] == 1 and (playingPiece[2] + pDiff == row + vDiff)  and (playingPiece[1] == col)):
+                elif playingPiece[0] == 1 and (playingPiece[2] + pDiff == row + vDiff)  and (playingPiece[1] == col):
                     return False
         # retrun if move is possible
         return True
