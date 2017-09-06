@@ -14,7 +14,7 @@ class Astar:
         self.states = [] # the inital state filename.
         self.goalState = (5, 2) # sys.argv[2]
         # self.bfs.drawBoard(self.states)
-        self.isGen = False
+        self.isGen = ()
         self.moves = 0
 
     def getCurrentState(self):
@@ -38,16 +38,15 @@ class Astar:
 
     def _nodeIsSolution(self, node):
         car = node.getPlayerPiece()
-        ## for our specific problem, check if right side of playing - car is on goal state
+        # for our specific problem, check if right side of playing - car is on goal state
         # if the playing piece is on same row as goal and the right side of the car is on the same column as the goal
-        if(self.goalState[1] == car[2] and (car[1] + (car[-1] - 1) == self.goalState[0])):
+        if self.goalState[1] == car[2] and (car[1] + (car[-1] - 1) == self.goalState[0]):
             return True # we found a solution!
         # if not solution
         return False
 
-
     def _traversePath(self, solution, node):
-        if (node.getParent() == None):
+        if node.getParent() == None:
             return solution
 
         else:
@@ -55,12 +54,11 @@ class Astar:
             solution.append(parent)
             return self._traversePath(solution, parent)
 
-
     def _getSolution(self, node):
         solution = self._traversePath([], node)
         solution.reverse()
         solution.append(node)
-        ## reconstruct path to goal (follow the parent of the goal state, backwords)
+        # reconstruct path to goal (follow the parent of the goal state, backwords)
 
         print(len(self.states) - 1)  # -1 because 1 state is generated twice
         print("\n" * 5)
@@ -68,8 +66,11 @@ class Astar:
         for step in solution:
             # print(step)
             self.bfs.drawBoard(step.state)
+            print(step)
             print("\n"*2)
-        print("Num steps", len(solution) -1 ) # -1 because the first / inital state is not a move.
+        print("Num steps", len(solution) - 1)  # -1 because the first / inital state is not a move.
+        # for step in self.CLOSED:
+        #     print (step)
         return solution  # the nodes / states that generate the goal state
 
 
@@ -88,15 +89,15 @@ class Astar:
         #push initial node to the agenda (open-list)
         self.OPEN.append(initNode)
         #Agenda loop starts here. While no solution found do:
-        while(len(self.OPEN)):
+        while len(self.OPEN):
             searchNode = self._popFromAgenda()
             self._pushToDone(searchNode)
-            print("\n"*2) #Space between boards
-            print(searchNode)
-            self.bfs.drawBoard(searchNode.getState())
+            # print("\n"*2) #Space between boards
+            # print(searchNode)
+            # self.bfs.drawBoard(searchNode.getState())
 
             # check if the new node is the goal
-            if(self._nodeIsSolution(searchNode)):
+            if self._nodeIsSolution(searchNode):
                 return self._getSolution(searchNode) # if solution return the path.
 
             # if not solution, generate all successors / children of seachNode (all possible moves) in this state. (move each piece onePython step, in both available orientation direction (left/right, or up/down))
@@ -105,8 +106,10 @@ class Astar:
             for kid in successors:
                 # check if the successor has been created before --> check if the kid -list is in the self.states list
 
-                if(self.checkIfPrevGen(kid, self.OPEN) or self.checkIfPrevGen(kid, self.CLOSED)):
-                    if (self.isGen[0] == self.CLOSED):
+                self.attach_and_eval(kid, searchNode)
+
+                if self.checkIfPrevGen(kid, self.OPEN) or self.checkIfPrevGen(kid, self.CLOSED):
+                    if self.isGen[0] == self.CLOSED:
                         kid = self.CLOSED[self.isGen[1]]
                     else:
                         kid = self.OPEN[self.isGen[1]]
@@ -115,15 +118,15 @@ class Astar:
                 # push the successor to the searchNode kids list.
                 searchNode.addKid(kid)
 
-                if not(self.isGen):
+                if not self.isGen:
                     self.attach_and_eval(kid, searchNode)
                     self._pushToAgenda(kid)
-                elif((searchNode.getGValue() + self.bfs.arc_cost(searchNode, kid)) < kid.getGValue()):
+                elif (searchNode.getGValue() + self.bfs.arc_cost(searchNode, kid)) < kid.getGValue():
                     self.attach_and_eval(kid, searchNode)
-                    if(self.isGen == self.CLOSED):
+                    if self.isGen == self.CLOSED:
                         self.propagate_path_improvement(kid)
 
-                self.isGen = False
+                self.isGen = ()
 
         # if the while loop could not find a solution
         print("open is now: ", len(self.OPEN))
@@ -136,7 +139,7 @@ class Astar:
             return False
         for i in range(len(l)):
             node = l[i]
-            if (node.getId() == kid.getId()):
+            if node.getId() == kid.getId():
                 # kid = l[i]
                 self.isGen = (l, i)
                 return True
@@ -156,8 +159,6 @@ class Astar:
                 kid.setGValue(pathCost)
                 kid.setFValue()
                 self.propagate_path_improvement(kid)
-
-
 
 def main():
     algo = Astar()
