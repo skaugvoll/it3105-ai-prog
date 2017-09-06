@@ -57,7 +57,6 @@ class RushHourBFS:
 
     def calculateHValue(self, node, goal):
         # car that has to get to the goal is always the first in state representation
-        value = None
         distanse = 0
         blocks = 0
         car = node.state[0]
@@ -80,7 +79,6 @@ class RushHourBFS:
             elif(playingPiece[0] == 1 and playingPiece[1] > car[1] and playingPiece[2] <= goal[1] and (playingPiece[2]+(playingPiece[-1] -1)) >= goal[1]):
                 blocks += 1
 
-            # Check if middel of a size 3 car is in the way of goal
 
         return distanse + blocks
 
@@ -94,7 +92,7 @@ class RushHourBFS:
     def generateSuccessors(self, node):
         ''' each piece can move 2 directions, 2 directions * number of pieces === numPiexes ^2 successors at most '''
         successors = []
-        # a new successor is when we make a legal move on a playing piece. so if one piece can move both one position left or right, one new state is moving left, and one new state is moving right
+        # a new successor is when we make a legal move on a playing piece. so if onePython piece can move both onePython position left or right, onePython new state is moving left, and onePython new state is moving right
         # first we need to know what direction we can move the piece
         state = node.getState()
         for pieceNumber in range(len(state)):

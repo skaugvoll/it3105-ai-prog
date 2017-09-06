@@ -9,8 +9,8 @@ class Astar:
     def __init__(self):
         self.bfs = RushHourBFS(6) # should be a sys arg.
         self.CLOSED = [] # visited and expanded
-        self.OPEN = [] # found and to be expandedi
-        # self.states = [self.bfs.getInitalState(sys.argv[1])] # the inital state filename.
+        self.OPEN = [] # found and to be expanded
+        # self.states = [self.bfs.getInitalState(sys.argv[1])] # the initial state filename.
         self.states = [] # the inital state filename.
         self.goalState = (5, 2) # sys.argv[2]
         # self.bfs.drawBoard(self.states)
@@ -97,16 +97,20 @@ class Astar:
 
             # check if the new node is the goal
             if(self._nodeIsSolution(searchNode)):
-
                 return self._getSolution(searchNode) # if solution return the path.
 
-            # if not solution, generate all successors / children of seachNode (all possible moves) in this state. (move each piece one step, in both available orientation direction (left/right, or up/down))
+            # if not solution, generate all successors / children of seachNode (all possible moves) in this state. (move each piece onePython step, in both available orientation direction (left/right, or up/down))
             successors = self.bfs.generateSuccessors(searchNode)
                 # for each successor do
             for kid in successors:
                 # check if the successor has been created before --> check if the kid -list is in the self.states list
-                kid = self.checkIfPrevGen(kid, self.OPEN)
-                kid = self.checkIfPrevGen(kid, self.CLOSED)
+
+                if(self.checkIfPrevGen(kid, self.OPEN) or self.checkIfPrevGen(kid, self.CLOSED)):
+                    if (self.isGen[0] == self.CLOSED):
+                        kid = self.CLOSED[self.isGen[1]]
+                    else:
+                        kid = self.OPEN[self.isGen[1]]
+
 
                 # push the successor to the searchNode kids list.
                 searchNode.addKid(kid)
@@ -129,14 +133,14 @@ class Astar:
 
     def checkIfPrevGen(self, kid, l):
         if (len(l) == 0):
-            return kid
+            return False
         for i in range(len(l)):
             node = l[i]
             if (node.getId() == kid.getId()):
-                kid = l[i]
-                self.isGen = l
-                break
-        return kid
+                # kid = l[i]
+                self.isGen = (l, i)
+                return True
+        return False
 
     def attach_and_eval(self, kid, node):
         kid.setParent(node)
