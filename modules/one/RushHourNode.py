@@ -1,11 +1,10 @@
 class SearchNode:
-    def __init__(self, state=None, g=None, h=None, f=None, status=None, parent=None):
+    def __init__(self, state=None):
         self.state = state
-        self.gValue = g
-        self.hValue = h
-        self.fValue = f
-        self.status = status
-        self.parent = parent
+        self.gValue = None
+        self.hValue = None
+        self.fValue = None
+        self.parent = None
         self.kids = []
         self.rank = self._createId()
 

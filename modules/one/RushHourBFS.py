@@ -57,7 +57,6 @@ class RushHourBFS:
 
     def calculateHValue(self, node, goal):
         # car that has to get to the goal is always the first in state representation
-        value = None
         distanse = 0
         blocks = 0
         car = node.state[0]
@@ -80,7 +79,6 @@ class RushHourBFS:
             elif(playingPiece[0] == 1 and playingPiece[1] > car[1] and playingPiece[2] <= goal[1] and (playingPiece[2]+(playingPiece[-1] -1)) >= goal[1]):
                 blocks += 1
 
-            # Check if middel of a size 3 car is in the way of goal
 
         return distanse + blocks
 

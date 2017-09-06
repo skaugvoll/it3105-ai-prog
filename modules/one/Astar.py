@@ -9,8 +9,8 @@ class Astar:
     def __init__(self):
         self.bfs = RushHourBFS(6) # should be a sys arg.
         self.CLOSED = [] # visited and expanded
-        self.OPEN = [] # found and to be expandedi
-        # self.states = [self.bfs.getInitalState(sys.argv[1])] # the inital state filename.
+        self.OPEN = [] # found and to be expanded
+        # self.states = [self.bfs.getInitalState(sys.argv[1])] # the initial state filename.
         self.states = [] # the inital state filename.
         self.goalState = (5, 2) # sys.argv[2]
         # self.bfs.drawBoard(self.states)
@@ -107,7 +107,7 @@ class Astar:
 
                 if(self.checkIfPrevGen(kid, self.OPEN) or self.checkIfPrevGen(kid, self.CLOSED)):
                     if (self.isGen[0] == self.CLOSED):
-                        kid = self.CLOSED.pop(self.isGen[1])
+                        kid = self.CLOSED[self.isGen[1]]
                     else:
                         kid = self.OPEN[self.isGen[1]]
 
