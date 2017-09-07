@@ -6,7 +6,7 @@ from RushHourBFS import RushHourBFS
 
 
 class Astar:
-    def __init__(self):
+    def __init__(self, initStateFile=sys.argv[0]):
         self.bfs = RushHourBFS(6) # should be a sys arg.
         self.CLOSED = [] # visited and expanded
         self.OPEN = [] # found and to be expanded
@@ -16,6 +16,7 @@ class Astar:
         # self.bfs.drawBoard(self.states)
         self.isGen = ()
         self.moves = 0
+        self.initStateFile = initStateFile
 
     def getCurrentState(self):
         return self.states[-1]
