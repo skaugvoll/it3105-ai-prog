@@ -6,7 +6,7 @@ from RushHourBFS import RushHourBFS
 
 
 class Astar:
-    def __init__(self, initStateFile):
+    def __init__(self, initStateFile, algo="BFS"):
         self.bfs = RushHourBFS(6) # should be a sys arg.
         self.CLOSED = [] # visited and expanded
         self.OPEN = [] # found and to be expanded
@@ -17,7 +17,8 @@ class Astar:
         self.isGen = ()
         self.moves = 0
         self.initState = self.bfs.getInitalState("tasks/" + initStateFile + ".txt")
-
+        self.search = 1
+        self.algo = algo
 
     def getCurrentState(self):
         return self.states[-1]
@@ -29,10 +30,15 @@ class Astar:
         return self.OPEN.pop(0) # return the first element from the agenda / open list. (the node / state with lowest f-value)
 
     def _pushToAgenda(self, node):
-        self.OPEN.append(node)
-        self._sortAgenda()
-        # where we should use insertion sort, should speed up the process,
-        # instead of sorting the whole list, every time. or possibly a binary seach, since its going to be "sorted"
+        if self.algo == "DFS":
+            self.OPEN.insert(0, node)
+            return
+        elif self.algo == "BFS":
+            self.OPEN.append(node)
+        else:
+            self.OPEN.append(node)
+            self._sortAgenda()
+
 
     def _pushToDone(self, node):
         self.CLOSED.append(node)
