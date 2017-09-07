@@ -4,19 +4,21 @@ from time import sleep
 
 class GUI:
     def __init__(self):
-        self.astar = Astar()
+        self.astar = None
         self.solution = None
         self.gui = Tk()
         # for c in range(0, 6):
         #     for r in range(0, 6):
         #         Button(bg="#c0c3c6", state=DISABLED, padx=20, pady=15).grid(row=r, column=c, sticky='news')
-
+        self.file = StringVar()
         self.board = [[Button(bg="#c0c3c6", state=DISABLED, padx=20, pady=15) for c in range(6)] for r in range(6)]
         for r in range(6):
             for c in range(6):
                 self.board[r][c].grid(row=r, column=c)
-        Button(bg="#FFFFFF", state=DISABLED, padx=3, pady=15).grid(row=2, column=6, sticky='news')
-        Button(bg="#118391", padx=30, pady=15, text="Solve:", command=self.findSolution).grid(row=0, column=8, sticky='news')
+        Button(bg="#FFFFFF", state=DISABLED, padx=3, pady=15, text="Goal").grid(row=2, column=6)
+        Label(text="Skriv inn filnavn på brett:").grid(row=0, column=8)
+        Entry(textvariable=self.file).grid(row=1, column=8)
+        Button(bg="#118391", padx=30, pady=15, text="Solve:", command=self.findSolution).grid(row=2, column=8)
         self.gui.mainloop()
 
     def drawState(self, index):
@@ -51,9 +53,10 @@ class GUI:
             self.drawState(index + 1)
 
     def findSolution(self):
+        self.astar = Astar(self.file.get())
         self.solution = self.astar.solve()
         self.drawState(0)
 
 
-if __name__ == "__main__":
-    g = GUI()
+# if __name__ == "__main__":
+#     g = GUI()

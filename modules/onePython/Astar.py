@@ -6,7 +6,7 @@ from RushHourBFS import RushHourBFS
 
 
 class Astar:
-    def __init__(self):
+    def __init__(self, initStateFile):
         self.bfs = RushHourBFS(6) # should be a sys arg.
         self.CLOSED = [] # visited and expanded
         self.OPEN = [] # found and to be expanded
@@ -16,7 +16,8 @@ class Astar:
         # self.bfs.drawBoard(self.states)
         self.isGen = ()
         self.moves = 0
-        self.initStateFile = "tasks/expert.txt"
+        self.initState = self.bfs.getInitalState("tasks/" + initStateFile + ".txt")
+
 
     def getCurrentState(self):
         return self.states[-1]
@@ -80,7 +81,7 @@ class Astar:
         # do the inital work. (much is done in the initialization of Astar)
         # pop the inital state
         # initNode = self.getCurrentState()
-        initNode = self.bfs.getInitalState(self.initStateFile)
+        initNode = self.initState
         # set g value to 0,
         initNode.setGValue(0)
         # set h value to estimation.
