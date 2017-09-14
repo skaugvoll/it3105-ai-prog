@@ -1,6 +1,7 @@
 from RushHourNode import SearchNode
+from BFSclass import BFS
 
-class RushHourBFS:
+class RushHourBFS(BFS):
     def __init__(self, boardSize):
         self.boardSize = boardSize
         self.board = self.createBoard()
