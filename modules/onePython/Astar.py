@@ -1,12 +1,13 @@
 import sys
 # from RushHourNode import SearchNode
 from RushHourBFS import RushHourBFS
+import time
 
 # commandline parameters: initalStateFile, goalState, boardSize,
 
 
 class Astar:
-    def __init__(self):
+    def __init__(self, initStateFile, algo):
         self.bfs = RushHourBFS(6) # should be a sys arg.
         self.CLOSED = [] # visited and expanded
         self.OPEN = [] # found and to be expanded
@@ -16,6 +17,10 @@ class Astar:
         # self.bfs.drawBoard(self.states)
         self.isGen = ()
         self.moves = 0
+        self.initState = self.bfs.getInitalState("tasks/" + initStateFile + ".txt")
+        self.search = 1
+        self.algo = algo
+        self.startTime = None
 
     def getCurrentState(self):
         return self.states[-1]
@@ -27,10 +32,15 @@ class Astar:
         return self.OPEN.pop(0) # return the first element from the agenda / open list. (the node / state with lowest f-value)
 
     def _pushToAgenda(self, node):
-        self.OPEN.append(node)
-        self._sortAgenda()
-        # where we should use insertion sort, should speed up the process,
-        # instead of sorting the whole list, every time. or possibly a binary seach, since its going to be "sorted"
+        if self.algo == "DFS":
+            self.OPEN.insert(0, node)
+            return
+        elif self.algo == "BFS":
+            self.OPEN.append(node)
+        else:
+            self.OPEN.append(node)
+            self._sortAgenda()
+
 
     def _pushToDone(self, node):
         self.CLOSED.append(node)
@@ -41,6 +51,7 @@ class Astar:
         # for our specific problem, check if right side of playing - car is on goal state
         # if the playing piece is on same row as goal and the right side of the car is on the same column as the goal
         if self.goalState[1] == car[2] and (car[1] + (car[-1] - 1) == self.goalState[0]):
+            print(time.time() - self.startTime)
             return True # we found a solution!
         # if not solution
         return False
@@ -79,7 +90,7 @@ class Astar:
         # do the inital work. (much is done in the initialization of Astar)
         # pop the inital state
         # initNode = self.getCurrentState()
-        initNode = self.bfs.getInitalState(sys.argv[1])
+        initNode = self.initState
         # set g value to 0,
         initNode.setGValue(0)
         # set h value to estimation.
@@ -88,6 +99,7 @@ class Astar:
         #print(node)
         #push initial node to the agenda (open-list)
         self.OPEN.append(initNode)
+        self.startTime = time.time()
         #Agenda loop starts here. While no solution found do:
         while len(self.OPEN):
             searchNode = self._popFromAgenda()
@@ -165,4 +177,4 @@ def main():
     # algo.getCurrentState()
     algo.solve()
 
-main()
+# main()
