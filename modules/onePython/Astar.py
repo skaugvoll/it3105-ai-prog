@@ -1,6 +1,7 @@
 import sys
 # from RushHourNode import SearchNode
 from RushHourBFS import RushHourBFS
+import time
 
 # commandline parameters: initalStateFile, goalState, boardSize,
 
@@ -19,6 +20,7 @@ class Astar:
         self.initState = self.bfs.getInitalState("tasks/" + initStateFile + ".txt")
         self.search = 1
         self.algo = algo
+        self.startTime = None
 
     def getCurrentState(self):
         return self.states[-1]
@@ -49,6 +51,7 @@ class Astar:
         # for our specific problem, check if right side of playing - car is on goal state
         # if the playing piece is on same row as goal and the right side of the car is on the same column as the goal
         if self.goalState[1] == car[2] and (car[1] + (car[-1] - 1) == self.goalState[0]):
+            print(time.time() - self.startTime)
             return True # we found a solution!
         # if not solution
         return False
@@ -96,6 +99,7 @@ class Astar:
         #print(node)
         #push initial node to the agenda (open-list)
         self.OPEN.append(initNode)
+        self.startTime = time.time()
         #Agenda loop starts here. While no solution found do:
         while len(self.OPEN):
             searchNode = self._popFromAgenda()
