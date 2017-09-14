@@ -7,7 +7,7 @@ import time
 
 
 class Astar:
-    def __init__(self, initStateFile, algo="BFS"):
+    def __init__(self, initStateFile, algo):
         self.bfs = RushHourBFS(6) # should be a sys arg.
         self.CLOSED = [] # visited and expanded
         self.OPEN = [] # found and to be expanded
