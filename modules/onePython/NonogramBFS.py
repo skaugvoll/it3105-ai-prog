@@ -1,6 +1,6 @@
 from BFSclass import BFS
 
-class nonogramsBFS(BFS):
+class NonogramBFS(BFS):
     def __init__(self):
         pass
 
