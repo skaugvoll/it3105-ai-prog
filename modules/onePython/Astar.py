@@ -26,4 +26,12 @@ class Astar(ASTAR):
         return False
 
 
+def main():
+    astar = Astar(NonogramBFS(), "nono-cat", "")
+    astar.solve()
+
+
+main()
+
+
 

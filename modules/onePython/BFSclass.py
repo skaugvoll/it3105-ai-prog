@@ -4,7 +4,6 @@ class BFS(ABC):
     def __init__(self, boardSize):
         self.boardSize = boardSize
         self.board = self.createBoard()
-        self.available = self.createBoard()
 
     @abstractmethod
     def createBoard(self):
