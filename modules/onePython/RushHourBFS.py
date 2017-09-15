@@ -2,11 +2,6 @@ from RushHourNode import SearchNode
 from BFSclass import BFS
 
 class RushHourBFS(BFS):
-    def __init__(self, boardSize):
-        self.boardSize = boardSize
-        self.board = self.createBoard()
-        self.available = self.createBoard()
-
 
     def createBoard(self):
         board = [["-" for c in range(self.boardSize)] for r in range(self.boardSize)]
