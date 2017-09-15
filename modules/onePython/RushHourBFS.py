@@ -175,3 +175,10 @@ class RushHourBFS(BFS):
 
     def arc_cost(self, kid, node):
         return 1
+
+
+    def foundSolution(self, node, goalState):
+        car = node.getPlayerPiece()
+        if goalState[1] == car[2] and (car[1] + (car[-1] - 1) == goalState[0]):
+            return True
+        return False

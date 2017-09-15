@@ -41,3 +41,7 @@ class BFS(ABC):
     def arc_cost(self, kid, node):
         pass
 
+    @abstractmethod
+    def foundSolution(self, node, goalState):
+        pass
+
