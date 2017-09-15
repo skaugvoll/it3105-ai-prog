@@ -8,8 +8,6 @@ class ASTAR(ABC):
         self.states = []  # the inital state filename.
         self.isGen = ()
         self.moves = 0
-        self.initState = self.bfs.getInitalState("tasks/" + initStateFile + ".txt")
-        self.algo = algo
         self.startTime = None
 
     def getCurrentState(self):

@@ -10,14 +10,10 @@ import time
 class Astar(ASTAR):
     def __init__(self, initStateFile, algo):
         self.bfs = RushHourBFS(6) # should be a sys arg.
-        self.CLOSED = [] # visited and expanded
-        self.OPEN = [] # found and to be expanded
-        self.states = [] # the inital state filename.
         self.goalState = (5, 2) # sys.argv[2]
-        self.isGen = ()
-        self.moves = 0
         self.initState = self.bfs.getInitalState("tasks/" + initStateFile + ".txt")
         self.algo = algo
+        super(Astar, self).__init__(initStateFile, algo)
 
     def _nodeIsSolution(self, node):
         car = node.getPlayerPiece()
@@ -29,10 +25,5 @@ class Astar(ASTAR):
         # if not solution
         return False
 
-#
-# def main():
-#     algo = Astar()
-#     # algo.getCurrentState()
-#     algo.solve()
 
-# main()
+
