@@ -1,6 +1,7 @@
 import sys
 # from RushHourNode import SearchNode
 from RushHourBFS import RushHourBFS
+from NonogramBFS import NonogramBFS
 from AstarClass import ASTAR
 import time
 
