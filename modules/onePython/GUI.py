@@ -1,5 +1,6 @@
 from tkinter import *
 from Astar import Astar
+from RushHourBFS import RushHourBFS
 from time import sleep
 
 class GUI:
@@ -62,7 +63,7 @@ class GUI:
 
     def findSolution(self, algo):
         self.infoText.configure(text="")
-        self.astar = Astar(self.file.get(), algo)
+        self.astar = Astar(RushHourBFS(6), self.file.get(), algo)
         self.solution = self.astar.solve()
         self.drawState(0)
         self.infoText.configure(text="Steps: " + str(len(self.solution)) + "\n Nodes generated: " + str(len(self.astar.states)))

@@ -8,8 +8,8 @@ import time
 
 
 class Astar(ASTAR):
-    def __init__(self, initStateFile, algo):
-        self.bfs = RushHourBFS(6) # should be a sys arg.
+    def __init__(self, problem, initStateFile, algo):
+        self.bfs = problem # should be a sys arg.
         self.goalState = (5, 2) # sys.argv[2]
         self.initState = self.bfs.getInitalState("tasks/" + initStateFile + ".txt")
         self.algo = algo
