@@ -20,10 +20,10 @@ class NonogramBFS(BFS):
                     self.numRows = line[1]
                 elif(lineNumber <= self.numRows):
                     rows.append(line)
-                    self.generateNode(line, "row")
+                    # self.generateNode(line, "row")
                 else:
                     columns.append(line)
-                    self.generateNode(line, "column")
+                    # self.generateNode(line, "column")
 
                 lineNumber += 1
             print("Rows: " + str(rows))
@@ -63,9 +63,9 @@ class NonogramBFS(BFS):
             domain = self.getAllRowPermutations(variable)
         else:
             domain = self.getAllColumnPermutations(variable)
-        # print("var = " + str(variable))
-        # print("dom = " + str(domain))
-        # print("\n")
+        print("var = " + str(variable))
+        print("dom = " + str(domain))
+        print("\n")
 
 
     def getAllRowPermutations(self, elementArray):
@@ -75,7 +75,7 @@ class NonogramBFS(BFS):
                 elementString = str(i) * self.numColumns
             else:
                 elementString += str(i) * elementArray[i]
-            if(i == len(elementArray)-1):
+            if i == len(elementArray)-1:
                 elementString += "-" * (self.numColumns - len(elementString))
         # all permutations # contains duplicates... (1,2) and (2,1) == duplicates.
         perms = list(set([''.join(p) for p in permutations(elementString)]))
@@ -83,7 +83,7 @@ class NonogramBFS(BFS):
         for l in range(len(perms)):
             for k in range(len(elementArray)):
                 legal = True
-                if(str(perms[l]).find(str(k) * int(elementArray[k])) == -1):
+                if str(perms[l]).find(str(k) * int(elementArray[k])) == -1:
                     legal = False
                     break
             if(legal):
@@ -113,11 +113,46 @@ class NonogramBFS(BFS):
         return legalColumnPerms
 
 
+
+
+
+    def makefunc(self, var_names, expression, envir=globals()):
+        args = ",".join(var_names)
+        print("args:" + str(args))
+        return eval("(lambda " + args + ":" + expression + ")", envir)
+
+
+
+    def orderConstraint(self, domain, segments): # domain = on of the row/columns permutations ||segements are the variables involved [3,1] or [3,1,1]
+        numberOfSegments = len(segments)
+
+
+        constraint = ""
+
+        if numberOfSegments <= 1:
+            return domain
+
+        for i in range(numberOfSegments):
+            # stuff.append(chr(97 + i))
+            if i != numberOfSegments - 1 :
+                constraint += "domain.rfind(" + "str(" +str(i) + "))" + " < domain.find(" + "str(" + str(i+1) + ")) - 1 and "
+            else: # if last variable, you are covered by the other variables. you just need to be after them
+                constraint = constraint[:len(constraint)-4]
+
+        print("con:  " + constraint)
+        print("domain:  " + domain)
+
+        if eval(constraint):
+            print("EUREKA")
+
+
+
 def main():
     nono = NonogramBFS()
     nono.getInitalState("tasks/nono-cat.txt")
     # nono.getAllRowPermutations([3, 1])
     # print(nono.getAllRowPermutations([2, 2]))
     # print(nono.getAllColumnPermutations([2, 2]))
+    print(nono.orderConstraint('0-11-2-3-4-5-6-7-999--88', [1, 2, 1, 1, 1, 1, 1, 1, 2, 3]))
 
 main()
