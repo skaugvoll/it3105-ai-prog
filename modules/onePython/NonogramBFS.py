@@ -1,3 +1,4 @@
+from itertools import permutations
 from BFSclass import BFS
 
 class NonogramBFS(BFS):
@@ -22,8 +23,8 @@ class NonogramBFS(BFS):
                 else:
                     columns.append(line)
                 lineNumber += 1
-            print(rows)
-            print(columns)
+            print("Rows: " + str(rows))
+            print("Columns:" + str(columns))
         except:
             raise Exception("Something went wrong when making inital state")
 
@@ -52,6 +53,18 @@ class NonogramBFS(BFS):
 
     def foundSolution(self, node, goalState):
         pass
+
+
+    def getAllPermutations(self, elementString):
+        # all permutations # contains duplicates... (1,2) and (2,1) == duplicates.
+        perms = set([''.join(p) for p in permutations(elementString, r=self.numRows)])
+        print("perms: " + str(perms))
+
+        # remove all illegal permutaitons with regards to domain constraints.
+
+
+
+
 
 def main():
     nono = NonogramBFS()
