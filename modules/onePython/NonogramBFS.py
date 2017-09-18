@@ -20,8 +20,11 @@ class NonogramBFS(BFS):
                     self.numRows = line[1]
                 elif(lineNumber <= self.numRows):
                     rows.append(line)
+                    self.generateNode(line, "row")
                 else:
                     columns.append(line)
+                    self.generateNode(line, "column")
+
                 lineNumber += 1
             print("Rows: " + str(rows))
             print("Columns:" + str(columns))
@@ -54,20 +57,67 @@ class NonogramBFS(BFS):
     def foundSolution(self, node, goalState):
         pass
 
+    def generateNode(self, variable, dir):
+        domain = []
+        if(dir == "row"):
+            domain = self.getAllRowPermutations(variable)
+        else:
+            domain = self.getAllColumnPermutations(variable)
+        # print("var = " + str(variable))
+        # print("dom = " + str(domain))
+        # print("\n")
 
-    def getAllPermutations(self, elementString):
+
+    def getAllRowPermutations(self, elementArray):
+        elementString = ""
+        for i in range(len(elementArray)):
+            if(elementArray[i] == self.numColumns):
+                elementString = str(i) * self.numColumns
+            else:
+                elementString += str(i) * elementArray[i]
+            if(i == len(elementArray)-1):
+                elementString += "-" * (self.numColumns - len(elementString))
         # all permutations # contains duplicates... (1,2) and (2,1) == duplicates.
-        perms = set([''.join(p) for p in permutations(elementString, r=self.numRows)])
-        print("perms: " + str(perms))
+        perms = list(set([''.join(p) for p in permutations(elementString)]))
+        legalRowPerms = []
+        for l in range(len(perms)):
+            for k in range(len(elementArray)):
+                legal = True
+                if(str(perms[l]).find(str(k) * int(elementArray[k])) == -1):
+                    legal = False
+                    break
+            if(legal):
+                legalRowPerms.append(perms[l])
+        return legalRowPerms
 
-        # remove all illegal permutaitons with regards to domain constraints.
-
-
-
+    def getAllColumnPermutations(self, elementArray):
+        elementString = ""
+        for i in range(len(elementArray)):
+            if (elementArray[i] == self.numRows):
+                elementString = str(i) * self.numRows
+            else:
+                elementString += str(i) * elementArray[i]
+            if (i == len(elementArray)-1):
+                elementString += "-" * (self.numRows - len(elementString))
+        # all permutations # contains duplicates... (1,2) and (2,1) == duplicates.
+        perms = list(set([''.join(p) for p in permutations(elementString)]))
+        legalColumnPerms = []
+        for l in range(len(perms)):
+            for k in range(len(elementArray)):
+                legal = True
+                if (str(perms[l]).find(str(k) * int(elementArray[k])) == -1):
+                    legal = False
+                    break
+            if (legal):
+                legalColumnPerms.append(perms[l])
+        return legalColumnPerms
 
 
 def main():
     nono = NonogramBFS()
     nono.getInitalState("tasks/nono-cat.txt")
+    # nono.getAllRowPermutations([3, 1])
+    # print(nono.getAllRowPermutations([2, 2]))
+    # print(nono.getAllColumnPermutations([2, 2]))
 
 main()
