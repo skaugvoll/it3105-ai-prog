@@ -22,6 +22,8 @@ class NonogramBFS(BFS):
                 else:
                     columns.append(line)
                 lineNumber += 1
+            print(rows)
+            print(columns)
         except:
             raise Exception("Something went wrong when making inital state")
 
@@ -48,6 +50,8 @@ class NonogramBFS(BFS):
     def arc_cost(self, kid, node):
         pass
 
+    def foundSolution(self, node, goalState):
+        pass
 
 def main():
     nono = NonogramBFS()
