@@ -79,6 +79,16 @@ class NonogramBFS(BFS):
                 elementString += "-" * (self.numColumns - len(elementString))
         # all permutations # contains duplicates... (1,2) and (2,1) == duplicates.
         perms = list(set([''.join(p) for p in permutations(elementString)]))
+
+        print("ELEMENT STRING: " + elementString)
+        print("ELEMENT ARRAY: " + str(elementArray))
+
+        # ******** VI ønsker å gjøre denne og ikke linje 81 ******** #
+
+                                # perms = self.getAllLegalPermutations(elementString, elementArray)
+
+        # ******** VI ønsker å gjøre denne og ikke linje 81 ********
+
         legalRowPerms = []
         for l in range(len(perms)):
             for k in range(len(elementArray)):
@@ -113,19 +123,14 @@ class NonogramBFS(BFS):
         return legalColumnPerms
 
 
-
-
-
     def makefunc(self, var_names, expression, envir=globals()):
         args = ",".join(var_names)
         print("args:" + str(args))
         return eval("(lambda " + args + ":" + expression + ")", envir)
 
 
-
-    def orderConstraint(self, domain, segments): # domain = on of the row/columns permutations ||segements are the variables involved [3,1] or [3,1,1]
+    def orderConstraint(self, domain, segments): # domain = on of the row/columns permutations || segements are the variables involved [3,1] or [3,1,1]
         numberOfSegments = len(segments)
-
 
         constraint = ""
 
@@ -146,6 +151,33 @@ class NonogramBFS(BFS):
             print("EUREKA")
 
 
+    def getAllLegalPermutations(self, elementString, elementArray):
+        numberOfShifts = len(elementString) - sum(elementArray)
+        numberOfSegments = len(elementArray)
+
+        temp = elementString
+        permutations = []
+        # for shift in range(numberOfShifts):
+        # for segment in range(numberOfSegments, -1, -1): # move the rightmost first, then work your way leftover.
+        # finn første hendelse i strengen av segment vi er på
+        # finn størrelsen på den (er lagret i elementArray)
+        # flytt segmentet en til venstre
+            # bytt første hendelse ut med - og ta siste hendelse index + 1 og sett segment symbol
+            # sjekk om lovelig permutasjon --> self.orderConstraint(....)
+        # legg denne nye permutasjonen inn i permutations listen
+        # sett denne permutasjone som temp.
+        # gjør denne opperasjonen på nytt til vi har flyttet dette segmentet helt til høyre
+
+        # når vi har flyttet ett segment helt til høyre, ta neste segment og flytt etter
+        # når vi har flyttet alle segmentene helt til høyre,
+        # ta utgangspunt / orginal raden, og skift alle en til høyre
+        # sett den nye skiftete raden som utgangspunkt / orginal raden, utfør alle skifting for hvert segment på nytt
+
+        # nar vi har gjort dette før alle skiftene nødvendig, har vi alle mulige og lovelige permutasjoner for raden.
+        # siden vi har hatt alle segmenten på alle posisjonene de kan være uten at det bryter med rekkefølgen.
+        return -1
+
+
 
 def main():
     nono = NonogramBFS()
@@ -154,5 +186,6 @@ def main():
     # print(nono.getAllRowPermutations([2, 2]))
     # print(nono.getAllColumnPermutations([2, 2]))
     print(nono.orderConstraint('0-11-2-3-4-5-6-7-999--88', [1, 2, 1, 1, 1, 1, 1, 1, 2, 3]))
+    print(nono.orderConstraint('0-111', [1, 3]))
 
 main()
