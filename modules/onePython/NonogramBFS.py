@@ -101,18 +101,18 @@ class NonogramBFS(BFS):
         return True
 
     def reduceDomain(self, a, b):
-        for key in a.common.keys():
-            valid = True
-            for x in b:
-                print("Before reduce: " + str(len(x.domain)))
-                print(x.domain)
-                print(a.common)
-                for d in x.domain:
+        for x in b:
+            for key in a.common.keys():
+                index = 0
+                while index < len(x.domain):
+                    d = x.domain[index]
                     # print("Dkey: " + str(d[key]))
                     # print("aCommonKey: " + str(a.common[key]))
                     if d[key] != a.common[key]:
-                        valid = False
                         x.domain.remove(d)
+                    else:
+                        index += 1
+                print(a)
                 print("After reduce: " + str(len(x.domain)))
                 print(x.domain)
 
