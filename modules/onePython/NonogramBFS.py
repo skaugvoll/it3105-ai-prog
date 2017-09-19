@@ -118,7 +118,7 @@ class NonogramBFS(BFS):
         permutations = []
 
         for shift in range(numberOfShifts):
-            permutations = permutations + self.moveSegments(numberOfSegments, numberOfShifts, elementArray, temp) # concatenate two lists
+            permutations = list(set(permutations + self.moveSegments(numberOfSegments, numberOfShifts, elementArray, temp))) # concatenate two lists
             print("GALP temp"  + temp)
             print("GALP len temp: " + str(len(temp)))
             print("******* SHIFT MY BABY UP *******")
@@ -162,9 +162,7 @@ class NonogramBFS(BFS):
                 size = elementArray[segment]
                 # flytt segmentet en til høyre
                 # bytt første hendelse ut med - og ta siste hendelse index + 1 og sett segment symbol
-                # print("index : " + str(index))
-                # print("index + size : " + str(index + size))
-                # print("newElementString : newElementStringLength " + str(newElementString) + "__" + str(len(newElementString)))
+
                 newElementString[index] = "-"
                 newElementString[index+size] = str(segment)
                 temp = "".join(newElementString)
