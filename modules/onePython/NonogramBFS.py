@@ -33,7 +33,6 @@ class NonogramBFS(BFS):
         except:
             raise Exception("Something went wrong when making inital state")
 
-    
 
 
     def createBoard(self):
@@ -101,13 +100,30 @@ class NonogramBFS(BFS):
 
         return True
 
-    #ength rad eller col 6, [1, 2, 1] -> [[101101],[...]]
+    def reduceDomain(self, a, b):
+        for key in a.common.keys():
+            valid = True
+            for x in b:
+                print("Before reduce: " + str(len(x.domain)))
+                print(x.domain)
+                print(a.common)
+                for d in x.domain:
+                    # print("Dkey: " + str(d[key]))
+                    # print("aCommonKey: " + str(a.common[key]))
+                    if d[key] != a.common[key]:
+                        valid = False
+                        x.domain.remove(d)
+                print("After reduce: " + str(len(x.domain)))
+                print(x.domain)
 
 def main():
     nono = NonogramBFS()
     nono.getInitalState("tasks/nono-cat.txt")
-    # for row in nono.rows:
-    #     print(row)
+    for row in nono.rows:
+        nono.reduceDomain(row, nono.columns)
+        print(row)
+
+
     # for col in nono.columns:
     #     print(col)
 
