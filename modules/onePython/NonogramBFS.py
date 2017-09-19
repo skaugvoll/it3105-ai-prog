@@ -69,58 +69,15 @@ class NonogramBFS(BFS):
 
 
     def getAllRowPermutations(self, elementArray):
-        elementString = ""
-        for i in range(len(elementArray)):
-            if(elementArray[i] == self.numColumns):
-                elementString = str(i) * self.numColumns
-            else:
-                elementString += str(i) * elementArray[i]
-            if i == len(elementArray)-1:
-                elementString += "-" * (self.numColumns - len(elementString))
+        elementString = self.drawString(elementArray, 0, self.numRows)
         # all permutations # contains duplicates... (1,2) and (2,1) == duplicates.
-        perms = list(set([''.join(p) for p in permutations(elementString)]))
+        # print("ELEMENT STRING: " + elementString)
+        # print("ELEMENT ARRAY: " + str(elementArray))
 
-        print("ELEMENT STRING: " + elementString)
-        print("ELEMENT ARRAY: " + str(elementArray))
 
-        # ******** VI ønsker å gjøre denne og ikke linje 81 ******** #
+        perms = self.getAllLegalPermutations(elementString, elementArray, self.numRows)
 
-                                # perms = self.getAllLegalPermutations(elementString, elementArray)
 
-        # ******** VI ønsker å gjøre denne og ikke linje 81 ********
-
-        legalRowPerms = []
-        for l in range(len(perms)):
-            for k in range(len(elementArray)):
-                legal = True
-                if str(perms[l]).find(str(k) * int(elementArray[k])) == -1:
-                    legal = False
-                    break
-            if(legal):
-                legalRowPerms.append(perms[l])
-        return legalRowPerms
-
-    def getAllColumnPermutations(self, elementArray):
-        elementString = ""
-        for i in range(len(elementArray)):
-            if (elementArray[i] == self.numRows):
-                elementString = str(i) * self.numRows
-            else:
-                elementString += str(i) * elementArray[i]
-            if (i == len(elementArray)-1):
-                elementString += "-" * (self.numRows - len(elementString))
-        # all permutations # contains duplicates... (1,2) and (2,1) == duplicates.
-        perms = list(set([''.join(p) for p in permutations(elementString)]))
-        legalColumnPerms = []
-        for l in range(len(perms)):
-            for k in range(len(elementArray)):
-                legal = True
-                if (str(perms[l]).find(str(k) * int(elementArray[k])) == -1):
-                    legal = False
-                    break
-            if (legal):
-                legalColumnPerms.append(perms[l])
-        return legalColumnPerms
 
 
     def makefunc(self, var_names, expression, envir=globals()):
@@ -144,26 +101,90 @@ class NonogramBFS(BFS):
             else: # if last variable, you are covered by the other variables. you just need to be after them
                 constraint = constraint[:len(constraint)-4]
 
-        print("con:  " + constraint)
-        print("domain:  " + domain)
+        # print("con:  " + constraint)
+        # print("domain:  " + domain)
 
-        if eval(constraint):
-            print("EUREKA")
+        if not eval(constraint):
+            return False
+
+        return True
+
+    def getAllLegalPermutations(self, elementString, elementArray, rowColSize):
+        numberOfShifts = len(elementString) - sum(elementArray)
+        numberOfSegments = len(elementArray)
+
+        temp = elementString
+
+        permutations = []
+
+        for shift in range(numberOfShifts):
+            permutations = permutations + self.moveSegments(numberOfSegments, numberOfShifts, elementArray, temp) # concatenate two lists
+            print("GALP temp"  + temp)
+            print("GALP len temp: " + str(len(temp)))
+            print("******* SHIFT MY BABY UP *******")
+            temp = self.drawString(elementArray, shift+1, rowColSize)
+            numberOfShifts -= 1
 
 
-    def getAllLegalPermutations(self, elementString, elementArray):
+        print(permutations)
 
         return -1
 
 
 
+    def drawString(self, elementArray, startpos, rowColSize):
+        elementString = ""
+        if startpos != 0:
+            elementString += "-" * startpos
+
+        for i in range(len(elementArray)):
+            if (elementArray[i] == rowColSize):
+                elementString = str(i) * rowColSize
+            else:
+                elementString += str(i) * elementArray[i]
+            if i == len(elementArray) - 1:
+                elementString += "-" * (rowColSize - len(elementString))
+        print("DS elementString: " + elementString)
+        print("DS len es : " + str(len(elementString)))
+        return elementString
+
+
+    def moveSegments(self, numberOfSegments, numberOfShifts, elementArray, elementString):
+        newElementString = list(elementString)
+        temp = elementString
+        permutations = []
+
+        for segment in range(numberOfSegments-1, -1, -1): # move the rightmost first, then work your way leftover.
+            for s in range(numberOfShifts):
+                # finn første hendelse i strengen av segment vi er på
+                index = temp.find(str(segment)) # first occurence in the string of this segment
+                # finn størrelsen på den (er lagret i elementArray)
+                size = elementArray[segment]
+                # flytt segmentet en til høyre
+                # bytt første hendelse ut med - og ta siste hendelse index + 1 og sett segment symbol
+                # print("index : " + str(index))
+                # print("index + size : " + str(index + size))
+                # print("newElementString : newElementStringLength " + str(newElementString) + "__" + str(len(newElementString)))
+                newElementString[index] = "-"
+                newElementString[index+size] = str(segment)
+                temp = "".join(newElementString)
+                print("TEMP: " + str(temp))
+                # sjekk om lovelig permutasjon --> self.orderConstraint(....)
+                if self.orderConstraint(temp, elementArray):
+                    # legg denne nye permutasjonen inn i permutations listen
+                    permutations.append(temp)
+
+        return permutations
+
+
 def main():
     nono = NonogramBFS()
     nono.getInitalState("tasks/nono-cat.txt")
-    # nono.getAllRowPermutations([3, 1])
+    nono.getAllRowPermutations([3, 1])
     # print(nono.getAllRowPermutations([2, 2]))
     # print(nono.getAllColumnPermutations([2, 2]))
-    print(nono.orderConstraint('0-11-2-3-4-5-6-7-999--88', [1, 2, 1, 1, 1, 1, 1, 1, 2, 3]))
-    print(nono.orderConstraint('0-111', [1, 3]))
+    # print(nono.orderConstraint('0-11-2-3-4-5-6-7-999--88', [1, 2, 1, 1, 1, 1, 1, 1, 2, 3]))
+    # print(nono.orderConstraint('0-111', [1, 3]))
+    # print(nono.drawString([3,1], 4))
 
 main()
