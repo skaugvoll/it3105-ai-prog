@@ -102,6 +102,7 @@ class NonogramBFS(BFS):
 
     def reduceDomain(self, a, b):
         for x in b:
+
             for key in a.common.keys():
                 index = 0
                 while index < len(x.domain):
@@ -112,17 +113,20 @@ class NonogramBFS(BFS):
                         x.domain.remove(d)
                     else:
                         index += 1
-                print(a)
-                print("After reduce: " + str(len(x.domain)))
-                print(x.domain)
+                # print("\n")
+                # print(a)
+                # print("After reduce: " + str(len(x.domain)))
+                # print(x.domain)
+                # print("\n")
 
 def main():
     nono = NonogramBFS()
     nono.getInitalState("tasks/nono-cat.txt")
     for row in nono.rows:
         nono.reduceDomain(row, nono.columns)
-        print(row)
 
+    for col in nono.columns:
+        nono.reduceDomain(col, nono.rows)
 
     # for col in nono.columns:
     #     print(col)
