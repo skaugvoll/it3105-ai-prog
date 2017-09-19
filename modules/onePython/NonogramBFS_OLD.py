@@ -126,6 +126,25 @@ class NonogramBFS(BFS):
                 shift += 1
                 temp = self.drawString(elementArray, shift, rowColSize)
 
+        # for shift in range(numberOfShifts):
+
+
+
+            # localNumberOfShifts = numberOfShifts -1
+            # localTemp = temp
+            # while localTemp.rfind(str(len(elementArray)-1)) != len(temp)-1:
+            #     for numSeg in range(2, len(elementArray)):
+            #         move = self.moveCurrentString(numSeg, elementArray, localTemp)
+            #         print("move" + move)
+            #         permutations = list(set(permutations + self.moveSegments(numberOfSegments, localNumberOfShifts, elementArray, move)))  # concatenate two lists
+            #         localNumberOfShifts -= 1
+            #     localTemp = move
+            # print("GALP temp"  + temp)
+            # print("GALP len temp: " + str(len(temp)))
+            # print("******* SHIFT MY BABY UP *******")
+            # numberOfShifts -= 1
+
+
         print(permutations)
         print(len(permutations))
 
@@ -203,16 +222,33 @@ class NonogramBFS(BFS):
                     if self.orderConstraint(temp, elementArray):
                         # legg denne nye permutasjonen inn i permutations listen
                         permutations.append(temp)
+            # for s in range(numberOfShifts):
+            #     # finn første hendelse i strengen av segment vi er på
+            #     index = temp.find(str(segment)) # first occurence in the string of this segment
+            #     # finn størrelsen på den (er lagret i elementArray)
+            #     size = elementArray[segment]
+            #     # flytt segmentet en til høyre
+            #     # bytt første hendelse ut med - og ta siste hendelse index + 1 og sett segment symbol
+            #
+            #     newElementString[index] = "-"
+            #     newElementString[index+size] = str(segment)
+            #     temp = "".join(newElementString)
+            #     print("TEMP: " + str(temp))
+            #     # sjekk om lovelig permutasjon --> self.orderConstraint(....)
+            #     if self.orderConstraint(temp, elementArray):
+            #         # legg denne nye permutasjonen inn i permutations listen
+            #         permutations.append(temp)
+
         return permutations
 
 
 def main():
     nono = NonogramBFS()
-    # nono.getInitalState("tasks/nono-chick.txt")
-    # nono.getAllRowPermutations([5, 1, 3, 2])
+    nono.getInitalState("tasks/nono-chick.txt")
+    nono.getAllRowPermutations([5, 1, 3, 2])
 
     # nono.getInitalState("tasks/nono-cat.txt")
-    # nono.getAllRowPermutations([3, 1])
+    # nono.getAllRowPermutations([2, 2, 1])
 
     # nono.getInitalState("tasks/nono-fox.txt")
     # nono.getAllRowPermutations([1, 2, 1, 1, 1, 1, 1, 1, 2, 3])
