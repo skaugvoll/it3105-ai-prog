@@ -1,10 +1,12 @@
-from itertools import permutations
 from BFSclass import BFS
+from NonogramNode import NonogramNode
 
 class NonogramBFS(BFS):
     def __init__(self):
         self.numColumns = 0
         self.numRows = 0
+        self.rows = []
+        self.columns = []
         pass
 
     def getInitalState(self, fileWithInitState):
@@ -20,16 +22,19 @@ class NonogramBFS(BFS):
                     self.numRows = line[1]
                 elif(lineNumber <= self.numRows):
                     rows.append(line)
-                    # self.generateNode(line, "row")
+                    self.rows.append(NonogramNode("row", self.numColumns, line))
                 else:
                     columns.append(line)
-                    # self.generateNode(line, "column")
+                    self.columns.append(NonogramNode("column", self.numRows, line))
 
                 lineNumber += 1
             print("Rows: " + str(rows))
             print("Columns:" + str(columns))
         except:
             raise Exception("Something went wrong when making inital state")
+
+    
+
 
     def createBoard(self):
         board = None
@@ -60,25 +65,12 @@ class NonogramBFS(BFS):
     def generateNode(self, variable, dir):
         domain = []
         if(dir == "row"):
-            domain = self.getAllRowPermutations(variable)
+            domain = self.create_domain(self.numColumns, variable)
         else:
-            domain = self.getAllColumnPermutations(variable)
+            domain = self.create_domain(self.numRows, variable)
         print("var = " + str(variable))
         print("dom = " + str(domain))
         print("\n")
-
-
-    def getAllRowPermutations(self, elementArray):
-        elementString = self.drawString(elementArray, 0, self.numColumns)
-        # all permutations # contains duplicates... (1,2) and (2,1) == duplicates.
-        # print("ELEMENT STRING: " + elementString)
-        # print("ELEMENT ARRAY: " + str(elementArray))
-        print(elementString)
-
-        perms = self.getAllLegalPermutations(elementString, elementArray, self.numColumns)
-
-
-
 
     def makefunc(self, var_names, expression, envir=globals()):
         args = ",".join(var_names)
@@ -109,105 +101,16 @@ class NonogramBFS(BFS):
 
         return True
 
-    def getAllLegalPermutations(self, elementString, elementArray, rowColSize):
-        numberOfShifts = len(elementString) - sum(elementArray)
-        numberOfSegments = len(elementArray)
-
-        temp = elementString
-
-        permutations = []
-        shift = 0
-        if sum(elementArray) + len(elementArray) -1 == len(elementString):
-            permutations.append(elementString)
-        else:
-            permutations.append(elementString)
-            while temp.rfind(str(len(elementArray) -1)) != len(temp) -1:
-                permutations = list(set(permutations + self.moveSegments(numberOfSegments, numberOfShifts, elementArray, temp))) # concatenate two lists
-                shift += 1
-                temp = self.drawString(elementArray, shift, rowColSize)
-
-        print(permutations)
-        print(len(permutations))
-
-        return -1
-
-    def moveCurrentString(self, numSeg, elementArray, elementString):
-        newElementString = list(elementString)
-        index = elementString.find(str(len(elementArray) - numSeg))
-        newElementString.insert(int(index), "-")
-        newElementString.pop(-1)
-        temp = "".join(newElementString)
-        return temp
-
-
-    def drawString(self, elementArray, startpos, rowColSize):
-        elementString = ""
-        if startpos != 0:
-            elementString += "-" * startpos
-        for i in range(len(elementArray)):
-            if (elementArray[i] == rowColSize):
-                elementString = str(i) * rowColSize
-            else:
-                elementString += str(i) * elementArray[i]
-                if len(elementString) < rowColSize:
-                    elementString += "-"
-            if i == len(elementArray) - 1:
-                elementString += "-" * (rowColSize - len(elementString))
-        print("DS elementString: " + elementString)
-        print("DS len es : " + str(len(elementString)))
-        return elementString
-
-
-    def moveSegments(self, numberOfSegments, numberOfShifts, elementArray, elementString):
-        newElementString = list(elementString)
-        temp = elementString
-        permutations = []
-
-        for segment in range(numberOfSegments-1, -1, -1): # move the rightmost first, then work your way leftover.
-            if(segment == len(elementArray) -1):
-                shifts = len(temp) - temp.rfind(str(segment)) -1
-                for s in range(shifts):
-                    # finn første hendelse i strengen av segment vi er på
-                    index = temp.find(str(segment))  # first occurence in the string of this segment
-                    # finn størrelsen på den (er lagret i elementArray)
-                    size = elementArray[segment]
-                    # flytt segmentet en til høyre
-                    # bytt første hendelse ut med - og ta siste hendelse index + 1 og sett segment symbol
-
-                    newElementString[index] = "-"
-                    newElementString[index + size] = str(segment)
-                    temp = "".join(newElementString)
-                    print("TEMP: " + str(temp))
-                    # sjekk om lovelig permutasjon --> self.orderConstraint(....)
-                    if self.orderConstraint(temp, elementArray):
-                        # legg denne nye permutasjonen inn i permutations listen
-                        permutations.append(temp)
-            else:
-                shifts = temp.find(str(segment+1)) - temp.rfind(str(segment)) -2
-                #
-                # print("Segment:  " + str(segment))
-                # print("Shifts:  " + str(shifts))
-                for s in range(shifts):
-                    # finn første hendelse i strengen av segment vi er på
-                    index = temp.find(str(segment))  # first occurence in the string of this segment
-                    # finn størrelsen på den (er lagret i elementArray)
-                    size = elementArray[segment]
-                    # flytt segmentet en til høyre
-                    # bytt første hendelse ut med - og ta siste hendelse index + 1 og sett segment symbol
-
-                    newElementString[index] = "-"
-                    newElementString[index + size] = str(segment)
-                    temp = "".join(newElementString)
-                    print("TEMP: " + str(temp))
-                    # sjekk om lovelig permutasjon --> self.orderConstraint(....)
-                    if self.orderConstraint(temp, elementArray):
-                        # legg denne nye permutasjonen inn i permutations listen
-                        permutations.append(temp)
-        return permutations
-
+    #ength rad eller col 6, [1, 2, 1] -> [[101101],[...]]
 
 def main():
     nono = NonogramBFS()
+    nono.getInitalState("tasks/nono-cat.txt")
+    # for row in nono.rows:
+    #     print(row)
+    # for col in nono.columns:
+    #     print(col)
+
     # nono.getInitalState("tasks/nono-chick.txt")
     # nono.getAllRowPermutations([5, 1, 3, 2])
 
