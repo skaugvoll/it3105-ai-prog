@@ -119,6 +119,15 @@ class NonogramBFS(BFS):
 
         for shift in range(numberOfShifts):
             permutations = list(set(permutations + self.moveSegments(numberOfSegments, numberOfShifts, elementArray, temp))) # concatenate two lists
+            localNumberOfShifts = numberOfShifts -1
+            localTemp = temp
+            while localTemp.rfind(str(len(elementArray)-1)) != len(temp)-1:
+                for numSeg in range(2, len(elementArray)):
+                    move = self.moveCurrentString(numSeg, elementArray, localTemp)
+                    print("move" + move)
+                    permutations = list(set(permutations + self.moveSegments(numberOfSegments, localNumberOfShifts, elementArray, move)))  # concatenate two lists
+                    localNumberOfShifts -= 1
+                localTemp = move
             print("GALP temp"  + temp)
             print("GALP len temp: " + str(len(temp)))
             print("******* SHIFT MY BABY UP *******")
@@ -127,9 +136,17 @@ class NonogramBFS(BFS):
 
 
         print(permutations)
+        print(len(permutations))
 
         return -1
 
+    def moveCurrentString(self, numSeg, elementArray, elementString):
+        newElementString = list(elementString)
+        index = elementString.find(str(len(elementArray) - numSeg))
+        newElementString.insert(int(index), "-")
+        newElementString.pop(-1)
+        temp = "".join(newElementString)
+        return temp
 
 
     def drawString(self, elementArray, startpos, rowColSize):
@@ -177,8 +194,10 @@ class NonogramBFS(BFS):
 
 def main():
     nono = NonogramBFS()
+    # nono.getInitalState("tasks/nono-chick.txt")
     nono.getInitalState("tasks/nono-cat.txt")
-    nono.getAllRowPermutations([3, 1])
+    # nono.moveCurrentString()
+    nono.getAllRowPermutations([2, 2, 1, 1])
     # print(nono.getAllRowPermutations([2, 2]))
     # print(nono.getAllColumnPermutations([2, 2]))
     # print(nono.orderConstraint('0-11-2-3-4-5-6-7-999--88', [1, 2, 1, 1, 1, 1, 1, 1, 2, 3]))
