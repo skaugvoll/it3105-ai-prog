@@ -17,3 +17,31 @@ heuristics could be;
 
 
 i denne her funksjonen generateSuccessors har vi expanded size. pass inn til checkIfMoveIsPossible, bytt ut alle plasser der størrelsen med epanded size.
+
+
+
+Permutations:
+
+    numberOfShifts = len(elementString) - sum(elementArray)
+    numberOfSegments = len(elementArray)
+
+    temp = elementString
+    permutations = []
+    # for shift in range(numberOfShifts):
+    # for segment in range(numberOfSegments, -1, -1): # move the rightmost first, then work your way leftover.
+    # finn første hendelse i strengen av segment vi er på
+    # finn størrelsen på den (er lagret i elementArray)
+    # flytt segmentet en til venstre
+        # bytt første hendelse ut med - og ta siste hendelse index + 1 og sett segment symbol
+        # sjekk om lovelig permutasjon --> self.orderConstraint(....)
+    # legg denne nye permutasjonen inn i permutations listen
+    # sett denne permutasjone som temp.
+    # gjør denne opperasjonen på nytt til vi har flyttet dette segmentet helt til høyre
+
+    # når vi har flyttet ett segment helt til høyre, ta neste segment og flytt etter
+    # når vi har flyttet alle segmentene helt til høyre,
+    # ta utgangspunt / orginal raden, og skift alle en til høyre
+    # sett den nye skiftete raden som utgangspunkt / orginal raden, utfør alle skifting for hvert segment på nytt
+
+    # nar vi har gjort dette før alle skiftene nødvendig, har vi alle mulige og lovelige permutasjoner for raden.
+    # siden vi har hatt alle segmenten på alle posisjonene de kan være uten at det bryter med rekkefølgen.
