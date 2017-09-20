@@ -62,44 +62,7 @@ class NonogramBFS(BFS):
     def foundSolution(self, node, goalState):
         pass
 
-    def generateNode(self, variable, dir):
-        domain = []
-        if(dir == "row"):
-            domain = self.create_domain(self.numColumns, variable)
-        else:
-            domain = self.create_domain(self.numRows, variable)
-        print("var = " + str(variable))
-        print("dom = " + str(domain))
-        print("\n")
 
-    def makefunc(self, var_names, expression, envir=globals()):
-        args = ",".join(var_names)
-        print("args:" + str(args))
-        return eval("(lambda " + args + ":" + expression + ")", envir)
-
-
-    def orderConstraint(self, domain, segments): # domain = on of the row/columns permutations || segements are the variables involved [3,1] or [3,1,1]
-        numberOfSegments = len(segments)
-
-        constraint = ""
-
-        if numberOfSegments <= 1:
-            return domain
-
-        for i in range(numberOfSegments):
-            # stuff.append(chr(97 + i))
-            if i != numberOfSegments - 1 :
-                constraint += "domain.rfind(" + "str(" +str(i) + "))" + " < domain.find(" + "str(" + str(i+1) + ")) - 1 and "
-            else: # if last variable, you are covered by the other variables. you just need to be after them
-                constraint = constraint[:len(constraint)-4]
-
-        # print("con:  " + constraint)
-        # print("domain:  " + domain)
-
-        if not eval(constraint):
-            return False
-
-        return True
 
     def reduceRowsAndCols(self):
         for row in self.rows:
@@ -107,6 +70,7 @@ class NonogramBFS(BFS):
 
         for col in self.columns:
             self.reduceDomain(col, self.rows)
+
 
     def reduceDomain(self, a, b):
         change = False
@@ -130,6 +94,7 @@ class NonogramBFS(BFS):
                 else:
                     index += 1
         return change
+
 
     def findNewCommons(self):
         for row in self.rows:
@@ -181,6 +146,39 @@ class NonogramBFS(BFS):
             return self.rows
         else:
             print("SNAIL FUCKUP!! WOHO")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def main():
