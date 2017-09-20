@@ -72,7 +72,6 @@ class ASTAR(ABC):
     def solve(self):
         # pop/ get the inital state
         initNode = self.initState
-
         # set g value to 0,
         initNode.setGValue(0)
 
@@ -130,9 +129,9 @@ class ASTAR(ABC):
                 self.isGen = ()
 
         # if the while loop could not find a solution
-        print("open is now: ", len(self.OPEN))
-        print("close is now: ", len(self.CLOSED))
-        print("states is now: ", len(self.states))
+        # print("open is now: ", len(self.OPEN))
+        # print("close is now: ", len(self.CLOSED))
+        # print("states is now: ", len(self.states))
         return False
 
     def checkIfPrevGen(self, kid, l):

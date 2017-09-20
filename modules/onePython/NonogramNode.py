@@ -12,8 +12,7 @@ class NonogramNode:
         self.rows = self.state[0]
         self.columns = self.state[1]
         self.hasFoundSolution = False
-        self.solve()
-
+        # self.solve()
 
     def _createId(self):
         if self.state == None:

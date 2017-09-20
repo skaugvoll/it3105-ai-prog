@@ -12,7 +12,7 @@ class NonogramVariable():
 
     def __repr__(self):
         # return str(self.variable) + "Domain: " + str(self.domain)
-        return str(self.variable) + " Common: " + str(self.common) + "\nLen:" + str(len(self.domain)) + " Domain: " + str(self.domain) +"\n"
+        return str(self.variable) + " Len:" + str(len(self.domain)) + " Domain: " + str(self.domain) +"\n"
 
     def setValues(self, values):
         self.values = values

@@ -31,6 +31,7 @@ class NonogramBFS(BFS):
                     self.columns.append(NonogramVariable("column", self.numRows, line))
 
                 lineNumber += 1
+
             return NonogramNode([self.rows, self.columns])
         except:
             raise Exception("Something went wrong when making inital state")
@@ -74,7 +75,12 @@ class NonogramBFS(BFS):
         pass
 
     def calculateHValue(self, node, goal):
-        return node.sumDomains() - 1
+        domainSum = 0
+        for row in node.rows:
+            domainSum += len(row.domain)-1
+        for col in node.columns:
+            domainSum += len(col.domain)-1
+        return domainSum
 
     def generateSuccessors(self, node):
         ''' Rember to check if moveing will be outside "board" (use self.boardSize) '''
@@ -83,15 +89,23 @@ class NonogramBFS(BFS):
         for idx in range(len(orgNode.rows)): # gives a variable
             tempNode = deepcopy(orgNode)
             var = tempNode.rows[idx]
+            tempVar = deepcopy(var)
             if (len(var.domain) <= 1):
                 continue
-
-            for domainIdx in range(0,len(var.domain)):
-                var.setDomain([var.domain[domainIdx]])
-                print("\n")
-
+            for domainIdx in range(len(var.domain)):
+                var.setDomain([tempVar.domain[domainIdx]])
                 kids.append(NonogramNode(state=[tempNode.rows, tempNode.columns]))
-                tempNode = deepcopy(orgNode)
+
+        for idx in range(len(orgNode.columns)): # gives a variable
+            tempNode = deepcopy(orgNode)
+            var = tempNode.columns[idx]
+            tempVar = deepcopy(var)
+            if (len(var.domain) <= 1):
+                continue
+            for domainIdx in range(len(var.domain)):
+                var.setDomain([tempVar.domain[domainIdx]])
+                kids.append(NonogramNode(state=[tempNode.rows, tempNode.columns]))
+
 
         return kids
 
@@ -99,9 +113,10 @@ class NonogramBFS(BFS):
         node.addKid(kid)
 
     def arc_cost(self, kid, node):
-        pass
+        return 1
 
     def foundSolution(self, node, goalState):
+        node.solve()
         return node.hasFoundSolution
 
 
