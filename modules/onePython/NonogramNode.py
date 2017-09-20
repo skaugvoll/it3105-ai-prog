@@ -136,8 +136,8 @@ class NonogramNode:
         self.hasFoundSolution = False
         while iterate:
             self.reduceRowsAndCols()
-
             self.findNewCommons()
+
             if self.isSolution():
                 iterate = False
                 self.hasFoundSolution = True

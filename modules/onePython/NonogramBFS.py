@@ -116,10 +116,11 @@ class NonogramBFS(BFS):
         return 1
 
     def foundSolution(self, node, goalState):
-        node.solve()
-        return node.hasFoundSolution
-
-
+        try:
+            node.solve()
+            return node.hasFoundSolution
+        except Exception as e:
+            return False
 
 
     # def reduceRowsAndCols(self):
