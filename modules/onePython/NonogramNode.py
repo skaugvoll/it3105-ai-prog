@@ -13,7 +13,7 @@ class NonogramNode():
 
     def __repr__(self):
         # return str(self.variable) + "Domain: " + str(self.domain)
-        return str(self.variable) + " Common: " + str(self.common) + " Domain: " + str(self.domain)
+        return str(self.variable) + " Common: " + str(self.common) + "\nLen:" + str(len(self.domain)) + " Domain: " + str(self.domain) +"\n"
 
     def setValues(self, values):
         self.values = values
@@ -48,6 +48,7 @@ class NonogramNode():
 
 
     def findCommon(self):
+        self.common = {}
         index = 0
         checkValue = None
         while index < self.lenght:

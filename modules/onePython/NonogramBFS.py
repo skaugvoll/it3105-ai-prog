@@ -100,36 +100,61 @@ class NonogramBFS(BFS):
 
         return True
 
-    def reduceDomain(self, a, b):
-        for x in b:
+    def reduceRowsAndCols(self):
+        for row in self.rows:
+            self.reduceDomain(row, self.columns)
 
-            for key in a.common.keys():
-                index = 0
-                while index < len(x.domain):
-                    d = x.domain[index]
-                    # print("Dkey: " + str(d[key]))
-                    # print("aCommonKey: " + str(a.common[key]))
-                    if d[key] != a.common[key]:
-                        x.domain.remove(d)
-                    else:
-                        index += 1
-                # print("\n")
-                # print(a)
-                # print("After reduce: " + str(len(x.domain)))
-                # print(x.domain)
-                # print("\n")
+        for col in self.columns:
+            self.reduceDomain(col, self.rows)
+
+    def reduceDomain(self, a, b):
+        for key in a.common.keys():
+            if (b == self.columns):
+                x = b[key]
+            else:
+                x = b[(len(self.rows)-1) - key]
+            index = 0
+            while index < len(x.domain):
+                d = x.domain[index]
+                # print("Dkey: " + str(d[key]))
+                # print("aCommonKey: " + str(a.common[key]))
+                if(b == self.rows):
+                    l = self.columns.index(a)
+                else:
+                    l = (len(self.rows)-1)-self.rows.index(a)
+                if d[l] != a.common[key]:
+                    x.domain.remove(d)
+                else:
+                    index += 1
+
+    def findNewCommons(self):
+        for row in self.rows:
+            row.findCommon()
+
+        for col in self.columns:
+            self.reduceDomain(col, self.rows)
+            col.findCommon()
+
+    def solve(self):
+        self.reduceRowsAndCols()
+        self.findNewCommons()
+
+        self.reduceRowsAndCols()
+        self.findNewCommons()
+
+        self.reduceRowsAndCols()
+
 
 def main():
     nono = NonogramBFS()
-    nono.getInitalState("tasks/nono-cat.txt")
+    nono.getInitalState("tasks/nono-pdf.txt")
+    # nono.getInitalState("tasks/nono-cat.txt")
+    nono.solve()
+
+    nono.rows.reverse()
     for row in nono.rows:
-        nono.reduceDomain(row, nono.columns)
+        print(row.domain)
 
-    for col in nono.columns:
-        nono.reduceDomain(col, nono.rows)
-
-    # for col in nono.columns:
-    #     print(col)
 
     # nono.getInitalState("tasks/nono-chick.txt")
     # nono.getAllRowPermutations([5, 1, 3, 2])
@@ -151,3 +176,17 @@ def main():
     # print(nono.drawString([3,1], 4))
 
 main()
+
+# Funker på rad index 0
+# def reduceDomain(self, a, b):
+#     for key in a.common.keys():
+#         x = b[key]
+#         index = 0
+#         while index < len(x.domain):
+#             d = x.domain[index]
+#             # print("Dkey: " + str(d[key]))
+#             # print("aCommonKey: " + str(a.common[key]))
+#             if d[key] != a.common[key]:
+#                 x.domain.remove(d)
+#             else:
+#                 index += 1
