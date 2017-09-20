@@ -1,8 +1,9 @@
-from GUI import GUI
+from RushHourGUI import RushHourGUI
+from NonoGUI import NonoGUI
 
 class Main:
     def __init__(self):
-        self.gui = GUI()
+        self.gui = NonoGUI()
 
 if __name__ == "__main__":
     main = Main()

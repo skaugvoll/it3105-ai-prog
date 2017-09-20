@@ -3,7 +3,7 @@ from RushHourSolver import rushHourSolver
 from RushHourBFS import RushHourBFS
 from time import sleep
 
-class GUI:
+class RushHourGUI:
     def __init__(self):
         self.astar = None
         self.solution = None
