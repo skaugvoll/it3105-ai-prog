@@ -1,6 +1,7 @@
 from BFSclass import BFS
 from NonogramNode import NonogramNode
 import pip
+from copy import deepcopy
 
 
 class NonogramBFS(BFS):
@@ -103,13 +104,24 @@ class NonogramBFS(BFS):
         return True
 
     def reduceRowsAndCols(self):
+        madeChange = False
+        tempRowChange = deepcopy(self.rows)
+        tempColChange = deepcopy(self.rows)
+
         for row in self.rows:
             self.reduceDomain(row, self.columns)
+        if tempRowChange != self.rows:
+            madeChange = True
 
         for col in self.columns:
-            self.reduceDomain(col, self.rows)
+            tempRowChange = self.reduceDomain(col, self.rows)
+        if tempColChange != self.columns:
+            madeChange = True
+
+        return madeChange
 
     def reduceDomain(self, a, b):
+        change = False
         for key in a.common.keys():
             if (b == self.columns):
                 x = b[key]
@@ -126,8 +138,10 @@ class NonogramBFS(BFS):
                     l = (len(self.rows)-1)-self.rows.index(a)
                 if d[l] != a.common[key]:
                     x.domain.remove(d)
+                    change = True
                 else:
                     index += 1
+        return change
 
     def findNewCommons(self):
         for row in self.rows:
@@ -136,50 +150,31 @@ class NonogramBFS(BFS):
         for col in self.columns:
             col.findCommon()
 
+
+    def isSolution(self):
+        solution = True
+        for row in self.rows:
+            if len(row.domain) > 1:
+                solution =  False
+
+        for col in self.columns:
+            if len(col.domain) > 1:
+                solution =  False
+
+        return solution
+
     def solve(self):
-        self.reduceRowsAndCols()
-        self.findNewCommons()
+        maxIterations = 10000
+        i = 0
+        while i < maxIterations:
+            change = self.reduceRowsAndCols()
+            self.findNewCommons()
+            if self.isSolution() or not change:
+                break
+            i += 1
+        print("Iterations: " + str(i) + " / " + str(maxIterations))
 
-        self.reduceRowsAndCols()
-        self.findNewCommons()
 
-        self.reduceRowsAndCols()
-        self.findNewCommons()
-
-        self.reduceRowsAndCols()
-        self.findNewCommons()
-
-        self.reduceRowsAndCols()
-        self.findNewCommons()
-
-        self.reduceRowsAndCols()
-        self.findNewCommons()
-
-        self.reduceRowsAndCols()
-        self.findNewCommons()
-
-        self.reduceRowsAndCols()
-        self.findNewCommons()
-
-        self.reduceRowsAndCols()
-        self.findNewCommons()
-
-        self.reduceRowsAndCols()
-        self.findNewCommons()
-
-        self.reduceRowsAndCols()
-        self.findNewCommons()
-
-        self.reduceRowsAndCols()
-        self.findNewCommons()
-
-        self.reduceRowsAndCols()
-        self.findNewCommons()
-
-        self.reduceRowsAndCols()
-        self.findNewCommons()
-
-        self.reduceRowsAndCols()
 
 
 def main():
@@ -195,8 +190,7 @@ def main():
         color = False
 
     nono = NonogramBFS()
-    nono.getInitalState("tasks/nono-chick.txt")
-    # nono.getInitalState("tasks/nono-cat.txt")
+    nono.getInitalState("tasks/nono-telephone.txt")
     nono.solve()
 
     nono.rows.reverse()
@@ -206,12 +200,12 @@ def main():
             for ch in d:
                 if(color):
                     if (ch == 0):
-                        s += termcolor.colored(ch, "grey")
+                        s += termcolor.colored(ch, "blue")
                     else:
-                        s += termcolor.colored(ch, "red")
+                        s += termcolor.colored(ch, "white")
                 else:
                     s += str(ch)
-            print(s)
+        print(s)
 
 
 
