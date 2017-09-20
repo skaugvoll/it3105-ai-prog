@@ -191,7 +191,7 @@ def main():
         print("imported: termcolor")
     except ImportError as e:
         print("NO IMPORT...")
-        pip.main(['install', termcolor])
+        # pip.main(['install', termcolor])
         color = False
 
     nono = NonogramBFS()
