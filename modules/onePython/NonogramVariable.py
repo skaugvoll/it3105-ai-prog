@@ -60,3 +60,7 @@ class NonogramVariable():
             if valid:
                 self.common[index] = checkValue
             index += 1
+
+
+    def setDomain(self, domain):
+        self.domain = domain

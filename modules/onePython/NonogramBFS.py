@@ -78,9 +78,22 @@ class NonogramBFS(BFS):
 
     def generateSuccessors(self, node):
         ''' Rember to check if moveing will be outside "board" (use self.boardSize) '''
-        pass
+        orgNode = deepcopy(node)
+        kids = []
+        for idx in range(len(orgNode.rows)): # gives a variable
+            tempNode = deepcopy(orgNode)
+            var = tempNode.rows[idx]
+            if (len(var.domain) <= 1):
+                continue
 
-        
+            for domainIdx in range(0,len(var.domain)):
+                var.setDomain([var.domain[domainIdx]])
+                print("\n")
+
+                kids.append(NonogramNode(state=[tempNode.rows, tempNode.columns]))
+                tempNode = deepcopy(orgNode)
+
+        return kids
 
     def addKid(self, node, kid):
         node.addKid(kid)
