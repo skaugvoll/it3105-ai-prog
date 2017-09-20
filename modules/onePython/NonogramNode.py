@@ -11,8 +11,8 @@ class NonogramNode:
         self.rank = self._createId()
         self.rows = self.state[0]
         self.columns = self.state[1]
-        self.solve()
         self.hasFoundSolution = False
+        self.solve()
 
 
     def _createId(self):
@@ -154,7 +154,8 @@ class NonogramNode:
 
 
     def getSolution(self):
-        return self.rows.reverse()
+        self.rows.reverse()
+        return self.rows
 
     def hasFoundSolution(self):
         return self.hasFoundSolution
