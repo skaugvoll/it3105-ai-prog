@@ -17,3 +17,80 @@ heuristics could be;
 
 
 i denne her funksjonen generateSuccessors har vi expanded size. pass inn til checkIfMoveIsPossible, bytt ut alle plasser der størrelsen med epanded size.
+
+
+
+Permutations:
+
+    numberOfShifts = len(elementString) - sum(elementArray)
+    numberOfSegments = len(elementArray)
+
+    temp = elementString
+    permutations = []
+    # for shift in range(numberOfShifts):
+    # for segment in range(numberOfSegments, -1, -1): # move the rightmost first, then work your way leftover.
+    # finn første hendelse i strengen av segment vi er på
+    # finn størrelsen på den (er lagret i elementArray)
+    # flytt segmentet en til venstre
+        # bytt første hendelse ut med - og ta siste hendelse index + 1 og sett segment symbol
+        # sjekk om lovelig permutasjon --> self.orderConstraint(....)
+    # legg denne nye permutasjonen inn i permutations listen
+    # sett denne permutasjone som temp.
+    # gjør denne opperasjonen på nytt til vi har flyttet dette segmentet helt til høyre
+
+    # når vi har flyttet ett segment helt til høyre, ta neste segment og flytt etter
+    # når vi har flyttet alle segmentene helt til høyre,
+    # ta utgangspunt / orginal raden, og skift alle en til høyre
+    # sett den nye skiftete raden som utgangspunkt / orginal raden, utfør alle skifting for hvert segment på nytt
+
+    # nar vi har gjort dette før alle skiftene nødvendig, har vi alle mulige og lovelige permutasjoner for raden.
+    # siden vi har hatt alle segmenten på alle posisjonene de kan være uten at det bryter med rekkefølgen.
+
+
+
+##### Finne alle Permutasjoner
+r = orginal rad / kolonne
+
+hvis vi har 3 segmenter
+
+m = {
+    flytt segment 3 helt til høyre,
+    flytt segment 2 helt til høyre
+    flytt segment 1 helt til høyre
+}
+
+o = {
+    r' = øk indeksen til alle segmenten med 1 i r.
+    sett r til å være den nye r'
+    gjennta mønster m for r'
+}
+
+gjør o,  x antall ganger hvor x = lengden av raden/kolonnen - (minus) antall segmenter
+
+
+
+
+
+
+    def getAllColumnPermutations(self, elementArray):
+        elementString = ""
+        for i in range(len(elementArray)):
+            if (elementArray[i] == self.numRows):
+                elementString = str(i) * self.numRows
+            else:
+                elementString += str(i) * elementArray[i]
+            if (i == len(elementArray)-1):
+                elementString += "-" * (self.numRows - len(elementString))
+        # all permutations # contains duplicates... (1,2) and (2,1) == duplicates.
+        perms = list(set([''.join(p) for p in permutations(elementString)]))
+        legalColumnPerms = []
+        for l in range(len(perms)):
+            for k in range(len(elementArray)):
+                legal = True
+                if (str(perms[l]).find(str(k) * int(elementArray[k])) == -1):
+                    legal = False
+                    break
+            if (legal):
+                legalColumnPerms.append(perms[l])
+        return legalColumnPerms
+

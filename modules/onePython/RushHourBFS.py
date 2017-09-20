@@ -1,11 +1,7 @@
 from RushHourNode import SearchNode
+from BFSclass import BFS
 
-class RushHourBFS:
-    def __init__(self, boardSize):
-        self.boardSize = boardSize
-        self.board = self.createBoard()
-        self.available = self.createBoard()
-
+class RushHourBFS(BFS):
 
     def createBoard(self):
         board = [["-" for c in range(self.boardSize)] for r in range(self.boardSize)]
@@ -179,3 +175,10 @@ class RushHourBFS:
 
     def arc_cost(self, kid, node):
         return 1
+
+
+    def foundSolution(self, node, goalState):
+        car = node.getPlayerPiece()
+        if goalState[1] == car[2] and (car[1] + (car[-1] - 1) == goalState[0]):
+            return True
+        return False
