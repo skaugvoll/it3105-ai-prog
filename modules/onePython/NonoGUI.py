@@ -52,7 +52,9 @@ class NonoGUI:
         self.astar = ASTAR(problem=NonogramBFS(), goal=0, initStateFile=fil, algo="Astar")
         self.solution = self.astar.solve()
 
-        self.drawState(self.solution[-1].getSolution())
+        # self.drawState(self.solution[-1].getSolution())
+        for s in self.solution:
+            self.drawState(s.getSolution())
         # self.infoText.configure(text="Steps: " + str(len(self.solution)-1) + "\n Nodes generated: " + str(len(self.astar.states)))
 
 
