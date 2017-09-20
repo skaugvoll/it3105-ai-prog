@@ -162,7 +162,7 @@ class NonogramBFS(BFS):
         return solution
 
     def solve(self):
-        maxIterations = 10000
+        maxIterations = 500
         i = 0
         while i < maxIterations:
             change = self.reduceRowsAndCols()
@@ -172,8 +172,12 @@ class NonogramBFS(BFS):
             i += 1
         print("Iterations: " + str(i) + " / " + str(maxIterations))
 
-
-
+        sumdomains = 0
+        for row in self.rows:
+            sumdomains += len(row.domain)
+        for col in self.columns:
+            sumdomains += len(col.domain)
+        print(sumdomains)
         self.rows.reverse()
 
         return self.rows
