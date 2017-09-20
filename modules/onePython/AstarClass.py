@@ -14,6 +14,9 @@ class ASTAR(ABC):
         self.startTime = None
         self.algo = algo
 
+    def getClosed(self):
+        return self.CLOSED
+
     def getCurrentState(self):
         return self.states[-1]
 
@@ -56,16 +59,6 @@ class ASTAR(ABC):
         solution.reverse()
         solution.append(node) # add the goal state as last step is solution
 
-        # reconstruct path to goal (follow the parent of the goal state, backwords)
-        # print(len(self.states) - 1)  # -1 because 1 state is generated twice
-        print("\n" * 5)
-        print("::::: SOLUTION :::::"*5)
-        for step in solution:
-            # print(step)
-            self.bfs.drawBoard(step.state)
-            # print(step)
-            print("\n" * 2)
-        print("Num steps", len(solution) - 1)  # -1 because the first / inital state is not a move.
         return solution  # the nodes / states that generate the goal state
 
     '''should return the path, or failure.'''
@@ -129,9 +122,6 @@ class ASTAR(ABC):
                 self.isGen = ()
 
         # if the while loop could not find a solution
-        # print("open is now: ", len(self.OPEN))
-        # print("close is now: ", len(self.CLOSED))
-        # print("states is now: ", len(self.states))
         return False
 
     def checkIfPrevGen(self, kid, l):

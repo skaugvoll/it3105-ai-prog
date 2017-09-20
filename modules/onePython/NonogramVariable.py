@@ -22,7 +22,6 @@ class NonogramVariable():
 
 
     def generate_domain(self, length, variable):
-        # generate minimum placement
         domain = []
         min_placement = []
         for s in variable:
