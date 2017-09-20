@@ -1,6 +1,7 @@
 from BFSclass import BFS
 from NonogramNode import NonogramNode
-from termcolor import colored
+import pip
+
 
 class NonogramBFS(BFS):
     def __init__(self):
@@ -182,8 +183,16 @@ class NonogramBFS(BFS):
 
 
 def main():
+    color = True
 
-    
+    try:
+        print("trying...")
+        import termcolor
+        print("imported: termcolor")
+    except ImportError as e:
+        print("NO IMPORT...")
+        pip.main(['install', termcolor])
+        color = False
 
     nono = NonogramBFS()
     nono.getInitalState("tasks/nono-chick.txt")
@@ -195,10 +204,13 @@ def main():
         for d in row.domain:
             s = ""
             for ch in d:
-                if (ch == 0):
-                    s += colored(ch, "grey")
+                if(color):
+                    if (ch == 0):
+                        s += termcolor.colored(ch, "grey")
+                    else:
+                        s += termcolor.colored(ch, "red")
                 else:
-                    s += colored(ch, "red")
+                    s += str(ch)
             print(s)
 
 
