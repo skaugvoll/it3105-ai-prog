@@ -1,5 +1,6 @@
 from BFSclass import BFS
 from NonogramNode import NonogramNode
+from termcolor import colored
 
 class NonogramBFS(BFS):
     def __init__(self):
@@ -132,7 +133,6 @@ class NonogramBFS(BFS):
             row.findCommon()
 
         for col in self.columns:
-            self.reduceDomain(col, self.rows)
             col.findCommon()
 
     def solve(self):
@@ -143,17 +143,64 @@ class NonogramBFS(BFS):
         self.findNewCommons()
 
         self.reduceRowsAndCols()
+        self.findNewCommons()
+
+        self.reduceRowsAndCols()
+        self.findNewCommons()
+
+        self.reduceRowsAndCols()
+        self.findNewCommons()
+
+        self.reduceRowsAndCols()
+        self.findNewCommons()
+
+        self.reduceRowsAndCols()
+        self.findNewCommons()
+
+        self.reduceRowsAndCols()
+        self.findNewCommons()
+
+        self.reduceRowsAndCols()
+        self.findNewCommons()
+
+        self.reduceRowsAndCols()
+        self.findNewCommons()
+
+        self.reduceRowsAndCols()
+        self.findNewCommons()
+
+        self.reduceRowsAndCols()
+        self.findNewCommons()
+
+        self.reduceRowsAndCols()
+        self.findNewCommons()
+
+        self.reduceRowsAndCols()
+        self.findNewCommons()
+
+        self.reduceRowsAndCols()
 
 
 def main():
+
+    
+
     nono = NonogramBFS()
-    nono.getInitalState("tasks/nono-pdf.txt")
+    nono.getInitalState("tasks/nono-chick.txt")
     # nono.getInitalState("tasks/nono-cat.txt")
     nono.solve()
 
     nono.rows.reverse()
     for row in nono.rows:
-        print(row.domain)
+        for d in row.domain:
+            s = ""
+            for ch in d:
+                if (ch == 0):
+                    s += colored(ch, "grey")
+                else:
+                    s += colored(ch, "red")
+            print(s)
+
 
 
     # nono.getInitalState("tasks/nono-chick.txt")
