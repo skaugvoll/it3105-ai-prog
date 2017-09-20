@@ -62,61 +62,15 @@ class NonogramBFS(BFS):
     def foundSolution(self, node, goalState):
         pass
 
-    def generateNode(self, variable, dir):
-        domain = []
-        if(dir == "row"):
-            domain = self.create_domain(self.numColumns, variable)
-        else:
-            domain = self.create_domain(self.numRows, variable)
-        print("var = " + str(variable))
-        print("dom = " + str(domain))
-        print("\n")
 
-    def makefunc(self, var_names, expression, envir=globals()):
-        args = ",".join(var_names)
-        print("args:" + str(args))
-        return eval("(lambda " + args + ":" + expression + ")", envir)
-
-
-    def orderConstraint(self, domain, segments): # domain = on of the row/columns permutations || segements are the variables involved [3,1] or [3,1,1]
-        numberOfSegments = len(segments)
-
-        constraint = ""
-
-        if numberOfSegments <= 1:
-            return domain
-
-        for i in range(numberOfSegments):
-            # stuff.append(chr(97 + i))
-            if i != numberOfSegments - 1 :
-                constraint += "domain.rfind(" + "str(" +str(i) + "))" + " < domain.find(" + "str(" + str(i+1) + ")) - 1 and "
-            else: # if last variable, you are covered by the other variables. you just need to be after them
-                constraint = constraint[:len(constraint)-4]
-
-        # print("con:  " + constraint)
-        # print("domain:  " + domain)
-
-        if not eval(constraint):
-            return False
-
-        return True
 
     def reduceRowsAndCols(self):
-        madeChange = False
-        tempRowChange = deepcopy(self.rows)
-        tempColChange = deepcopy(self.rows)
-
         for row in self.rows:
             self.reduceDomain(row, self.columns)
-        if tempRowChange != self.rows:
-            madeChange = True
 
         for col in self.columns:
-            tempRowChange = self.reduceDomain(col, self.rows)
-        if tempColChange != self.columns:
-            madeChange = True
+            self.reduceDomain(col, self.rows)
 
-        return madeChange
 
     def reduceDomain(self, a, b):
         change = False
@@ -141,6 +95,7 @@ class NonogramBFS(BFS):
                     index += 1
         return change
 
+
     def findNewCommons(self):
         for row in self.rows:
             row.findCommon()
@@ -161,22 +116,70 @@ class NonogramBFS(BFS):
 
         return solution
 
+    def sumDomains(self):
+        domainSum = 0
+
+        for row in self.rows:
+            domainSum += len(row.domain)
+        for col in self.columns:
+            domainSum += len(col.domain)
+        return domainSum
+
     def solve(self):
-        maxIterations = 10000
-        i = 0
-        while i < maxIterations:
-            change = self.reduceRowsAndCols()
+        iterate = True
+        lastDomainSum = self.sumDomains()
+        solution = False
+        while iterate:
+            self.reduceRowsAndCols()
+
             self.findNewCommons()
-            if self.isSolution() or not change:
-                break
-            i += 1
-        print("Iterations: " + str(i) + " / " + str(maxIterations))
+            if self.isSolution():
+                iterate = False
+                solution = True
+            elif lastDomainSum == self.sumDomains():
+                iterate = False
+
+            lastDomainSum = self.sumDomains()
+
+        if(solution):
+            self.rows.reverse()
+            return self.rows
+        else:
+            print("SNAIL FUCKUP!! WOHO")
 
 
 
-        self.rows.reverse()
 
-        return self.rows
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def main():
     color = True
