@@ -1,15 +1,15 @@
 from BFSclass import BFS
-from NonogramNode import NonogramNode
+from NonogramVariable import NonogramVariable
 import pip
 from copy import deepcopy
+from NonogramNode import NonogramNode
 
 class NonogramBFS(BFS):
-    def __init__(self, task):
+    def __init__(self):
         self.numColumns = 0
         self.numRows = 0
         self.rows = []
         self.columns = []
-        self.getInitalState("tasks/" + "nono-" + task + ".txt")
         pass
 
     def getInitalState(self, fileWithInitState):
@@ -25,12 +25,14 @@ class NonogramBFS(BFS):
                     self.numRows = line[1]
                 elif(lineNumber <= self.numRows):
                     rows.append(line)
-                    self.rows.append(NonogramNode("row", self.numColumns, line))
+                    self.rows.append(NonogramVariable("row", self.numColumns, line))
                 else:
                     columns.append(line)
-                    self.columns.append(NonogramNode("column", self.numRows, line))
+                    self.columns.append(NonogramVariable("column", self.numRows, line))
 
                 lineNumber += 1
+
+            return NonogramNode([self.rows, self.columns])
         except:
             raise Exception("Something went wrong when making inital state")
 
@@ -41,111 +43,168 @@ class NonogramBFS(BFS):
         return board
 
     def drawBoard(self, state):
-        self.board = self.createBoard()
-        # place the pieces on a fresh board
-        # print board.
+        color = True
+
+        try:
+            print("trying...")
+            import termcolor
+            print("imported: termcolor")
+        except ImportError as e:
+            print("NO IMPORT...")
+            # pip.main(['install', termcolor])
+            color = False
+
+
+
+
+        nono = state
+        print("NONO:")
+        print(nono)
+        for row in nono[0]:
+            for d in row.domain:
+                s = ""
+                for ch in d:
+                    if (color):
+                        if (ch == 0):
+                            s += termcolor.colored(ch, "blue")
+                        else:
+                            s += termcolor.colored(ch, "white")
+                    else:
+                        s += str(ch)
+            print(s)
         pass
 
     def calculateHValue(self, node, goal):
-        pass
+        domainSum = 0
+        for row in node.rows:
+            domainSum += len(row.domain)-1
+        for col in node.columns:
+            domainSum += len(col.domain)-1
+        return domainSum
 
     def generateSuccessors(self, node):
         ''' Rember to check if moveing will be outside "board" (use self.boardSize) '''
-        pass
+        orgNode = deepcopy(node)
+        kids = []
+        for idx in range(len(orgNode.rows)): # gives a variable
+            tempNode = deepcopy(orgNode)
+            var = tempNode.rows[idx]
+            tempVar = deepcopy(var)
+            if (len(var.domain) <= 1):
+                continue
+            for domainIdx in range(len(var.domain)):
+                var.setDomain([tempVar.domain[domainIdx]])
+                kids.append(NonogramNode(state=[tempNode.rows, tempNode.columns]))
+
+        for idx in range(len(orgNode.columns)): # gives a variable
+            tempNode = deepcopy(orgNode)
+            var = tempNode.columns[idx]
+            tempVar = deepcopy(var)
+            if (len(var.domain) <= 1):
+                continue
+            for domainIdx in range(len(var.domain)):
+                var.setDomain([tempVar.domain[domainIdx]])
+                kids.append(NonogramNode(state=[tempNode.rows, tempNode.columns]))
+
+
+        return kids
 
     def addKid(self, node, kid):
         node.addKid(kid)
 
     def arc_cost(self, kid, node):
-        pass
+        return 1
 
     def foundSolution(self, node, goalState):
-        pass
+        try:
+            node.solve()
+            return node.hasFoundSolution
+        except Exception as e:
+            return False
 
 
+    # def reduceRowsAndCols(self):
+    #     for row in self.rows:
+    #         self.reduceDomain(row, self.columns)
+    #
+    #     for col in self.columns:
+    #         self.reduceDomain(col, self.rows)
+    #
+    #
+    # def reduceDomain(self, a, b):
+    #     change = False
+    #     for key in a.common.keys():
+    #         if (b == self.columns):
+    #             x = b[key]
+    #         else:
+    #             x = b[(len(self.rows)-1) - key]
+    #         index = 0
+    #         while index < len(x.domain):
+    #             d = x.domain[index]
+    #             # print("Dkey: " + str(d[key]))
+    #             # print("aCommonKey: " + str(a.common[key]))
+    #             if(b == self.rows):
+    #                 l = self.columns.index(a)
+    #             else:
+    #                 l = (len(self.rows)-1)-self.rows.index(a)
+    #             if d[l] != a.common[key]:
+    #                 x.domain.remove(d)
+    #                 change = True
+    #             else:
+    #                 index += 1
+    #     return change
+    #
+    #
+    # def findNewCommons(self):
+    #     for row in self.rows:
+    #         row.findCommon()
+    #
+    #     for col in self.columns:
+    #         col.findCommon()
 
-    def reduceRowsAndCols(self):
-        for row in self.rows:
-            self.reduceDomain(row, self.columns)
 
-        for col in self.columns:
-            self.reduceDomain(col, self.rows)
-
-
-    def reduceDomain(self, a, b):
-        change = False
-        for key in a.common.keys():
-            if (b == self.columns):
-                x = b[key]
-            else:
-                x = b[(len(self.rows)-1) - key]
-            index = 0
-            while index < len(x.domain):
-                d = x.domain[index]
-                # print("Dkey: " + str(d[key]))
-                # print("aCommonKey: " + str(a.common[key]))
-                if(b == self.rows):
-                    l = self.columns.index(a)
-                else:
-                    l = (len(self.rows)-1)-self.rows.index(a)
-                if d[l] != a.common[key]:
-                    x.domain.remove(d)
-                    change = True
-                else:
-                    index += 1
-        return change
-
-
-    def findNewCommons(self):
-        for row in self.rows:
-            row.findCommon()
-
-        for col in self.columns:
-            col.findCommon()
-
-
-    def isSolution(self):
-        solution = True
-        for row in self.rows:
-            if len(row.domain) > 1:
-                solution =  False
-
-        for col in self.columns:
-            if len(col.domain) > 1:
-                solution =  False
-
-        return solution
-
-    def sumDomains(self):
-        domainSum = 0
-
-        for row in self.rows:
-            domainSum += len(row.domain)
-        for col in self.columns:
-            domainSum += len(col.domain)
-        return domainSum
-
-    def solve(self):
-        iterate = True
-        lastDomainSum = self.sumDomains()
-        solution = False
-        while iterate:
-            self.reduceRowsAndCols()
-
-            self.findNewCommons()
-            if self.isSolution():
-                iterate = False
-                solution = True
-            elif lastDomainSum == self.sumDomains():
-                iterate = False
-
-            lastDomainSum = self.sumDomains()
-
-        if(solution):
-            self.rows.reverse()
-            return self.rows
-        else:
-            print("SNAIL FUCKUP!! WOHO")
+    # def isSolution(self):
+    #     solution = True
+    #     for row in self.rows:
+    #         if len(row.domain) > 1:
+    #             solution =  False
+    #
+    #     for col in self.columns:
+    #         if len(col.domain) > 1:
+    #             solution =  False
+    #
+    #     return solution
+    #
+    # def sumDomains(self):
+    #     domainSum = 0
+    #
+    #     for row in self.rows:
+    #         domainSum += len(row.domain)
+    #     for col in self.columns:
+    #         domainSum += len(col.domain)
+    #     return domainSum
+    #
+    # def solve(self):
+    #     iterate = True
+    #     lastDomainSum = self.sumDomains()
+    #     solution = False
+    #     while iterate:
+    #         self.reduceRowsAndCols()
+    #
+    #         self.findNewCommons()
+    #         if self.isSolution():
+    #             iterate = False
+    #             solution = True
+    #         elif lastDomainSum == self.sumDomains():
+    #             iterate = False
+    #
+    #         lastDomainSum = self.sumDomains()
+    #
+    #     if(solution):
+    #         self.rows.reverse()
+    #         return self.rows
+    #     else:
+    #         print("SNAIL FUCKUP!! WOHO")
 
 
 
