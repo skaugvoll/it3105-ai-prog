@@ -63,7 +63,7 @@ class ASTAR(ABC):
         for step in solution:
             # print(step)
             self.bfs.drawBoard(step.state)
-            print(step)
+            # print(step)
             print("\n" * 2)
         print("Num steps", len(solution) - 1)  # -1 because the first / inital state is not a move.
         return solution  # the nodes / states that generate the goal state

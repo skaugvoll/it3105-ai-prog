@@ -57,7 +57,9 @@ class NonogramBFS(BFS):
 
 
         nono = state
-        for row in nono.rows:
+        print("NONO:")
+        print(nono)
+        for row in nono[0]:
             for d in row.domain:
                 s = ""
                 for ch in d:
@@ -77,6 +79,8 @@ class NonogramBFS(BFS):
     def generateSuccessors(self, node):
         ''' Rember to check if moveing will be outside "board" (use self.boardSize) '''
         pass
+
+        
 
     def addKid(self, node, kid):
         node.addKid(kid)
