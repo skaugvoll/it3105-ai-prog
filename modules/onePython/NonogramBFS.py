@@ -1,13 +1,13 @@
 from BFSclass import BFS
 from NonogramNode import NonogramNode
-from termcolor import colored
 
 class NonogramBFS(BFS):
-    def __init__(self):
+    def __init__(self, task):
         self.numColumns = 0
         self.numRows = 0
         self.rows = []
         self.columns = []
+        self.getInitalState("tasks/" + "nono-" + task + ".txt")
         pass
 
     def getInitalState(self, fileWithInitState):
@@ -29,8 +29,6 @@ class NonogramBFS(BFS):
                     self.columns.append(NonogramNode("column", self.numRows, line))
 
                 lineNumber += 1
-            print("Rows: " + str(rows))
-            print("Columns:" + str(columns))
         except:
             raise Exception("Something went wrong when making inital state")
 
@@ -180,26 +178,20 @@ class NonogramBFS(BFS):
 
         self.reduceRowsAndCols()
 
+        self.rows.reverse()
 
-def main():
+        return self.rows
 
-    
 
-    nono = NonogramBFS()
-    nono.getInitalState("tasks/nono-chick.txt")
-    # nono.getInitalState("tasks/nono-cat.txt")
-    nono.solve()
-
-    nono.rows.reverse()
-    for row in nono.rows:
-        for d in row.domain:
-            s = ""
-            for ch in d:
-                if (ch == 0):
-                    s += colored(ch, "grey")
-                else:
-                    s += colored(ch, "red")
-            print(s)
+# def main():
+#     nono = NonogramBFS()
+#     # nono.getInitalState("tasks/nono-chick.txt")
+#     nono.getInitalState("tasks/nono-cat.txt")
+#     nono.solve()
+#
+#     nono.rows.reverse()
+#     for row in nono.rows:
+#         print(row.domain)
 
 
 
@@ -222,7 +214,7 @@ def main():
     # print(nono.orderConstraint('0-111', [1, 3]))
     # print(nono.drawString([3,1], 4))
 
-main()
+# main()
 
 # Funker på rad index 0
 # def reduceDomain(self, a, b):
