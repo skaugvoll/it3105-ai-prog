@@ -102,21 +102,11 @@ class NonogramBFS(BFS):
         return True
 
     def reduceRowsAndCols(self):
-        madeChange = False
-        tempRowChange = deepcopy(self.rows)
-        tempColChange = deepcopy(self.rows)
-
         for row in self.rows:
             self.reduceDomain(row, self.columns)
-        if tempRowChange != self.rows:
-            madeChange = True
 
         for col in self.columns:
-            tempRowChange = self.reduceDomain(col, self.rows)
-        if tempColChange != self.columns:
-            madeChange = True
-
-        return madeChange
+            self.reduceDomain(col, self.rows)
 
     def reduceDomain(self, a, b):
         change = False
@@ -161,26 +151,37 @@ class NonogramBFS(BFS):
 
         return solution
 
-    def solve(self):
-        maxIterations = 500
-        i = 0
-        while i < maxIterations:
-            change = self.reduceRowsAndCols()
-            self.findNewCommons()
-            if self.isSolution() or not change:
-                break
-            i += 1
-        print("Iterations: " + str(i) + " / " + str(maxIterations))
+    def sumDomains(self):
+        domainSum = 0
 
-        sumdomains = 0
         for row in self.rows:
-            sumdomains += len(row.domain)
+            domainSum += len(row.domain)
         for col in self.columns:
-            sumdomains += len(col.domain)
-        print(sumdomains)
-        self.rows.reverse()
+            domainSum += len(col.domain)
+        return domainSum
 
-        return self.rows
+    def solve(self):
+        iterate = True
+        lastDomainSum = self.sumDomains()
+        solution = False
+        while iterate:
+            self.reduceRowsAndCols()
+
+            self.findNewCommons()
+            if self.isSolution():
+                iterate = False
+                solution = True
+            elif lastDomainSum == self.sumDomains():
+                iterate = False
+
+            lastDomainSum = self.sumDomains()
+
+        if(solution):
+            self.rows.reverse()
+            return self.rows
+        else:
+            print("SNAIL FUCKUP!! WOHO")
+
 
 def main():
     color = True
