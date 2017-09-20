@@ -57,7 +57,7 @@ class ASTAR(ABC):
         solution.append(node) # add the goal state as last step is solution
 
         # reconstruct path to goal (follow the parent of the goal state, backwords)
-        print(len(self.states) - 1)  # -1 because 1 state is generated twice
+        # print(len(self.states) - 1)  # -1 because 1 state is generated twice
         print("\n" * 5)
         print("::::: SOLUTION :::::"*5)
         for step in solution:

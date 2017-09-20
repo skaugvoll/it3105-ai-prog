@@ -1,6 +1,7 @@
 from tkinter import *
 from NonogramBFS import NonogramBFS
 from time import sleep
+from AstarClass import ASTAR
 
 class NonoGUI:
     def __init__(self):
@@ -79,8 +80,10 @@ class NonoGUI:
             self.frame.grid(row=4, column=2)
         self.first = False
         # self.infoText.configure(text="")
-        self.nono = NonogramBFS(task=self.file.get())
-        self.solution = self.nono.solve()
+        # self.nono = NonogramBFS(task=self.file.get())
+        # self.solution = self.nono.solve()
+        self.astar = ASTAR(problem=NonogramBFS(), goal=0, initStateFile="nono-cat", algo="Astar")
+        self.solution = self.astar.solve()
         self.drawState(self.nono.numRows, self.nono.numColumns)
         # self.infoText.configure(text="Steps: " + str(len(self.solution)-1) + "\n Nodes generated: " + str(len(self.astar.states)))
 
