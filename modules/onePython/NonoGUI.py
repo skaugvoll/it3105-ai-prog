@@ -1,8 +1,5 @@
 from tkinter import *
 from NonogramBFS import NonogramBFS
-from NonogramNode import NonogramNode
-from NonogramVariable import NonogramVariable
-from time import sleep
 from AstarClass import ASTAR
 
 class NonoGUI:
