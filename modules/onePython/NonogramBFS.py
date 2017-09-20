@@ -54,9 +54,6 @@ class NonogramBFS(BFS):
             # pip.main(['install', termcolor])
             color = False
 
-
-
-
         nono = state
         print("NONO:")
         print(nono)
@@ -121,91 +118,6 @@ class NonogramBFS(BFS):
             return node.hasFoundSolution
         except Exception as e:
             return False
-
-
-    # def reduceRowsAndCols(self):
-    #     for row in self.rows:
-    #         self.reduceDomain(row, self.columns)
-    #
-    #     for col in self.columns:
-    #         self.reduceDomain(col, self.rows)
-    #
-    #
-    # def reduceDomain(self, a, b):
-    #     change = False
-    #     for key in a.common.keys():
-    #         if (b == self.columns):
-    #             x = b[key]
-    #         else:
-    #             x = b[(len(self.rows)-1) - key]
-    #         index = 0
-    #         while index < len(x.domain):
-    #             d = x.domain[index]
-    #             # print("Dkey: " + str(d[key]))
-    #             # print("aCommonKey: " + str(a.common[key]))
-    #             if(b == self.rows):
-    #                 l = self.columns.index(a)
-    #             else:
-    #                 l = (len(self.rows)-1)-self.rows.index(a)
-    #             if d[l] != a.common[key]:
-    #                 x.domain.remove(d)
-    #                 change = True
-    #             else:
-    #                 index += 1
-    #     return change
-    #
-    #
-    # def findNewCommons(self):
-    #     for row in self.rows:
-    #         row.findCommon()
-    #
-    #     for col in self.columns:
-    #         col.findCommon()
-
-
-    # def isSolution(self):
-    #     solution = True
-    #     for row in self.rows:
-    #         if len(row.domain) > 1:
-    #             solution =  False
-    #
-    #     for col in self.columns:
-    #         if len(col.domain) > 1:
-    #             solution =  False
-    #
-    #     return solution
-    #
-    # def sumDomains(self):
-    #     domainSum = 0
-    #
-    #     for row in self.rows:
-    #         domainSum += len(row.domain)
-    #     for col in self.columns:
-    #         domainSum += len(col.domain)
-    #     return domainSum
-    #
-    # def solve(self):
-    #     iterate = True
-    #     lastDomainSum = self.sumDomains()
-    #     solution = False
-    #     while iterate:
-    #         self.reduceRowsAndCols()
-    #
-    #         self.findNewCommons()
-    #         if self.isSolution():
-    #             iterate = False
-    #             solution = True
-    #         elif lastDomainSum == self.sumDomains():
-    #             iterate = False
-    #
-    #         lastDomainSum = self.sumDomains()
-    #
-    #     if(solution):
-    #         self.rows.reverse()
-    #         return self.rows
-    #     else:
-    #         print("SNAIL FUCKUP!! WOHO")
-
 
 
 

@@ -21,6 +21,7 @@ class NonoGUI:
         Label(text="Skriv inn filnavn på brett:", padx=10).grid(row=0, column=0)
         Entry(textvariable=self.file).grid(row=1, column=0)
         Button(bg="#469683", highlightbackground="#469683",padx=33, pady=5, text="Solve: ", command=lambda : self.findSolution()).grid(row=4, column=0)
+        # Button(bg="#469683", highlightbackground="#469683",padx=33, pady=5, text="Draw closed: ", command=lambda : self.drawClosed()).grid(row=5, column=0)
         # self.infoText = Label(text="", padx=10)
         # self.infoText.grid(row=5, column=9)
 
@@ -37,6 +38,24 @@ class NonoGUI:
 
         self.gui.update()
 
+    # def drawClosed(self):
+    #     closed = self.astar.getClosed()
+    #     for i in range(len(closed)):
+    #         node = closed[i]
+    #         solution = node.getSolution()
+    #         for j in range(len(solution)):
+    #             rows = solution
+    #             row = rows[j].domain
+    #             for k in range(len(row[0])):
+    #                 if len(row) == 1:
+    #                     if row[0][k] == 1:
+    #                         Button(self.frame, highlightbackground="#394f3f", bg="#394f3f", padx=10, pady=5, state=DISABLED).grid(row=j, column=k+2)
+    #                     else:
+    #                         Button(self.frame, highlightbackground="#c0c3c6", bg="#c0c3c6", padx=10, pady=5, state=DISABLED).grid(row=j, column=k+2)
+    #                 else:
+    #                     Button(self.frame, highlightbackground="#c0c3c6", bg="#c0c3c6", padx=10, pady=5, state=DISABLED).grid(row=j, column=k+2)
+    #
+    #     self.gui.update()
 
     def findSolution(self):
         if not self.first:

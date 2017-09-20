@@ -11,6 +11,7 @@ class NonogramNode:
         self.rank = self._createId()
         self.rows = self.state[0]
         self.columns = self.state[1]
+        self.secondH = self.sumDomains()
         self.hasFoundSolution = False
         # self.solve()
 

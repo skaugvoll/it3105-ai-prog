@@ -14,6 +14,9 @@ class ASTAR(ABC):
         self.startTime = None
         self.algo = algo
 
+    def getClosed(self):
+        return self.CLOSED
+
     def getCurrentState(self):
         return self.states[-1]
 
@@ -58,14 +61,14 @@ class ASTAR(ABC):
 
         # reconstruct path to goal (follow the parent of the goal state, backwords)
         # print(len(self.states) - 1)  # -1 because 1 state is generated twice
-        print("\n" * 5)
-        print("::::: SOLUTION :::::"*5)
-        for step in solution:
-            # print(step)
-            self.bfs.drawBoard(step.state)
-            # print(step)
-            print("\n" * 2)
-        print("Num steps", len(solution) - 1)  # -1 because the first / inital state is not a move.
+        # print("\n" * 5)
+        # print("::::: SOLUTION :::::"*5)
+        # for step in solution:
+        #     # print(step)
+        #     self.bfs.drawBoard(step.state)
+        #     # print(step)
+        #     print("\n" * 2)
+        # print("Num steps", len(solution) - 1)  # -1 because the first / inital state is not a move.
         return solution  # the nodes / states that generate the goal state
 
     '''should return the path, or failure.'''
