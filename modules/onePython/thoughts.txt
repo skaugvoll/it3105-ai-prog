@@ -95,14 +95,6 @@ gjør o,  x antall ganger hvor x = lengden av raden/kolonnen - (minus) antall se
         return legalColumnPerms
 
 
-
-
-
-
-
-
-
-
     def makefunc(self, var_names, expression, envir=globals()):
         args = ",".join(var_names)
         print("args:" + str(args))
@@ -136,3 +128,20 @@ gjør o,  x antall ganger hvor x = lengden av raden/kolonnen - (minus) antall se
             return False
 
         return True
+
+
+
+
+print fra getsolution
+
+
+# reconstruct path to goal (follow the parent of the goal state, backwords)
+# print(len(self.states) - 1)  # -1 because 1 state is generated twice
+# print("\n" * 5)
+# print("::::: SOLUTION :::::"*5)
+# for step in solution:
+#     # print(step)
+#     self.bfs.drawBoard(step.state)
+#     # print(step)
+#     print("\n" * 2)
+# print("Num steps", len(solution) - 1)  # -1 because the first / inital state is not a move.

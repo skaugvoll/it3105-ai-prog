@@ -8,9 +8,6 @@ class RushHourGUI:
         self.astar = None
         self.solution = None
         self.gui = Tk()
-        # for c in range(0, 6):
-        #     for r in range(0, 6):
-        #         Button(bg="#c0c3c6", state=DISABLED, padx=20, pady=15).grid(row=r, column=c, sticky='news')
         self.file = StringVar()
         self.board = [[Button(highlightbackground="#c0c3c6", bg="#c0c3c6", wraplength=1, state=DISABLED, padx=20, pady=15) for c in range(6)] for r in range(6)]
         for r in range(6):
