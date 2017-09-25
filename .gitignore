@@ -2,7 +2,7 @@
 *.pdf
 *.swp
 .idea/*
-
+mnist/
 
 #Byte-compiled / optimized / DLL files
 __pycache__/
