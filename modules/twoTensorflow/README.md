@@ -15,6 +15,7 @@ that facilitates these experiments
 #### Prerequesits
 - Python 3.5 or greater.
 - TensorFlow
+- mathplotlib
 
 ***How to make twoTensorFlow run***
 I'm using virtualenv and virtualenvwrapper for python on unix.
@@ -45,3 +46,15 @@ for the purposes of conducting machine learning and deep neural networks researc
 
 #### API
 https://www.tensorflow.org/api_docs/python/
+
+### Mathplotlib
+#### Installing
+- pip install mathplotlib
+- $ cd ~
+- $ cd .matplotlib/
+- # vim matplotlibrc
+> backend: TkAgg
+
+What this means is :
+There's a directory located at "~/" root called matplotlib. so cd --> ~/.matplotlib.
+Create a file called matplotlibrc --> ~/.matplotlib/matplotlibrc there and add the following code: backend: TkAgg
