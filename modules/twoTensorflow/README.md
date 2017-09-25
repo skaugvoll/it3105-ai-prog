@@ -10,6 +10,10 @@ A primary goal of this assignment is to streamline this trial-and-error process 
 can be experimented with in a short period of time. To this end, you will build an interface to Tensorflow
 that facilitates these experiments
 
+#### Requirements:
+- system must be object-oriented and as modular as the classes Gann and Gannmodule in Tutor(ial)3.py
+- No god damn recompilation...
+
 
 ### How to run
 #### Prerequesits
