@@ -13,13 +13,22 @@ def sigmoid(a):
     :param a: input value to transform / map to sigmoid
     :return: sigmoid-ified value
     '''
-    
+
     e = 2.7 # e = math.exp() # e ≈ 2.7
     return (1 / (1 + e**(-a)))
 
 
+def derivitedSigmoid(a):
+    derivitedSigmoidNumber = None
+    sigA = sigmoid(a)
 
-def showGraph():
+    # the derivited sigmoid can be written as: derivited sigmoid = (sigmoid(a) * (1 - sigmoid(a))
+    derivitedSigmoidNumber = sigA * (1 - sigA)
+    return derivitedSigmoidNumber
+
+
+
+def showSigmoidGraph():
     sigmoidValues = []
     for i in range(-10,10):
         sigmoidValues.append(sigmoid(i))
@@ -37,6 +46,25 @@ def showGraph():
     plt.show()
 
 
+def showDerivitedSigmoidGraph():
+    derivitedSigmoidValues = []
+    for i in range(-10,10):
+        derivitedSigmoidValues.append(derivitedSigmoid(i))
 
-showGraph()
+    print("Derivited Sigmoid values [-10,10]: " + str(derivitedSigmoidValues))
+
+    xAxis = np.arange(-10, 10) # make a list from (-10 to 10) with a step of one
+    yAxis = derivitedSigmoidValues
+
+
+    plt.ylabel("hmm...")
+    plt.xlabel("what are these numbers?")
+
+    plt.plot(xAxis, yAxis)
+    plt.show()
+
+
+
+showSigmoidGraph()
+showDerivitedSigmoidGraph()
 
