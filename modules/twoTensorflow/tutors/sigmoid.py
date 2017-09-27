@@ -3,8 +3,18 @@ import math
 import numpy as np
 
 def sigmoid(a):
-    # e = math.exp() # e ≈ 2.7
-    e = 2.7
+    '''
+    Basically a threshold function, but since it's not on/off [0,1], we call it an activation function (since we want values between 0 and 1) that gives us <0,1>.
+    When the input a --> -inf, sigmoid --> 0
+    When the input a --> inf, sigmoid --> 1
+
+    e is an mathematical constant approximately 2.7
+
+    :param a: input value to transform / map to sigmoid
+    :return: sigmoid-ified value
+    '''
+    
+    e = 2.7 # e = math.exp() # e ≈ 2.7
     return (1 / (1 + e**(-a)))
 
 
