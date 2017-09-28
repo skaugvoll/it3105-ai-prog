@@ -160,11 +160,18 @@ def tfex8(size=5, steps=50, tvect=None,learning_rate = 0.5,showint=10):
 
 
 
+def main():
+    print("EXAMPLE: " + str(1))
+    tfex1(2,2)
+    print("\n\n")
 
+    print("EXAMPLE: " + str(2))
+    tfex2(2,2)
+    print("\n\n")
 
+    for i in range (3,9):
+        print("EXAMPLE: " + str(i))
+        eval("tfex"+str(i)+"()")
+        print("\n\n")
 
-
-
-
-
-
+main()
