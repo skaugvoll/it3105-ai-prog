@@ -88,7 +88,7 @@ class autoencoder():
             TFT.simple_scatter_plot(hidden_activations,radius=8)
         return hidden_activations
 
-# ********  Auxiliary functions for the autoencoder example *******
+# ********  Auxiliary (providing supplementary or additional help and support.) functions for the autoencoder example *******
 
 def vector_distance(vect1, vect2):
     return (sum([(v1 - v2) ** 2 for v1, v2 in zip(vect1, vect2)])) ** 0.5
@@ -111,5 +111,3 @@ def autoex1(epochs=2000,num_bits=3,lrate=0.5,tint=25,showint=100):
     PLT.ioff()
     TFT.close_session(ann.current_session)
     return ann
-
-
