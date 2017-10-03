@@ -42,11 +42,11 @@ class Gann():
 
     def build(self):
         tf.reset_default_graph()  # This is essential for doing multiple runs!!
-        num_inputs = self.layer_sizes[0]
+        num_inputs = self.layer_sizes[0] #  f.eks : layer_sizes [16, 4, 16] --> 16 bits per input ?
         self.input = tf.placeholder(tf.float64, shape=(None, num_inputs), name='Input')
         invar = self.input; insize = num_inputs
         # Build all of the modules
-        for i,outsize in enumerate(self.layer_sizes[1:]):
+        for i,outsize in enumerate(self.layer_sizes[1:]): # f.eks : layer_sizes [16, 4, 16] --> enumerate(...) --> [(0, 4), (1, 16)] --> I:  0  OS:  4  &&  I:  1  OS:  16
             gmod = Gannmodule(self,i,invar,insize,outsize)
             invar = gmod.output; insize = gmod.outsize
         self.output = gmod.output # Output of last module is output of whole network
@@ -269,9 +269,8 @@ class Caseman():
 def autoex(epochs=300,nbits=4,lrate=0.03,showint=100,mbs=None,vfrac=0.1,tfrac=0.1,vint=100,sm=False):
     size = 2**nbits
     mbs = mbs if mbs else size
-    # case_generator = (lambda : TFT.gen_all_one_hot_cases(2**nbits))
-    case_generator = (lambda : helpers.converteDatasetTo2d("winequality_red.txt"))
-
+    case_generator = (lambda : TFT.gen_all_one_hot_cases(2**nbits))
+    print(TFT.gen_all_one_hot_cases(2**nbits))
 
     cman = Caseman(cfunc=case_generator,vfrac=vfrac,tfrac=tfrac)
     ann = Gann(dims=[size,nbits,size],cman=cman,lrate=lrate,showint=showint,mbs=mbs,vint=vint,softmax=sm)

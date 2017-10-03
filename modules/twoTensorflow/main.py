@@ -1,6 +1,5 @@
-import os
 from tutorialThree import Gann, autoex, Caseman
-from helpers import converteDatasetTo2d
+import helpers
 
 def runModule():
     dims = None #Layer-sizes
@@ -11,10 +10,10 @@ def runModule():
     vint = None # validation history
     softmax = None # softmax_0utputs # this is a regression / learning algorthm thingy thang
 
+
 def test():
     # dataset = "winequality_red.txt"
-    # datapath = os.getcwd()+"/data/"+dataset
-    # data = converteDatasetTo2d(datapath)
+    # data = converteDatasetTo2d(dataset)
     # print(data)
 
     autoex()
