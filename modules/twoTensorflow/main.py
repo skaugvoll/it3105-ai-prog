@@ -21,7 +21,7 @@ def test():
 # test()
 
 
-def gannTesting(epochs=300,nbits=4,lrate=0.03,showint=100,mbs=None,vfrac=0.1,tfrac=0.1,vint=100,sm=False):
+def gannTesting(epochs=50,nbits=4,lrate=0.03,showint=100,mbs=None,vfrac=0.1,tfrac=0.1,vint=100,sm=False):
     # size = 2**nbits I autoex, så gir denne 16, som er så mange elementer i hver liste / features
 
 
@@ -32,7 +32,7 @@ def gannTesting(epochs=300,nbits=4,lrate=0.03,showint=100,mbs=None,vfrac=0.1,tfr
     cman = Caseman(cfunc=case_generator,vfrac=vfrac,tfrac=tfrac)
 
     # dims = [features, hidden layer,...,hidden layer n-1, hiden layer n, labels]
-    dims = [11, nbits, 1]
+    dims = [11, nbits,4,4, 1]
 
     ann = Gann(dims=dims,cman=cman,lrate=lrate,showint=showint,mbs=mbs,vint=vint,softmax=sm)
 
