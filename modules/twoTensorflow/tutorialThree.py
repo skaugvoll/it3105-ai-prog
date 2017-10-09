@@ -41,16 +41,19 @@ class Gann():
 
     def build(self):
         tf.reset_default_graph()  # This is essential for doing multiple runs!!
-        num_inputs = self.layer_sizes[0]
+        num_inputs = self.layer_sizes[0] # sets num inputs to the amount of features for each case.
         self.input = tf.placeholder(tf.float64, shape=(None, num_inputs), name='Input')
-        invar = self.input; insize = num_inputs
-        # Build all of the modules
-        for i,outsize in enumerate(self.layer_sizes[1:]):
+        invar = self.input
+        insize = num_inputs
+        # Build all of the modules :: A module is a layer of neurons + all the weights coming into that layer
+        for i,outsize in enumerate(self.layer_sizes[1:]): # 1 --> siste element, siste element er jo hvor mange output neuroner
             gmod = Gannmodule(self,i,invar,insize,outsize)
-            invar = gmod.output; insize = gmod.outsize
+            invar = gmod.output
+            insize = gmod.outsize
         self.output = gmod.output # Output of last module is output of whole network
-        if self.softmax_outputs: self.output = tf.nn.softmax(self.output)
-        self.target = tf.placeholder(tf.float64,shape=(None,gmod.outsize),name='Target')
+        if self.softmax_outputs: # blir passet inn i konstruktøren til gann
+            self.output = tf.nn.softmax(self.output)
+        self.target = tf.placeholder(tf.float64,shape=(None,gmod.outsize),name='Target') # er vell label / klassen til casen ?
         self.configure_learning()
 
     # The optimizer knows to gather up all "trainable" variables in the function graph and compute
@@ -58,7 +61,7 @@ class Gann():
     # of the weight array.
 
     def configure_learning(self):
-        self.error = tf.reduce_mean(tf.square(self.target - self.output),name='MSE')
+        self.error = tf.reduce_mean(tf.square(self.target - self.output),name='MSE') # lager learings operator.
         self.predictor = self.output  # Simple prediction runs will request the value of output neurons
         # Defining the training operator
         optimizer = tf.train.GradientDescentOptimizer(self.learning_rate)
@@ -165,7 +168,7 @@ class Gann():
                 print(v, end="\n\n")
 
     def run(self,epochs=100,sess=None,continued=False,bestk=None):
-        PLT.ion()
+        PLT.ion() # slår på interaktiv modus
         self.training_session(epochs,sess=sess,continued=continued)
         self.test_on_trains(sess=self.current_session,bestk=bestk)
         self.testing_session(sess=self.current_session,bestk=bestk)
@@ -217,20 +220,21 @@ class Gannmodule():
 
     def __init__(self,ann,index,invariable,insize,outsize):
         self.ann = ann
-        self.insize=insize  # Number of neurons feeding into this module
-        self.outsize=outsize # Number of neurons in this module
-        self.input = invariable  # Either the gann's input variable or the upstream module's output
-        self.index = index
+        self.insize=insize  # Number of neurons feeding into this module :: antall features
+        self.outsize=outsize # Number of neurons in this module :: neaurons in hiddenlayer / output
+        self.input = invariable  # Either the gann's input variable or the upstream module's output :: placeholder
+        self.index = index # i in parameters --> enumerate index from list dims[1:]
         self.name = "Module-"+str(self.index)
         self.build()
 
     def build(self):
-        mona = self.name; n = self.outsize
+        mona = self.name
+        n = self.outsize
         self.weights = tf.Variable(np.random.uniform(-.1, .1, size=(self.insize,n)),
                                    name=mona+'-wgt',trainable=True) # True = default for trainable anyway
         self.biases = tf.Variable(np.random.uniform(-.1, .1, size=n),
                                   name=mona+'-bias', trainable=True)  # First bias vector
-        self.output = tf.nn.relu(tf.matmul(self.input,self.weights)+self.biases,name=mona+'-out')
+        self.output = tf.nn.relu(tf.matmul(self.input, self.weights)+self.biases, name=mona+'-out')
         self.ann.add_module(self)
 
     def getvar(self,type):  # type = (in,out,wgt,bias)
