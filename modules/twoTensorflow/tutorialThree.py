@@ -9,7 +9,7 @@ import tflowtools as TFT
 
 class Gann():
 
-    def __init__(self, dims, cman,lrate=.1,showint=None,mbs=10,vint=None,softmax=False):
+    def __init__(self, dims, cman,lrate=.1,showint=None,mbs=10,vint=None,softmax=False, hiddenLayerActivationFunction = None, outputActivationFunction= None, errorFunction=None):
         self.learning_rate = lrate
         self.layer_sizes = dims # Sizes of each layer of neurons
         self.show_interval = showint # Frequency of showing grabbed variables
@@ -22,6 +22,9 @@ class Gann():
         self.caseman = cman
         self.softmax_outputs = softmax
         self.modules = []
+        self.hiddenLayerActivationFunction = hiddenLayerActivationFunction
+        self.outputActivationFunction = outputActivationFunction
+        self.errorFunction = errorFunction
         self.build()
 
     # Probed variables are to be displayed in the Tensorboard.
@@ -46,8 +49,13 @@ class Gann():
         invar = self.input
         insize = num_inputs
         # Build all of the modules :: A module is a layer of neurons + all the weights coming into that layer
-        for i,outsize in enumerate(self.layer_sizes[1:]): # 1 --> siste element, siste element er jo hvor mange output neuroner
-            gmod = Gannmodule(self,i,invar,insize,outsize)
+        for i,outsize in enumerate(self.layer_sizes[1:-1]): # 1 --> siste element, siste element er jo hvor mange output neuroner
+            gmod = Gannmodule(self,i,invar,insize,outsize, self.hiddenLayerActivationFunction)
+            invar = gmod.output
+            insize = gmod.outsize
+
+        for i,outsize in enumerate(self.layer_sizes[-1:]): # 1 --> siste element, siste element er jo hvor mange output neuroner
+            gmod = Gannmodule(self,i,invar,insize,outsize, self.outputActivationFunction)
             invar = gmod.output
             insize = gmod.outsize
         self.output = gmod.output # Output of last module is output of whole network
@@ -218,23 +226,25 @@ class Gann():
 # A general ann module = a layer of neurons (the output) plus its incoming weights and biases.
 class Gannmodule():
 
-    def __init__(self,ann,index,invariable,insize,outsize):
+    def __init__(self,ann,index,invariable,insize,outsize, activationFunction):
         self.ann = ann
         self.insize=insize  # Number of neurons feeding into this module :: antall features
         self.outsize=outsize # Number of neurons in this module :: neaurons in hiddenlayer / output
         self.input = invariable  # Either the gann's input variable or the upstream module's output :: placeholder
         self.index = index # i in parameters --> enumerate index from list dims[1:]
         self.name = "Module-"+str(self.index)
-        self.build()
+        self.build(activationFunction)
 
-    def build(self):
+    def build(self, activationFunction):
         mona = self.name
         n = self.outsize
         self.weights = tf.Variable(np.random.uniform(-.1, .1, size=(self.insize,n)),
                                    name=mona+'-wgt',trainable=True) # True = default for trainable anyway
         self.biases = tf.Variable(np.random.uniform(-.1, .1, size=n),
                                   name=mona+'-bias', trainable=True)  # First bias vector
-        self.output = tf.nn.relu(tf.matmul(self.input, self.weights)+self.biases, name=mona+'-out')
+
+        self.output = eval("tf.nn."+ activationFunction +"(tf.matmul(self.input, self.weights)+self.biases, name=mona+'-out')")
+        # self.output = tf.nn.relu(tf.matmul(self.input, self.weights)+self.biases, name=mona+'-out')
         self.ann.add_module(self)
 
     def getvar(self,type):  # type = (in,out,wgt,bias)

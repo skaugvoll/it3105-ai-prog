@@ -1,7 +1,28 @@
 import os
 import re
 
-def converteDatasetTo2d(datapath):
+
+
+def converteDimsToList(string):
+    return list(map(lambda x: int(x), string.split(',')))
+
+
+print(converteDimsToList("3,4,5,6"))
+
+def converteLabelToBitVector(label, numberOfClasses):
+    counter = 0
+    bitVector = []
+    for i in range(numberOfClasses):
+        if(counter < label[0]):
+            bitVector.append(1)
+        else:
+            bitVector.append(0)
+        counter += 1
+    return bitVector
+
+
+
+def converteDatasetTo2d(datapath, numberOfClasses):
     filepath = os.getcwd() + "/data/" + datapath
 
     cases2d = []
@@ -15,6 +36,8 @@ def converteDatasetTo2d(datapath):
             c = list(map(lambda x: float(x), c)) # make elements float
 
             l = c[-1:] # get label
+            l = converteLabelToBitVector(l, numberOfClasses)
+            print(l)
             c = c[:-1] # remove label
             case = [c,l]
 
@@ -27,4 +50,4 @@ def converteDatasetTo2d(datapath):
     return cases2d
 
 
-converteDatasetTo2d("winequality_red.txt")
+
