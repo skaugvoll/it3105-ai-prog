@@ -3,11 +3,10 @@ import re
 
 
 
-def converteDimsToList(string):
+def convertStringToList(string):
     return list(map(lambda x: int(x), string.split(',')))
 
 
-print(converteDimsToList("3,4,5,6"))
 
 def converteLabelToBitVector(label, numberOfClasses):
     counter = 0
@@ -47,7 +46,7 @@ def converteDatasetTo2d(datapath, numberOfClasses):
 
             cases2d.append(case)
 
-    return cases2d
+    return cases2d[:]
 
 
 

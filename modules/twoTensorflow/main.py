@@ -42,7 +42,7 @@ def gannTesting(epochs=50,nbits=4,lrate=0.03,showint=100,mbs=None,vfrac=0.1,tfra
     # dims = [features, hidden layer,...,hidden layer n-1, hiden layer n, labels]
     dims = [9, 5,20, numberOfClasses]
 
-    ann = Gann(dims=dims,cman=cman,lrate=lrate,showint=showint,mbs=mbs,vint=vint,softmax=sm, hiddenLayerActivationFunction="sigmoid", outputActivationFunction="relu")
+    ann = Gann(dims=dims,cman=cman,lrate=lrate,showint=showint,mbs=mbs,vint=vint,softmax=sm, hiddenLayerActivationFunction="sigmoid", outputActivationFunction="relu", bounds=[-3,0])
 
     ann.gen_probe(0,'wgt',('hist','avg'))  # Plot a histogram and avg of the incoming weights to module 0.
     ann.gen_probe(-1,'out',('avg','max'))  # Plot average and max value of module 1's output vector

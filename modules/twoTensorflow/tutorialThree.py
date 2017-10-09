@@ -9,7 +9,7 @@ import tflowtools as TFT
 
 class Gann():
 
-    def __init__(self, dims, cman,lrate=.1,showint=None,mbs=10,vint=None,softmax=False, hiddenLayerActivationFunction = None, outputActivationFunction= None, errorFunction=None):
+    def __init__(self, dims, cman,lrate=.1,showint=None,mbs=10,vint=None,softmax=False, hiddenLayerActivationFunction = None, outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1]):
         self.learning_rate = lrate
         self.layer_sizes = dims # Sizes of each layer of neurons
         self.show_interval = showint # Frequency of showing grabbed variables
@@ -25,6 +25,7 @@ class Gann():
         self.hiddenLayerActivationFunction = hiddenLayerActivationFunction
         self.outputActivationFunction = outputActivationFunction
         self.errorFunction = errorFunction
+        self.bounds = bounds
         self.build()
 
     # Probed variables are to be displayed in the Tensorboard.
@@ -50,12 +51,12 @@ class Gann():
         insize = num_inputs
         # Build all of the modules :: A module is a layer of neurons + all the weights coming into that layer
         for i,outsize in enumerate(self.layer_sizes[1:-1]): # 1 --> siste element, siste element er jo hvor mange output neuroner
-            gmod = Gannmodule(self,i,invar,insize,outsize, self.hiddenLayerActivationFunction)
+            gmod = Gannmodule(self,i,invar,insize,outsize, self.hiddenLayerActivationFunction, lowerbound=self.bounds[0], upperbound=self.bounds[1])
             invar = gmod.output
             insize = gmod.outsize
 
         for i,outsize in enumerate(self.layer_sizes[-1:]): # 1 --> siste element, siste element er jo hvor mange output neuroner
-            gmod = Gannmodule(self,i,invar,insize,outsize, self.outputActivationFunction)
+            gmod = Gannmodule(self,i,invar,insize,outsize, self.outputActivationFunction, lowerbound=self.bounds[0], upperbound=self.bounds[1])
             invar = gmod.output
             insize = gmod.outsize
         self.output = gmod.output # Output of last module is output of whole network
@@ -226,21 +227,23 @@ class Gann():
 # A general ann module = a layer of neurons (the output) plus its incoming weights and biases.
 class Gannmodule():
 
-    def __init__(self,ann,index,invariable,insize,outsize, activationFunction):
+    def __init__(self,ann,index,invariable,insize,outsize, activationFunction, lowerbound=-.1, upperbound=.1):
         self.ann = ann
         self.insize=insize  # Number of neurons feeding into this module :: antall features
         self.outsize=outsize # Number of neurons in this module :: neaurons in hiddenlayer / output
         self.input = invariable  # Either the gann's input variable or the upstream module's output :: placeholder
         self.index = index # i in parameters --> enumerate index from list dims[1:]
         self.name = "Module-"+str(self.index)
+        self.lb = lowerbound # lower weight bound
+        self.ub = upperbound # upper weight bound
         self.build(activationFunction)
 
     def build(self, activationFunction):
         mona = self.name
         n = self.outsize
-        self.weights = tf.Variable(np.random.uniform(-.1, .1, size=(self.insize,n)),
+        self.weights = tf.Variable(np.random.uniform(self.lb, self.ub, size=(self.insize,n)),
                                    name=mona+'-wgt',trainable=True) # True = default for trainable anyway
-        self.biases = tf.Variable(np.random.uniform(-.1, .1, size=n),
+        self.biases = tf.Variable(np.random.uniform(self.lb, self.ub, size=n),
                                   name=mona+'-bias', trainable=True)  # First bias vector
 
         self.output = eval("tf.nn."+ activationFunction +"(tf.matmul(self.input, self.weights)+self.biases, name=mona+'-out')")
@@ -272,8 +275,9 @@ class Gannmodule():
 
 class Caseman():
 
-    def __init__(self,cfunc,vfrac=0,tfrac=0):
+    def __init__(self,cfunc,vfrac=0,tfrac=0, case_fraction=1):
         self.casefunc = cfunc
+        self.case_fraction = case_fraction
         self.validation_fraction = vfrac
         self.test_fraction = tfrac
         self.training_fraction = 1 - (vfrac + tfrac)
@@ -285,7 +289,14 @@ class Caseman():
 
     def organize_cases(self):
         ca = np.array(self.cases)
+
+        print("#######")
+        print(ca, self.cases)
+
         np.random.shuffle(ca) # Randomly shuffle all cases
+
+
+
         separator1 = round(len(self.cases) * self.training_fraction)
         separator2 = separator1 + round(len(self.cases)*self.validation_fraction)
         self.training_cases = ca[0:separator1]
