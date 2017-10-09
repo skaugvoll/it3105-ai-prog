@@ -6,12 +6,17 @@ A network scenario consists of:
 1. A dataset serving as the basis for a classification task.
 2. A specification of the network’s architecture (a.k.a. configuration): the layers of neurons, their sizes and activation functions, the cost function, etc.
 3. A scheme for training and testing the network on the dataset.
-
+4. A specification of the network behaviors to be visualized.
 
 ##### The Dataset
 Has a list of features and list of class/labels (labels = output).
+- Created either from data files or,
+- Created from special functions
+
 
 ##### The Network Architecture
+A dataset defines a classification task, which will give hints as to the proper neural network configurations.
+
 Trian and error is a big part of this task, for finding the right architeture.
 
 Important degrees of freedom are;
