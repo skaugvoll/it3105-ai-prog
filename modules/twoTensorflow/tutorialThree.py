@@ -275,9 +275,9 @@ class Gannmodule():
 
 class Caseman():
 
-    def __init__(self,cfunc,vfrac=0,tfrac=0, case_fraction=1):
+    def __init__(self,cfunc,vfrac=0,tfrac=0, cfrac=1):
         self.casefunc = cfunc
-        self.case_fraction = case_fraction
+        self.case_fraction = cfrac
         self.validation_fraction = vfrac
         self.test_fraction = tfrac
         self.training_fraction = 1 - (vfrac + tfrac)
@@ -289,16 +289,12 @@ class Caseman():
 
     def organize_cases(self):
         ca = np.array(self.cases)
-
-        print("#######")
-        print(ca, self.cases)
-
         np.random.shuffle(ca) # Randomly shuffle all cases
 
+        ca = ca[:math.floor(len(self.cases) * self.case_fraction)] # slices the shuffled cases based on case_fraction param, to get random cases each time.
 
-
-        separator1 = round(len(self.cases) * self.training_fraction)
-        separator2 = separator1 + round(len(self.cases)*self.validation_fraction)
+        separator1 = round(len(ca) * self.training_fraction)
+        separator2 = separator1 + round(len(ca)*self.validation_fraction)
         self.training_cases = ca[0:separator1]
         self.validation_cases = ca[separator1:separator2]
         self.testing_cases = ca[separator2:]
