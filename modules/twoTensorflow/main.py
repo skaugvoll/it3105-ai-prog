@@ -1,5 +1,6 @@
 from tutorialThree import Gann, autoex, Caseman
 import helpers
+import tflowtools as TFT
 
 
 # def whatIsThis(dims):
@@ -23,12 +24,12 @@ def test():
 # test()
 
 
-def runModule(epochs=10,lrate=.3,showint=50,mbs=None,vfrac=0.1,tfrac=0.1,vint=100,sm=False):
+def runModule(epochs=30,lrate=.8,showint=30,mbs=None,vfrac=0.1,tfrac=0.1,vint=10,sm=True):
     # size = 2**nbits I autoex, så gir denne 16, som er så mange elementer i hver liste / features
 
     numberOfClasses = 6
 
-    mbs = mbs if mbs else 11
+    mbs = mbs if mbs else 5
 
     case_generator = (lambda : helpers.converteDatasetTo2d("winequality_red.txt", numberOfClasses))
 
@@ -36,7 +37,7 @@ def runModule(epochs=10,lrate=.3,showint=50,mbs=None,vfrac=0.1,tfrac=0.1,vint=10
     cman = Caseman(cfunc=case_generator,vfrac=vfrac,tfrac=tfrac, cfrac=1)
 
     # dims = [features, hidden layer,...,hidden layer n-1, hidden layer n, labels]
-    dims = [11, 5, 4, 5, numberOfClasses]
+    dims = [11, 5, 4, numberOfClasses]
 
     ann = Gann(
         dims=dims,
@@ -46,17 +47,18 @@ def runModule(epochs=10,lrate=.3,showint=50,mbs=None,vfrac=0.1,tfrac=0.1,vint=10
         mbs=mbs,
         vint=vint,
         softmax=sm,
-        hiddenLayerActivationFunction="sigmoid",
-        outputActivationFunction="sigmoid",
+        hiddenLayerActivationFunction="softmax",
+        outputActivationFunction="softmax",
         bounds=[-1, 1],
-        lossFunction="MSE"
+        lossFunction="MSE",
+        mapBatch = 0
     )
 
     ann.gen_probe(0,'wgt',('hist','avg'))  # Plot a histogram and avg of the incoming weights to module 0. : first hidden layer ?
     ann.gen_probe(1,'wgt',('hist','avg'))  # Plot average and max value of module 1's output vector : second hidden layer
 
     ann.add_grabvar(1,'wgt') # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
-    ann.add_grabvar(-1, 'out')  # Add a grabvar (to be displayed in its own matplotlib window). # get the last module / layer in the network. this is the output layer
+    # ann.add_grabvar(-1, 'out')  # Add a grabvar (to be displayed in its own matplotlib window). # get the last module / layer in the network. this is the output layer
 
     ann.run(epochs)
     ann.runmore(epochs*2)

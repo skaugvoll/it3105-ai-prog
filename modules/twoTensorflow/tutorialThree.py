@@ -10,7 +10,8 @@ import helpers
 
 class Gann():
 
-    def __init__(self, dims, cman,lrate=.1,showint=None,mbs=10,vint=None,softmax=False, hiddenLayerActivationFunction = None, outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1], lossFunction="MSE"):
+    def __init__(self, dims, cman,lrate=.1,showint=None,mbs=10,vint=None,softmax=False, hiddenLayerActivationFunction = None,
+                 outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1], lossFunction="MSE", mapBatch=0):
         self.learning_rate = lrate
         self.layer_sizes = dims # Sizes of each layer of neurons
         self.show_interval = showint # Frequency of showing grabbed variables
@@ -28,6 +29,7 @@ class Gann():
         self.errorFunction = errorFunction
         self.bounds = bounds
         self.lossFunction = lossFunction
+        self.mapBatch = mapBatch
         self.build()
 
     # Probed variables are to be displayed in the Tensorboard.
