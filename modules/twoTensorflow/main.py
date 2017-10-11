@@ -36,7 +36,7 @@ def runModule(epochs=50,lrate=.01,showint=100,mbs=None,vfrac=0.1,tfrac=0.1,vint=
     cman = Caseman(cfunc=case_generator,vfrac=vfrac,tfrac=tfrac, cfrac=1)
 
     # dims = [features, hidden layer,...,hidden layer n-1, hidden layer n, labels]
-    dims = [11, 5, 2, 7, numberOfClasses]
+    dims = [11, 5,2,5, numberOfClasses]
 
     ann = Gann(
         dims=dims,
@@ -53,15 +53,14 @@ def runModule(epochs=50,lrate=.01,showint=100,mbs=None,vfrac=0.1,tfrac=0.1,vint=
     )
 
     ann.gen_probe(0,'wgt',('hist','avg'))  # Plot a histogram and avg of the incoming weights to module 0.
-    ann.gen_probe(-1,'out',('avg','max'))  # Plot average and max value of module 1's output vector
+    ann.gen_probe(1,'out',('avg','max'))  # Plot average and max value of module 1's output vector
 
     ann.add_grabvar(0,'wgt') # Add a grabvar (to be displayed in its own matplotlib window).
-    # ann.add_grabvar(0, 'out')  # Add a grabvar (to be displayed in its own matplotlib window).
+    ann.add_grabvar(0, 'out')  # Add a grabvar (to be displayed in its own matplotlib window).
 
     ann.run(epochs)
     ann.runmore(epochs*2)
-    ann.runmore(epochs * 3)
-    # ann.runmore(epochs * 4)
+
 
 
     return ann
