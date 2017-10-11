@@ -50,7 +50,6 @@ def converteDatasetTo2d(datapath, numberOfClasses):
 
 
 def getCostFunction(name=""):
-    print(name)
     # lager learings operator.
     if name == "MSE": # mean squared error
         return "tf.reduce_mean(tf.square(self.target - self.output),name='MSE')"

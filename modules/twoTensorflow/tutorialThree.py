@@ -53,11 +53,14 @@ class Gann():
         insize = num_inputs
         # Build all of the modules :: A module is a layer of neurons + all the weights coming into that layer
         for i,outsize in enumerate(self.layer_sizes[1:-1]): # 1 --> siste element, siste element er jo hvor mange output neuroner
+            print("Insize to module, Outsize of module", insize, outsize)
             gmod = Gannmodule(self,i,invar,insize,outsize, self.hiddenLayerActivationFunction, lowerbound=self.bounds[0], upperbound=self.bounds[1])
             invar = gmod.output
             insize = gmod.outsize
+            # print(insize)
 
         for i,outsize in enumerate(self.layer_sizes[-1:]): # 1 --> siste element, siste element er jo hvor mange output neuroner
+            print("Insize to module, Outsize of module: ", insize, outsize)
             gmod = Gannmodule(self,i,invar,insize,outsize, self.outputActivationFunction, lowerbound=self.bounds[0], upperbound=self.bounds[1])
             invar = gmod.output
             insize = gmod.outsize
@@ -72,7 +75,6 @@ class Gann():
     # of the weight array.
 
     def configure_learning(self):
-        print(self.lossFunction)
         self.error = eval(helpers.getCostFunction(name=self.lossFunction))
         self.predictor = self.output  # Simple prediction runs will request the value of output neurons
         # Defining the training operator
@@ -230,7 +232,7 @@ class Gann():
 # A general ann module = a layer of neurons (the output) plus its incoming weights and biases.
 class Gannmodule():
 
-    def __init__(self,ann,index,invariable,insize,outsize, activationFunction, lowerbound=-.1, upperbound=.1):
+    def __init__(self,ann,index,invariable,insize,outsize, activationFunction, lowerbound=None, upperbound=None):
         self.ann = ann
         self.insize=insize  # Number of neurons feeding into this module :: antall features
         self.outsize=outsize # Number of neurons in this module :: neaurons in hiddenlayer / output

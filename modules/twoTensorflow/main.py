@@ -23,7 +23,7 @@ def test():
 # test()
 
 
-def runModule(epochs=50,lrate=.01,showint=100,mbs=None,vfrac=0.1,tfrac=0.1,vint=100,sm=False):
+def runModule(epochs=10,lrate=.3,showint=50,mbs=None,vfrac=0.1,tfrac=0.1,vint=100,sm=False):
     # size = 2**nbits I autoex, så gir denne 16, som er så mange elementer i hver liste / features
 
     numberOfClasses = 6
@@ -36,7 +36,7 @@ def runModule(epochs=50,lrate=.01,showint=100,mbs=None,vfrac=0.1,tfrac=0.1,vint=
     cman = Caseman(cfunc=case_generator,vfrac=vfrac,tfrac=tfrac, cfrac=1)
 
     # dims = [features, hidden layer,...,hidden layer n-1, hidden layer n, labels]
-    dims = [11, 5,2,5, numberOfClasses]
+    dims = [11, 5, 4, 5, numberOfClasses]
 
     ann = Gann(
         dims=dims,
@@ -46,17 +46,17 @@ def runModule(epochs=50,lrate=.01,showint=100,mbs=None,vfrac=0.1,tfrac=0.1,vint=
         mbs=mbs,
         vint=vint,
         softmax=sm,
-        hiddenLayerActivationFunction="relu",
-        outputActivationFunction="relu",
+        hiddenLayerActivationFunction="sigmoid",
+        outputActivationFunction="sigmoid",
         bounds=[-1, 1],
         lossFunction="MSE"
     )
 
-    ann.gen_probe(0,'wgt',('hist','avg'))  # Plot a histogram and avg of the incoming weights to module 0.
-    ann.gen_probe(1,'out',('avg','max'))  # Plot average and max value of module 1's output vector
+    ann.gen_probe(0,'wgt',('hist','avg'))  # Plot a histogram and avg of the incoming weights to module 0. : first hidden layer ?
+    ann.gen_probe(1,'wgt',('hist','avg'))  # Plot average and max value of module 1's output vector : second hidden layer
 
-    ann.add_grabvar(0,'wgt') # Add a grabvar (to be displayed in its own matplotlib window).
-    ann.add_grabvar(0, 'out')  # Add a grabvar (to be displayed in its own matplotlib window).
+    ann.add_grabvar(1,'wgt') # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
+    ann.add_grabvar(-1, 'out')  # Add a grabvar (to be displayed in its own matplotlib window). # get the last module / layer in the network. this is the output layer
 
     ann.run(epochs)
     ann.runmore(epochs*2)
