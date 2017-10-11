@@ -3,13 +3,14 @@ import numpy as np
 import math
 import matplotlib.pyplot as PLT
 import tflowtools as TFT
+import helpers
 
 # ******* A General Artificial Neural Network ********
 # This is the original GANN, which has been improved in the file gann.py
 
 class Gann():
 
-    def __init__(self, dims, cman,lrate=.1,showint=None,mbs=10,vint=None,softmax=False, hiddenLayerActivationFunction = None, outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1]):
+    def __init__(self, dims, cman,lrate=.1,showint=None,mbs=10,vint=None,softmax=False, hiddenLayerActivationFunction = None, outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1], lossFunction="MSE"):
         self.learning_rate = lrate
         self.layer_sizes = dims # Sizes of each layer of neurons
         self.show_interval = showint # Frequency of showing grabbed variables
@@ -26,6 +27,7 @@ class Gann():
         self.outputActivationFunction = outputActivationFunction
         self.errorFunction = errorFunction
         self.bounds = bounds
+        self.lossFunction = lossFunction
         self.build()
 
     # Probed variables are to be displayed in the Tensorboard.
@@ -70,7 +72,8 @@ class Gann():
     # of the weight array.
 
     def configure_learning(self):
-        self.error = tf.reduce_mean(tf.square(self.target - self.output),name='MSE') # lager learings operator.
+        print(self.lossFunction)
+        self.error = eval(helpers.getCostFunction(name=self.lossFunction))
         self.predictor = self.output  # Simple prediction runs will request the value of output neurons
         # Defining the training operator
         optimizer = tf.train.GradientDescentOptimizer(self.learning_rate)

@@ -49,4 +49,19 @@ def converteDatasetTo2d(datapath, numberOfClasses):
     return cases2d[:]
 
 
+def getCostFunction(name=""):
+    print(name)
+    # lager learings operator.
+    if name == "MSE": # mean squared error
+        return "tf.reduce_mean(tf.square(self.target - self.output),name='MSE')"
+    elif name == "SCE":  # sigmoid_cross_entropy
+        return "tf.losses.sigmoid_cross_entropy(self.target, self.output)"
+    elif name == "AD": # compute absolute distance
+        return "tf.losses.absolute_difference(self.target, self.output)"
+    return name
+
+
+
+
+
 
