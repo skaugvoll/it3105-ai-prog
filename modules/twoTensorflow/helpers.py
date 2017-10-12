@@ -60,6 +60,12 @@ def getCostFunction(name=""):
     return name
 
 
+def add_grabvars(ann, newGrabvars):
+    for grabvar in newGrabvars:
+        ann.add_grabvar(int(grabvar[0]), str(grabvar[1]))
+
+
+
 
 
 

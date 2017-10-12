@@ -29,7 +29,7 @@ def runModule(epochs=30,lrate=.8,showint=30,mbs=None,vfrac=0.1,tfrac=0.1,vint=10
 
     numberOfClasses = 6
 
-    mbs = mbs if mbs else 5
+    mbs = mbs if mbs else 50
 
     case_generator = (lambda : helpers.converteDatasetTo2d("winequality_red.txt", numberOfClasses))
 
@@ -37,7 +37,7 @@ def runModule(epochs=30,lrate=.8,showint=30,mbs=None,vfrac=0.1,tfrac=0.1,vint=10
     cman = Caseman(cfunc=case_generator,vfrac=vfrac,tfrac=tfrac, cfrac=1)
 
     # dims = [features, hidden layer,...,hidden layer n-1, hidden layer n, labels]
-    dims = [11, 5, 4, numberOfClasses]
+    dims = [11, 1, 2, numberOfClasses]
 
     ann = Gann(
         dims=dims,
@@ -51,7 +51,7 @@ def runModule(epochs=30,lrate=.8,showint=30,mbs=None,vfrac=0.1,tfrac=0.1,vint=10
         outputActivationFunction="softmax",
         bounds=[-1, 1],
         lossFunction="MSE",
-        mapBatch = 0
+        mapBatchSize = 10
     )
 
     ann.gen_probe(0,'wgt',('hist','avg'))  # Plot a histogram and avg of the incoming weights to module 0. : first hidden layer ?

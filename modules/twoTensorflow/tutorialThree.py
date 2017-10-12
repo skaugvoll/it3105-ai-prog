@@ -11,7 +11,7 @@ import helpers
 class Gann():
 
     def __init__(self, dims, cman,lrate=.1,showint=None,mbs=10,vint=None,softmax=False, hiddenLayerActivationFunction = None,
-                 outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1], lossFunction="MSE", mapBatch=0):
+                 outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1], lossFunction="MSE", mapBatchSize=0, wantedMapGrabvars=[]):
         self.learning_rate = lrate
         self.layer_sizes = dims # Sizes of each layer of neurons
         self.show_interval = showint # Frequency of showing grabbed variables
@@ -29,7 +29,8 @@ class Gann():
         self.errorFunction = errorFunction
         self.bounds = bounds
         self.lossFunction = lossFunction
-        self.mapBatch = mapBatch
+        self.mapBatchSize = mapBatchSize
+        self.wantedMapGrabvars = wantedMapGrabvars
         self.build()
 
     # Probed variables are to be displayed in the Tensorboard.
@@ -76,7 +77,7 @@ class Gann():
     # derivatives of the error function with respect to each component of each variable, i.e. each weight
     # of the weight array.
 
-    def configure_learning(self):
+    def configure_learning(self, shouldLearn=True):
         self.error = eval(helpers.getCostFunction(name=self.lossFunction))
         self.predictor = self.output  # Simple prediction runs will request the value of output neurons
         # Defining the training operator
@@ -113,6 +114,8 @@ class Gann():
         self.test_func = self.error
         if bestk is not None:
             self.test_func = self.gen_match_counter(self.predictor,[TFT.one_hot_to_int(list(v)) for v in targets],k=bestk)
+
+
         testres, grabvals, _ = self.run_one_step(self.test_func, self.grabvars, self.probes, session=sess,
                                            feed_dict=feeder,  show_interval=None)
         if bestk is None:
@@ -183,12 +186,16 @@ class Gann():
             else:
                 print(v, end="\n\n")
 
-    def run(self,epochs=100,sess=None,continued=False,bestk=None):
+    def run(self,epochs=100,sess=None,continued=False,bestk=None, mapThatShit="Flase"):
         PLT.ion() # slår på interaktiv modus
         self.training_session(epochs,sess=sess,continued=continued)
         self.test_on_trains(sess=self.current_session,bestk=bestk)
         self.testing_session(sess=self.current_session,bestk=bestk)
         self.close_current_session(view=False)
+        if(mapThatShit):
+            self.do_mapping(msg="Mapping", bestk=False)
+
+
         PLT.ioff()
 
     # After a run is complete, runmore allows us to do additional training on the network, picking up where we
@@ -230,6 +237,27 @@ class Gann():
         self.save_session_params(sess=self.current_session)
         TFT.close_session(self.current_session, view=view)
 
+
+    def do_mapping(self, msg="Mapping", bestk=None):
+        self.reopen_current_session()
+        cases = self.caseman.getMappingCases(self.mapBatchSize)
+        self.grabvars.clear()
+        helpers.add_grabvars(self, self.wantedMapGrabvars)
+        inputs = [c[0] for c in cases];
+        targets = [c[1] for c in cases]
+        feeder = {self.input: inputs, self.target: targets}
+        self.test_func = self.predictor
+        if bestk is not None:
+            self.test_func = self.gen_match_counter(self.predictor, [TFT.one_hot_to_int(list(v)) for v in targets],
+                                                    k=bestk)
+
+        testres, grabvals, _ = self.run_one_step(self.test_func, self.grabvars, self.probes, session=self.current_session,
+                                                 feed_dict=feeder, show_interval=None)
+        if bestk is None:
+            print('%s Set Error = %f ' % (msg, testres))
+        else:
+            print('%s Set Correct Classifications = %f %%' % (msg, 100 * (testres / len(cases))))
+        return testres  # self.error uses MSE, so this is a per-case value when bestk=None
 
 # A general ann module = a layer of neurons (the output) plus its incoming weights and biases.
 class Gannmodule():
@@ -293,6 +321,12 @@ class Caseman():
 
     def generate_cases(self):
         self.cases = self.casefunc()  # Run the case generator.  Case = [input-vector, target-vector]
+
+    def getMappingCases(self, mapBatchSize):
+        ca = np.array(self.cases)
+        np.random.shuffle(ca)  # Randomly shuffle all cases
+
+        return ca[:mapBatchSize]
 
     def organize_cases(self):
         ca = np.array(self.cases)
