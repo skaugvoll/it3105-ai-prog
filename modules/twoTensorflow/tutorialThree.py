@@ -186,14 +186,14 @@ class Gann():
             else:
                 print(v, end="\n\n")
 
-    def run(self,epochs=100,sess=None,continued=False,bestk=None, mapThatShit="Flase"):
+    def run(self,epochs=100,sess=None,continued=False,bestk=None, mapThatShit=False):
         PLT.ion() # slår på interaktiv modus
         self.training_session(epochs,sess=sess,continued=continued)
         self.test_on_trains(sess=self.current_session,bestk=bestk)
         self.testing_session(sess=self.current_session,bestk=bestk)
         self.close_current_session(view=False)
         if(mapThatShit):
-            self.do_mapping(msg="Mapping", bestk=False)
+            self.do_mapping(msg="Mapping", bestk=None)
 
 
         PLT.ioff()
@@ -253,6 +253,8 @@ class Gann():
 
         testres, grabvals, _ = self.run_one_step(self.test_func, self.grabvars, self.probes, session=self.current_session,
                                                  feed_dict=feeder, show_interval=None)
+        print("*********", testres)
+        TFT.display_matrix(testres)
         if bestk is None:
             print('%s Set Error = %f ' % (msg, testres))
         else:
