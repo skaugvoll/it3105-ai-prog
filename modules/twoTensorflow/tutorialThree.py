@@ -245,6 +245,7 @@ class Gann():
         helpers.add_grabvars(self, self.wantedMapGrabvars)
         inputs = [c[0] for c in cases];
         targets = [c[1] for c in cases]
+
         feeder = {self.input: inputs, self.target: targets}
         self.test_func = self.predictor
         if bestk is not None:
@@ -253,13 +254,14 @@ class Gann():
 
         testres, grabvals, _ = self.run_one_step(self.test_func, self.grabvars, self.probes, session=self.current_session,
                                                  feed_dict=feeder, show_interval=None)
-        print("*********", testres)
+
         TFT.display_matrix(testres)
-        if bestk is None:
-            print('%s Set Error = %f ' % (msg, testres))
-        else:
-            print('%s Set Correct Classifications = %f %%' % (msg, 100 * (testres / len(cases))))
-        return testres  # self.error uses MSE, so this is a per-case value when bestk=None
+        # TFT.hinton_plot(testres)
+        # if bestk is None:
+        #     print('%s Set Error = %f ' % (msg, np.concatenate(testres)))
+        # else:
+        #     print('%s Set Correct Classifications = %f %%' % (msg, 100 * (testres / len(cases))))
+        # return testres  # self.error uses MSE, so this is a per-case value when bestk=None
 
 # A general ann module = a layer of neurons (the output) plus its incoming weights and biases.
 class Gannmodule():
