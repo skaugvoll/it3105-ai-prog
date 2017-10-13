@@ -24,23 +24,23 @@ def test():
 # test()
 
 
-def runModule(epochs=200 ,lrate=0.18,showint=3,mbs=87,vfrac=0.2,tfrac=0.2,vint=80,sm=False):
+def runModule(epochs=2500 ,lrate=0.175,showint=15,mbs=87,vfrac=0.2,tfrac=0.1,vint=80,sm=False):
     # size = 2**nbits I autoex, så gir denne 16, som er så mange elementer i hver liste / features
 
-    numberOfFeatures = 9
-    numberOfClasses = 7
+    numberOfFeatures = 8 # g = 9, w = 11, y = 8
+    numberOfClasses = 10 # g = 7, w = 6, y = 10
 
     mbs = mbs if mbs else 10
 
     # case_generator = (lambda : helpers.converteDatasetTo2d("winequality_red.txt", numberOfClasses))
-    case_generator = (lambda: helpers.converteDatasetTo2d("glass.txt", numberOfClasses))
+    case_generator = (lambda: helpers.converteDatasetTo2d("yeast.txt", numberOfClasses))
     # case_generator = (lambda: helpers.converteDatasetTo2d("yeast.txt", numberOfClasses))
 
 
     cman = Caseman(cfunc=case_generator,vfrac=vfrac,tfrac=tfrac, cfrac=1)
 
     # dims = [features, hidden layer,...,hidden layer n-1, hidden layer n, labels]
-    dims = [numberOfFeatures, 120,  numberOfClasses]
+    dims = [numberOfFeatures, 133,  numberOfClasses]
 
     ann = Gann(
         dims=dims,
@@ -52,7 +52,7 @@ def runModule(epochs=200 ,lrate=0.18,showint=3,mbs=87,vfrac=0.2,tfrac=0.2,vint=8
         softmax=sm,
         hiddenLayerActivationFunction="sigmoid",
         outputActivationFunction="sigmoid",
-        bounds=[-1, 1],
+        bounds=[-0.5, 0.5],
         lossFunction="MSE",
         mapBatchSize = 15,
         wantedMapGrabvars = [[2,'in'], [2,'out']]
@@ -62,7 +62,7 @@ def runModule(epochs=200 ,lrate=0.18,showint=3,mbs=87,vfrac=0.2,tfrac=0.2,vint=8
     # ann.gen_probe(1,'wgt',('hist','avg'))  # Plot average and max value of module 1's output vector : second hidden layer
 
     # ann.add_grabvar(0,'in') # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
-    # ann.add_grabvar(0, 'wgt')  # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
+    # ann.add_grabvar(1, 'wgt')  # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
     # ann.add_grabvar(0, 'out')  # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
 
     # ann.add_grabvar(-1, 'out')  # Add a grabvar (to be displayed in its own matplotlib window). # get the last module / layer in the network. this is the output layer
