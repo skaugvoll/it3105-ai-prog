@@ -238,7 +238,7 @@ class Gann():
         TFT.close_session(self.current_session, view=view)
 
 
-    def do_mapping(self, msg="Mapping", bestk=None):
+    def do_mapping(self, msg="Mapping", bestk=None, plot="display"):
         self.reopen_current_session()
         cases = self.caseman.getMappingCases(self.mapBatchSize)
         self.grabvars.clear()
@@ -255,8 +255,14 @@ class Gann():
         testres, grabvals, _ = self.run_one_step(self.test_func, self.grabvars, self.probes, session=self.current_session,
                                                  feed_dict=feeder, show_interval=None)
 
-        TFT.display_matrix(testres)
-        # TFT.hinton_plot(testres)
+        if (plot == 'display'):
+            eval("TFT.display_matrix(testres)")
+        elif (plot =="hinton"):
+            eval("TFT.hinton_plot(testres)")
+        elif (plot == "dendrogram"):
+            eval("TFT.dendromgram(inputs, targets)")
+
+
         # if bestk is None:
         #     print('%s Set Error = %f ' % (msg, np.concatenate(testres)))
         # else:
