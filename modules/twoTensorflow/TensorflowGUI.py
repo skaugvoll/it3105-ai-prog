@@ -21,8 +21,8 @@ class TensorflowGUI:
         Label(text="").grid(row=2, column=0)
         # " "*20 is to make the width of dropdown, nice. If not 20 characters it looks so tiny.
         self.dataset = self.createDropDown("Dataset", " "*20, "glass", "winequality_red", "yeast", "one-hot-vector", "hackers-choice", row=3, column=0)
-        self.haf= self.createDropDown("Hidden Activation Func", "sigmoid", "softmax", "relu", "relu6", row=3, column=1)
-        self.oaf = self.createDropDown("Output Activation Func", "sigmoid", "softmax", "relu", "relu6", row=3, column=2)
+        self.haf= self.createDropDown("Hidden Activation Func", "sigmoid", "sigmoid", "softmax", "relu", "relu6", row=3, column=1)
+        self.oaf = self.createDropDown("Output Activation Func", "sigmoid", "sigmoid", "softmax", "relu", "relu6", row=3, column=2)
         self.costfunc= self.createEntry("Cost Function", 3,3)
         self.weightrange= self.createEntry("Weight Range", 3,4)
         self.epochs= self.createEntry("Epochs", 3,5)
