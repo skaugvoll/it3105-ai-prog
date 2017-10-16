@@ -243,7 +243,7 @@ class Gann():
         cases = self.caseman.getMappingCases(self.mapBatchSize)
         self.grabvars.clear()
         helpers.add_grabvars(self, self.wantedMapGrabvars)
-        inputs = [c[0] for c in cases];
+        inputs = [c[0] for c in cases]
         targets = [c[1] for c in cases]
 
         feeder = {self.input: inputs, self.target: targets}
@@ -263,16 +263,15 @@ class Gann():
             eval("TFT.dendrogram(inputs, targets)")
 
         # Dendrogram for each layer...
-        print("####### wantedMapGrab: {}".format(self.wantedMapGrabvars))
 
         for l in self.wantedMapGrabvars:
             # print("####### INDEX: {}".format(index))
             # index, type
             index = l[0]
-            print("####### INDEX: {}".format(index))
             m = self.modules[index]
-            # TFT.dendrogram(inputs, m.getvar('in'))
-            TFT.dendrogram(inputs, targets)
+
+            # TFT.dendrogram(testres, targets) # ser ut til å funke, men er jo feile verdier ?
+            TFT.dendrogram(testres, targets, ax=None) # ser ut til å funke, men er jo feile verdier ?
 
         # if bestk is None:
         #     print('%s Set Error = %f ' % (msg, np.concatenate(testres)))
