@@ -60,7 +60,7 @@ def getCostFunction(name=""):
 
 def add_grabvars(ann, newGrabvars):
     for grabvar in newGrabvars:
-        ann.add_grabvar(int(grabvar[0]), str(grabvar[1]))
+        ann.add_grabvar(grabvar[0], grabvar[1])
 
 
 def add_prob_grabvars(ann, newGrabvars):
@@ -72,8 +72,12 @@ def add_prob_grabvars(ann, newGrabvars):
     :return: nothing
     '''
     for grabvar in newGrabvars:
+        print(grabvar)
         # ann.gen_probe(0, 'wgt', ('hist', 'avg'))
-        ann.gen_probe(int(grabvar[0]), str(grabvar[1]), grabvar[2])
+        print(type(grabvar[0]))
+        print(type(grabvar[1]))
+        print(type(grabvar[2]))
+        ann.gen_probe(grabvar[0], grabvar[1], grabvar[2])
 
 
 

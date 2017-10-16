@@ -8,6 +8,7 @@ class TensorflowGUI:
     def __init__(self):
         self.gui = Tk()
         self.probeList = []
+        self.grabvarList = []
 
         self.entryWidth = 15
 
@@ -37,7 +38,7 @@ class TensorflowGUI:
         self.weightrange= self.createEntry("Weight Range", 6,4)
 
         Label(text="", padx=33).grid(row=6, column=7)
-        Button(bg="#469683", highlightbackground="#469683", padx=33, pady=5, text="Solve: ",
+        Button(bg="#469683", highlightbackground="#469683", padx=33, pady=5, text="Run",
                command=lambda: self.runModule(
                    dims=helpers.convertStringToIntList(self.dims.get()),
                    epochs=int(self.epochs.get()),
@@ -53,11 +54,16 @@ class TensorflowGUI:
                    costfunc=self.costfunc.get(),
                    sm=self.stringToBool(self.softmax.get()),
                    bounds=helpers.convertStringToFloatList(self.weightrange.get()),
+                   mapThatShit=self.stringToBool(self.mapThatShit.get()),
                )).grid(row=6, column=8)
 
         Label(text="").grid(row=8, column=0)
         self.rungrabvars= self.createEntry("Run Grabvars", 9,0)
-        self.proberabvars= self.createEntry("Probe Grabvars", 9,1)
+        Button(bg="#469683", highlightbackground="#469683", padx=10, pady=5, text="+",
+               command=lambda: self.addToGrabvarList(self.rungrabvars.get())).grid(row=10, column=1)
+        # self.probegrabvars= self.createEntry("Probe Grabvars", 9,1)
+        # Button(bg="#469683", highlightbackground="#469683", padx=10, pady=5, text="+",
+        #        command=lambda: self.addToProbeList(self.probegrabvars.get())).grid(row=10, column=2)
 
 
         Label(text="").grid(row=11, column=0)
@@ -93,9 +99,16 @@ class TensorflowGUI:
         listString = [index, type, tup]
         self.probeList.append(listString)
 
+    def addToGrabvarList(self, listString):
+        x = listString.split(",")
+        module = int(x[0])
+        type = str(x[1])
+        listString = [module, type]
+        self.grabvarList.append(listString)
+
 
     def runModule(self, dims=None, epochs=500, lrate=None, mbs=None, cfrac=None, vfrac=None, tfrac=None, vint=None, showint=None,
-                  haf=None, oaf=None, costfunc=None, sm=False, bounds=None):
+                  haf=None, oaf=None, costfunc=None, sm=False, bounds=None, mapThatShit=None):
         # size = 2**nbits I autoex, så gir denne 16, som er så mange elementer i hver liste / features
 
         numberOfFeatures = 8  # g = 9, w = 11, y = 8
@@ -146,21 +159,24 @@ class TensorflowGUI:
             softmax=sm,
             bounds=bounds,
             mapBatchSize=15,
-            wantedMapGrabvars=[[2, 'in'], [2, 'out']]
+            wantedMapGrabvars=[[0, 'in'], [0, 'out']]
         )
 
-        helpers.add_prob_grabvars(ann,self.probeList)
+        # helpers.add_prob_grabvars(ann,self.probeList)
         # ann.gen_probe(0,'wgt',('hist','avg'))  # Plot a histogram and avg of the incoming weights to module 0. : first hidden layer ?
         # ann.gen_probe(1,'wgt',('hist','avg'))  # Plot average and max value of module 1's output vector : second hidden layer
 
+        helpers.add_grabvars(ann,self.grabvarList)
         # ann.add_grabvar(0,'in') # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
         # ann.add_grabvar(1, 'wgt')  # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
         # ann.add_grabvar(0, 'out')  # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
 
         # ann.add_grabvar(-1, 'out')  # Add a grabvar (to be displayed in its own matplotlib window). # get the last module / layer in the network. this is the output layer
 
-        ann.run(epochs, mapThatShit=False)
+        ann.run(epochs, mapThatShit=mapThatShit)
         ann.runmore(epochs * 2)
+
+        self.grabvarList.clear()
 
         return ann
 
