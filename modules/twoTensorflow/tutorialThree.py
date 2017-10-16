@@ -238,7 +238,7 @@ class Gann():
         TFT.close_session(self.current_session, view=view)
 
 
-    def do_mapping(self, msg="Mapping", bestk=None, plot="dendrogram"):
+    def do_mapping(self, msg="Mapping", bestk=None, plot="display"):
         self.reopen_current_session()
         cases = self.caseman.getMappingCases(self.mapBatchSize)
         self.grabvars.clear()
@@ -263,11 +263,16 @@ class Gann():
             eval("TFT.dendrogram(inputs, targets)")
 
         # Dendrogram for each layer...
+        print("####### wantedMapGrab: {}".format(self.wantedMapGrabvars))
+
         for l in self.wantedMapGrabvars:
+            # print("####### INDEX: {}".format(index))
             # index, type
             index = l[0]
+            print("####### INDEX: {}".format(index))
             m = self.modules[index]
-            TFT.dendrogram(inputs, m.getvar('in'))
+            # TFT.dendrogram(inputs, m.getvar('in'))
+            TFT.dendrogram(inputs, targets)
 
         # if bestk is None:
         #     print('%s Set Error = %f ' % (msg, np.concatenate(testres)))
