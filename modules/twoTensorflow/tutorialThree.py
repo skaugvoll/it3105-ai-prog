@@ -260,7 +260,14 @@ class Gann():
         elif (plot =="hinton"):
             eval("TFT.hinton_plot(testres)")
         elif (plot == "dendrogram"):
-            eval("TFT.dendromgram(inputs, targets)")
+            eval("TFT.dendrogram(inputs, targets)")
+
+        # Dendrogram for each layer...
+        # for l in self.wantedMapGrabvars:
+        #     # index, type
+        #     index = l[0]
+        #     m = self.modules[index]
+        #     TFT.dendrogram(m.getvar('in'), m.getvar('out'))
 
 
         # if bestk is None:
