@@ -9,8 +9,6 @@ def convertStringToIntList(string):
 def convertStringToFloatList(string):
     return list(map(lambda x: float(x), string.split(',')))
 
-
-
 def converteLabelToBitVector(label, numberOfClasses):
     counter = 0
     bitVector = []
@@ -21,8 +19,6 @@ def converteLabelToBitVector(label, numberOfClasses):
             bitVector.append(0)
         counter += 1
     return bitVector
-
-
 
 def converteDatasetTo2d(datapath, numberOfClasses):
     filepath = os.getcwd() + "/data/" + datapath
@@ -51,7 +47,6 @@ def converteDatasetTo2d(datapath, numberOfClasses):
 
     return cases2d[:]
 
-
 def getCostFunction(name=""):
     # lager learings operator.
     if name == "MSE": # mean squared error
@@ -68,6 +63,17 @@ def add_grabvars(ann, newGrabvars):
         ann.add_grabvar(int(grabvar[0]), str(grabvar[1]))
 
 
+def add_prob_grabvars(ann, newGrabvars):
+    '''
+    Function to add a list of vars to be probed in a neural network.
+    
+    :param ann: the network that holds the grabvars
+    :param newGrabvars: 2D list with, each elemetn having module-index, type, tuple(diagram, measure)
+    :return: nothing
+    '''
+    for grabvar in newGrabvars:
+        # ann.gen_probe(0, 'wgt', ('hist', 'avg'))
+        ann.gen_probe(grabvar[0], grabvar[1], grabvar[2])
 
 
 
