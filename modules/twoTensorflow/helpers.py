@@ -3,8 +3,11 @@ import re
 
 
 
-def convertStringToList(string):
+def convertStringToIntList(string):
     return list(map(lambda x: int(x), string.split(',')))
+
+def convertStringToFloatList(string):
+    return list(map(lambda x: float(x), string.split(',')))
 
 
 
@@ -31,12 +34,12 @@ def converteDatasetTo2d(datapath, numberOfClasses):
             caseline = caseline.rstrip() # remove newline character
 
             c = re.split(splitCharacters, caseline) # make a list out of line
-            print(c)
+            # print(c)
             c = list(map(lambda x: float(x), c)) # make elements float
 
             l = c[-1:] # get label
             l = converteLabelToBitVector(l, numberOfClasses)
-            print(l)
+            # print(l)
             c = c[:-1] # remove label
             case = [c,l]
 
