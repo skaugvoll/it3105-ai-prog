@@ -66,14 +66,14 @@ def add_grabvars(ann, newGrabvars):
 def add_prob_grabvars(ann, newGrabvars):
     '''
     Function to add a list of vars to be probed in a neural network.
-    
+
     :param ann: the network that holds the grabvars
     :param newGrabvars: 2D list with, each elemetn having module-index, type, tuple(diagram, measure)
     :return: nothing
     '''
     for grabvar in newGrabvars:
         # ann.gen_probe(0, 'wgt', ('hist', 'avg'))
-        ann.gen_probe(grabvar[0], grabvar[1], grabvar[2])
+        ann.gen_probe(int(grabvar[0]), str(grabvar[1]), grabvar[2])
 
 
 
