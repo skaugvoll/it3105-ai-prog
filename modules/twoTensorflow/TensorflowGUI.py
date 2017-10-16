@@ -9,6 +9,7 @@ class TensorflowGUI:
         self.gui = Tk()
         self.probeList = []
         self.grabvarList = []
+        self.mapgrabvarList = []
 
         self.entryWidth = 15
 
@@ -55,6 +56,7 @@ class TensorflowGUI:
                    sm=self.stringToBool(self.softmax.get()),
                    bounds=helpers.convertStringToFloatList(self.weightrange.get()),
                    mapThatShit=self.stringToBool(self.mapThatShit.get()),
+                   mapBatchSize=int(self.mapbatchsize.get()),
                )).grid(row=6, column=8)
 
         Label(text="").grid(row=8, column=0)
@@ -69,8 +71,10 @@ class TensorflowGUI:
         Label(text="").grid(row=11, column=0)
         self.mapThatShit = self.createDropDown("Mapping?", "False", "True", "False", row=12, column=0)
         self.mapbatchsize= self.createEntry("MapBatch Sixze", 12,1)
-        self.mapgrabvars= self.createEntry("Map Grabvars", 12,2)
-        self.mapplot= self.createEntry("Map Plot", 12,3)
+        self.mapplot= self.createEntry("Map Plot", 12,2)
+        self.mapgrabvars= self.createEntry("Map Grabvars", 12,3)
+        Button(bg="#469683", highlightbackground="#469683", padx=10, pady=5, text="+",
+               command=lambda: self.addToMapGrabvarList(self.mapgrabvars.get())).grid(row=13, column=4)
 
     def stringToBool(self, strng):
         return bool(strtobool(strng))
@@ -106,9 +110,16 @@ class TensorflowGUI:
         listString = [module, type]
         self.grabvarList.append(listString)
 
+    def addToMapGrabvarList(self, listString):
+        x = listString.split(",")
+        module = int(x[0])
+        type = str(x[1])
+        listString = [module, type]
+        self.mapgrabvarList.append(listString)
+
 
     def runModule(self, dims=None, epochs=500, lrate=None, mbs=None, cfrac=None, vfrac=None, tfrac=None, vint=None, showint=None,
-                  haf=None, oaf=None, costfunc=None, sm=False, bounds=None, mapThatShit=None):
+                  haf=None, oaf=None, costfunc=None, sm=False, bounds=None, mapThatShit=None, mapBatchSize=None):
         # size = 2**nbits I autoex, så gir denne 16, som er så mange elementer i hver liste / features
 
         numberOfFeatures = 8  # g = 9, w = 11, y = 8
@@ -158,8 +169,8 @@ class TensorflowGUI:
             lossFunction=costfunc,
             softmax=sm,
             bounds=bounds,
-            mapBatchSize=15,
-            wantedMapGrabvars=[[0, 'in'], [0, 'out']]
+            mapBatchSize=mapBatchSize,
+            wantedMapGrabvars=self.mapgrabvarList
         )
 
         # helpers.add_prob_grabvars(ann,self.probeList)
