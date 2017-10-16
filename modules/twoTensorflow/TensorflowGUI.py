@@ -19,8 +19,8 @@ class TensorflowGUI:
         self.vint = self.createEntry("Validation interval", 0,7)
 
         Label(text="").grid(row=2, column=0)
-
-        self.dataset = self.createDropDown("Dataset", "", "glass", "winequality_red", "yeast", "one-hot-vector", "hackers-choice", row=3, column=0)
+        # " "*20 is to make the width of dropdown, nice. If not 20 characters it looks so tiny.
+        self.dataset = self.createDropDown("Dataset", " "*20, "glass", "winequality_red", "yeast", "one-hot-vector", "hackers-choice", row=3, column=0)
         self.haf= self.createDropDown("Hidden Activation Func", "sigmoid", "softmax", "relu", "relu6", row=3, column=1)
         self.oaf = self.createDropDown("Output Activation Func", "sigmoid", "softmax", "relu", "relu6", row=3, column=2)
         self.costfunc= self.createEntry("Cost Function", 3,3)
@@ -37,12 +37,12 @@ class TensorflowGUI:
         return temp
 
     def createDropDown(self,name, defaultValue, *options, row, column):
-        # master = Tk()
         temp = StringVar(self.gui)
         temp.set(defaultValue)  # default value
 
         Label(text=name).grid(row=row, column=column)
         OptionMenu(self.gui, temp, *options).grid(padx=10, row=row+1, column=column)
+
         return temp
 
 
