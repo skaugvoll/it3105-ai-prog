@@ -7,6 +7,7 @@ import tflowtools as TFT
 class TensorflowGUI:
     def __init__(self):
         self.gui = Tk()
+        self.probeList = []
 
         self.entryWidth = 15
 
@@ -83,6 +84,15 @@ class TensorflowGUI:
 
         return temp
 
+    def addToProbeList(self, listString):
+        listString = listString.replace(' ', '')
+        x = listString.split(",")
+        index = int(x[0])
+        type = str(x[1].replace(" ", ''))
+        tup = (str(x[2].replace("(", '')), str(x[3].replace(")", "")))
+        listString = [index, type, tup]
+        self.probeList.append(listString)
+
 
     def runModule(self, dims=None, epochs=500, lrate=None, mbs=None, cfrac=None, vfrac=None, tfrac=None, vint=None, showint=None,
                   haf=None, oaf=None, costfunc=None, sm=False, bounds=None):
@@ -139,6 +149,7 @@ class TensorflowGUI:
             wantedMapGrabvars=[[2, 'in'], [2, 'out']]
         )
 
+        helpers.add_prob_grabvars(ann,self.probeList)
         # ann.gen_probe(0,'wgt',('hist','avg'))  # Plot a histogram and avg of the incoming weights to module 0. : first hidden layer ?
         # ann.gen_probe(1,'wgt',('hist','avg'))  # Plot average and max value of module 1's output vector : second hidden layer
 
@@ -152,6 +163,7 @@ class TensorflowGUI:
         ann.runmore(epochs * 2)
 
         return ann
+
 
 
     def show(self):
