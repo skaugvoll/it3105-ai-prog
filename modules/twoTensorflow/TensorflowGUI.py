@@ -23,9 +23,21 @@ class TensorflowGUI:
         self.dataset = self.createDropDown("Dataset", " "*20, "glass", "winequality_red", "yeast", "one-hot-vector", "hackers-choice", row=3, column=0)
         self.haf= self.createDropDown("Hidden Activation Func", "sigmoid", "sigmoid", "softmax", "relu", "relu6", row=3, column=1)
         self.oaf = self.createDropDown("Output Activation Func", "sigmoid", "sigmoid", "softmax", "relu", "relu6", row=3, column=2)
-        self.costfunc= self.createEntry("Cost Function", 3,3)
+        self.costfunc= self.createDropDown("Cost function", "MSE", "MSE", "SCE", "AD", row=3, column=3)
         self.weightrange= self.createEntry("Weight Range", 3,4)
         self.epochs= self.createEntry("Epochs", 3,5)
+        self.softmax = self.createDropDown("Softmax", "False", "True", "False", row=3, column=6)
+
+        Label(text="").grid(row=5, column=0)
+        self.rungrabvars= self.createEntry("Run Grabvars", 6,0)
+        self.proberabvars= self.createEntry("Probe Grabvars", 6,1)
+
+
+        Label(text="").grid(row=8, column=0)
+        self.mapThatShit = self.createDropDown("Mapping?", "False", "True", "False", row=9, column=0)
+        self.mapbatchsize= self.createEntry("MapBatch Sixze", 9,1)
+        self.mapgrabvars= self.createEntry("Map Grabvars", 9,2)
+        self.mapplot= self.createEntry("Map Plot", 9,3)
 
 
 

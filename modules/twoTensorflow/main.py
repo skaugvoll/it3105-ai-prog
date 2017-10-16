@@ -29,6 +29,8 @@ def runModule(epochs=2500 ,lrate=0.175,showint=15,mbs=87,vfrac=0.2,tfrac=0.1,vin
 
     numberOfFeatures = 8 # g = 9, w = 11, y = 8
     numberOfClasses = 10 # g = 7, w = 6, y = 10
+    wantedRunGrabvars = [[0, 'in'], [1, 'wgt'], [0, 'out'], [-1, 'out']]
+    wantedProbeGrabvars = [[0, 'wgt', ('hist', 'avg')], [1, 'wgt', ('hist', 'avg')]]
 
     mbs = mbs if mbs else 10
 
@@ -36,6 +38,31 @@ def runModule(epochs=2500 ,lrate=0.175,showint=15,mbs=87,vfrac=0.2,tfrac=0.1,vin
     case_generator = (lambda: helpers.converteDatasetTo2d("yeast.txt", numberOfClasses))
     # case_generator = (lambda: helpers.converteDatasetTo2d("yeast.txt", numberOfClasses))
 
+
+
+    # case_generator = (lambda : helpers.converteDatasetTo2d("winequality_red.txt", numberOfClasses))
+    case_generator = (lambda: helpers.converteDatasetTo2d("yeast.txt", numberOfClasses))
+    # case_generator = (lambda: helpers.converteDatasetTo2d("yeast.txt", numberOfClasses))
+    # case_generator = (lambda: TFT.gen_all_one_hot_cases(2 ** nbits))
+
+
+    # parity cases
+    # case_generator = (lambda: TFT.gen_all_parity_cases())
+    # autoencoder
+    # gen_all_one hot_cases
+
+    # case_generator = (lambda: TFT.gen_all_one_hot_cases(2 ** nbits))
+    # gen_dense_autoencoder_cases
+
+    # Bit counter
+    # case_generator = (lambda: TFT.gen_vector_count_cases())
+
+    # Segment counter
+    # case_generator = (lambda: TFT.gen_segment_vector_cases())
+
+    # MNIST
+    # --> import mnist_basics.py, gives access to several simple functions for generating standard data sets, such ass load_all)flat)cases
+    # --> should probably scale all pixel values to numbers in the range [0,1] BEFORE feeding them into the input of your network
 
     cman = Caseman(cfunc=case_generator,vfrac=vfrac,tfrac=tfrac, cfrac=1)
 
