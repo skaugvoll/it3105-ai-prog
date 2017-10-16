@@ -4,7 +4,7 @@ import math
 import matplotlib.pyplot as PLT
 import tflowtools as TFT
 import helpers
-
+import time
 # ******* A General Artificial Neural Network ********
 # This is the original GANN, which has been improved in the file gann.py
 
@@ -238,7 +238,7 @@ class Gann():
         TFT.close_session(self.current_session, view=view)
 
 
-    def do_mapping(self, msg="Mapping", bestk=None, plot="display"):
+    def do_mapping(self, msg="Mapping", bestk=None, plot="dendrogram"):
         self.reopen_current_session()
         cases = self.caseman.getMappingCases(self.mapBatchSize)
         self.grabvars.clear()
@@ -263,12 +263,11 @@ class Gann():
             eval("TFT.dendrogram(inputs, targets)")
 
         # Dendrogram for each layer...
-        # for l in self.wantedMapGrabvars:
-        #     # index, type
-        #     index = l[0]
-        #     m = self.modules[index]
-        #     TFT.dendrogram(m.getvar('in'), m.getvar('out'))
-
+        for l in self.wantedMapGrabvars:
+            # index, type
+            index = l[0]
+            m = self.modules[index]
+            TFT.dendrogram(inputs, m.getvar('in'))
 
         # if bestk is None:
         #     print('%s Set Error = %f ' % (msg, np.concatenate(testres)))
