@@ -80,7 +80,7 @@ def add_prob_grabvars(ann, newGrabvars):
         ann.gen_probe(grabvar[0], grabvar[1], grabvar[2])
 
 
-def get_case_generator(data_name, nbits=4, numberOfClasses=None):
+def get_case_generator(data_name="autoencoder", nbits=4, numberOfClasses=None):
     if data_name == 'yeast': return "(lambda: helpers.converteDatasetTo2d('yeast.txt', 10))"
     if data_name == 'glass': return "(lambda: helpers.converteDatasetTo2d('glass.txt', 7))"
     if data_name == 'wine': return "(lambda : helpers.converteDatasetTo2d('winequality_red.txt', 6))"
