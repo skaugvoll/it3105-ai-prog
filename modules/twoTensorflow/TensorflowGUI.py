@@ -122,15 +122,15 @@ class TensorflowGUI:
                   haf=None, oaf=None, costfunc=None, sm=False, bounds=None, mapThatShit=None, mapBatchSize=None):
         # size = 2**nbits I autoex, så gir denne 16, som er så mange elementer i hver liste / features
 
-        numberOfFeatures = 8  # g = 9, w = 11, y = 8
-        numberOfClasses = 10  # g = 7, w = 6, y = 10
+        numberOfFeatures = 8 # g = 9, w = 11, y = 8, autoencoder = 2**nbits (2**4 = 16)
+        numberOfClasses = 10  # g = 7, w = 6, y = 10, autoencoder = 2**nbits (2**4 = 16)
         wantedRunGrabvars = [[0, 'in'], [1, 'wgt'], [0, 'out'], [-1, 'out']]
         wantedProbeGrabvars = [[0, 'wgt', ('hist', 'avg')], [1, 'wgt', ('hist', 'avg')]]
 
         mbs = mbs if mbs else 10
 
         # case_generator = (lambda : helpers.converteDatasetTo2d("winequality_red.txt", numberOfClasses))
-        case_generator = (lambda: helpers.converteDatasetTo2d("yeast.txt", numberOfClasses))
+        case_generator = (lambda: helpers.converteDatasetTo2d("glass.txt", numberOfClasses))
         # case_generator = (lambda: helpers.converteDatasetTo2d("yeast.txt", numberOfClasses))
         # case_generator = (lambda: TFT.gen_all_one_hot_cases(2 ** nbits))
 

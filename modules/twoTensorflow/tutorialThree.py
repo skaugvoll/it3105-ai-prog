@@ -255,6 +255,7 @@ class Gann():
         testres, grabvals, _ = self.run_one_step(self.test_func, self.grabvars, self.probes, session=self.current_session,
                                                  feed_dict=feeder, show_interval=None)
 
+
         if (plot == 'display'):
             eval("TFT.display_matrix(testres)")
         elif (plot =="hinton"):
@@ -263,15 +264,15 @@ class Gann():
             eval("TFT.dendrogram(inputs, targets)")
 
         # Dendrogram for each layer...
+        print("grabvals")
+        print(grabvals)
 
-        for l in self.wantedMapGrabvars:
-            # print("####### INDEX: {}".format(index))
+        for hiddenactivation in grabvals:
             # index, type
-            index = l[0]
-            m = self.modules[index]
+            TFT.dendrogram(hiddenactivation, targets)
 
-            # TFT.dendrogram(testres, targets) # ser ut til å funke, men er jo feile verdier ?
-            TFT.dendrogram(testres, targets, ax=None) # ser ut til å funke, men er jo feile verdier ?
+            # TFT.dendrogram(feature, labels) --> mappe input og hidden activation patterns ... waht are the input, and what is the labels ? I see that labels are suppose to be string..
+            # TFT.dendrogram(testres, targets, ax=None) # ser ut til å funke, men er jo feile verdier ?
 
         # if bestk is None:
         #     print('%s Set Error = %f ' % (msg, np.concatenate(testres)))
