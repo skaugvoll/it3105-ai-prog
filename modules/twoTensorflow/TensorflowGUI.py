@@ -15,7 +15,7 @@ class TensorflowGUI:
 
         self.gui.minsize(width=1000, height=400)
 
-        self.dataset = self.createDropDown("Dataset", " "*20, "glass", "winequality_red", "yeast", "one-hot-vector", "hackers-choice", row=0, column=0)
+        self.dataset = self.createDropDown("Dataset", " "*20, "glass", "wine", "yeast", "one-hot-vector", "hackers-choice", "autoencoder", "parity", "dense", "bit", "segment", "mnist", row=0, column=0)
         self.dims = self.createEntry("Dims", 0,1)
         self.epochs = self.createEntry("Epochs", 0,2)
         self.lrate = self.createEntry("Learning Rate", 0,3)

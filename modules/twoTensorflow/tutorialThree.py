@@ -4,7 +4,8 @@ import math
 import matplotlib.pyplot as PLT
 import tflowtools as TFT
 import helpers
-import time
+
+
 # ******* A General Artificial Neural Network ********
 # This is the original GANN, which has been improved in the file gann.py
 

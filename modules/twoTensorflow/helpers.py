@@ -100,8 +100,8 @@ def get_case_generator(
     if data_name == 'dense': return "(lambda: TFT.gen_dense_autoencoder_cases("+ str(nbits) +","+ str(size) +","+ str(density) +"))"
     if data_name == 'bit': return "(lambda: TFT.gen_vector_count_cases("+ str(nbits) +","+ str(size) +","+ str(density) +","+ str(random) +","+ str(poptarg) +"))"
     if data_name == 'segment': return "(lambda: TFT.gen_segmented_vector_cases("+ str(nbits) +","+ str(size) +","+ str(minsegs) +","+ str(maxsegs) +","+ str(poptarg) +"))"
-    # if data_name == 'mnist': return
-    # if non of above, must have typed in another one
-    return "(lambda: helpers.converteDatasetTo2d(data_name, "+ str(numberOfClasses) +"))"
+    if data_name == 'mnist': return "(lambda: MNIST.load_all_flat_cases())"
+    # if non of above, must have typed in another one or chosen hackers_choice
+    return "(lambda: helpers.converteDatasetTo2d("+data_name+", "+ str(numberOfClasses) +"))"
 
 
