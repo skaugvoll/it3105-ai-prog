@@ -11,7 +11,7 @@ import time
 class Gann():
 
     def __init__(self, dims, cman,lrate=.1,showint=None,mbs=10,vint=None,softmax=False, hiddenLayerActivationFunction = None,
-                 outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1], lossFunction="MSE", mapBatchSize=0, wantedMapGrabvars=[], dendrogramLayers=[[1,'out']]):
+                 outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1], lossFunction="MSE", mapBatchSize=0, wantedMapGrabvars=[], dendrogramLayers=[]):
         self.learning_rate = lrate
         self.layer_sizes = dims # Sizes of each layer of neurons
         self.show_interval = showint # Frequency of showing grabbed variables
@@ -267,8 +267,8 @@ class Gann():
             eval("TFT.dendrogram(inputs, targets)")
 
         # Dendrogram for each layer...
-        print("grabvals")
-        print(grabvals)
+        # print("grabvals")
+        # print(grabvals)
 
         for hiddenactivation in grabvals[len(self.wantedMapGrabvars):]:
             # index, type

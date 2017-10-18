@@ -13,11 +13,6 @@ def runModule(dataset="autoencoder", epochs=100 ,lrate=0.175,showint=15,mbs=87,v
     # wantedProbeGrabvars = [[0, 'wgt', ('hist', 'avg')], [1, 'wgt', ('hist', 'avg')]]
 
     mbs = mbs if mbs else 10
-
-
-
-
-
     # case_generator = (lambda : helpers.converteDatasetTo2d("winequality_red.txt", numberOfClasses))
     # case_generator = (lambda: helpers.converteDatasetTo2d("glass.txt", numberOfClasses))
     # case_generator = (lambda: helpers.converteDatasetTo2d("yeast.txt", numberOfClasses))
@@ -47,7 +42,7 @@ def runModule(dataset="autoencoder", epochs=100 ,lrate=0.175,showint=15,mbs=87,v
     cman = Caseman(cfunc=case_generator,vfrac=vfrac,tfrac=tfrac, cfrac=1)
 
     # dims = [features, hidden layer,...,hidden layer n-1, hidden layer n, labels]
-    dims = [numberOfFeatures, 7,  numberOfClasses]
+    dims = [numberOfFeatures, 7, 7, numberOfClasses]
 
     ann = Gann(
         dims=dims,
@@ -62,7 +57,8 @@ def runModule(dataset="autoencoder", epochs=100 ,lrate=0.175,showint=15,mbs=87,v
         bounds=[-0.5, 0.5],
         lossFunction="MSE",
         mapBatchSize = 5,
-        wantedMapGrabvars = [[0,'out'], [1,'out']]
+        wantedMapGrabvars = [[0,'out'], [1,'out']],
+        dendrogramLayers = [[1,'out']],
     )
 
     # ann.gen_probe(0,'wgt',('hist','avg'))  # Plot a histogram and avg of the incoming weights to module 0. : first hidden layer ?
