@@ -171,11 +171,14 @@ class Gann():
         else:
             results = sess.run([operators, grabbed_vars], feed_dict=feed_dict)
         if show_interval and (step % show_interval == 0):
-            if len(self.dendrogramLayers) >= 1: self.display_grabvars(results[1], grabbed_vars[:len(self.wantedMapGrabvars)], step=step)
-            else: self.display_grabvars(results[1], grabbed_vars, step=step)
+            self.display_grabvars(results[1], grabbed_vars, step=step)
         return results[0], results[1], sess
 
     def display_grabvars(self, grabbed_vals, grabbed_vars,step=1):
+        if self.dendrogramLayers:
+            grabbed_vars = grabbed_vars[:len(self.wantedMapGrabvars)]
+            grabbed_vals = grabbed_vals[:len(self.wantedMapGrabvars)]
+
         names = [x.name for x in grabbed_vars];
         msg = "Grabbed Variables at Step " + str(step)
         print("\n" + msg, end="\n")
@@ -272,7 +275,7 @@ class Gann():
 
         for hiddenactivation in grabvals[len(self.wantedMapGrabvars):]:
             # index, type
-            TFT.dendrogram(hiddenactivation, targets)
+            TFT.dendrogram(hiddenactivation, targets, ax=None)
 
             # TFT.dendrogram(feature, labels) --> mappe input og hidden activation patterns ... waht are the input, and what is the labels ? I see that labels are suppose to be string..
             # TFT.dendrogram(testres, targets, ax=None) # ser ut til å funke, men er jo feile verdier ?

@@ -42,7 +42,7 @@ def runModule(dataset="autoencoder", epochs=100 ,lrate=0.175,showint=15,mbs=87,v
     cman = Caseman(cfunc=case_generator,vfrac=vfrac,tfrac=tfrac, cfrac=1)
 
     # dims = [features, hidden layer,...,hidden layer n-1, hidden layer n, labels]
-    dims = [numberOfFeatures, 7, 7, numberOfClasses]
+    dims = [numberOfFeatures, 7, 7, 8, numberOfClasses]
 
     ann = Gann(
         dims=dims,
@@ -58,7 +58,7 @@ def runModule(dataset="autoencoder", epochs=100 ,lrate=0.175,showint=15,mbs=87,v
         lossFunction="MSE",
         mapBatchSize = 5,
         wantedMapGrabvars = [[0,'out'], [1,'out']],
-        dendrogramLayers = [[1,'out']],
+        dendrogramLayers = [[2,'out']],
     )
 
     # ann.gen_probe(0,'wgt',('hist','avg'))  # Plot a histogram and avg of the incoming weights to module 0. : first hidden layer ?
