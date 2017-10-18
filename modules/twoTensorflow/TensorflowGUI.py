@@ -38,32 +38,10 @@ class TensorflowGUI:
         self.softmax = self.createDropDown("Softmax", "False", "True", "False", row=6, column=3)
         self.weightrange= self.createEntry("Weight Range", 6,4)
 
-        Label(text="", padx=33).grid(row=6, column=7)
-        Button(bg="#469683", highlightbackground="#469683", padx=33, pady=5, text="Run",
-               command=lambda: self.runModule(
-                   dataset=self.dataset.get(),
-                   dims=helpers.convertStringToIntList(self.dims.get()),
-                   epochs=int(self.epochs.get()),
-                   lrate=float(self.lrate.get().replace(",",".")),
-                   mbs=int(self.mbs.get()),
-                   cfrac=float(self.cfrac.get().replace(",",".")),
-                   vfrac=float(self.vfrac.get().replace(",",".")),
-                   tfrac=float(self.tfrac.get().replace(",",".")),
-                   vint=int(self.vint.get()),
-                   showint=int(self.showint.get()),
-                   haf=self.haf.get(),
-                   oaf=self.oaf.get(),
-                   costfunc=self.costfunc.get(),
-                   sm=self.stringToBool(self.softmax.get()),
-                   bounds=helpers.convertStringToFloatList(self.weightrange.get()),
-                   mapThatShit=self.stringToBool(self.mapThatShit.get()),
-                   mapBatchSize=int(self.mapbatchsize.get()),
-               )).grid(row=6, column=8)
-
         Label(text="").grid(row=8, column=0)
         self.rungrabvars= self.createEntry("Run Grabvars", 9,0)
-        Button(bg="#469683", highlightbackground="#469683", padx=10, pady=5, text="+",
-               command=lambda: self.addToGrabvarList(self.rungrabvars.get())).grid(row=10, column=1)
+        Button(bg="#469683", highlightbackground="#469683", padx=5, text="+",
+               command=lambda: self.addToGrabvarList(self.rungrabvars.get())).grid(row=10, column=1, sticky=W)
         # self.probegrabvars= self.createEntry("Probe Grabvars", 9,1)
         # Button(bg="#469683", highlightbackground="#469683", padx=10, pady=5, text="+",
         #        command=lambda: self.addToProbeList(self.probegrabvars.get())).grid(row=10, column=2)
@@ -74,8 +52,33 @@ class TensorflowGUI:
         self.mapbatchsize= self.createEntry("MapBatch Sixze", 12,1)
         self.mapplot= self.createEntry("Map Plot", 12,2)
         self.mapgrabvars= self.createEntry("Map Grabvars", 12,3)
-        Button(bg="#469683", highlightbackground="#469683", padx=10, pady=5, text="+",
-               command=lambda: self.addToMapGrabvarList(self.mapgrabvars.get())).grid(row=13, column=4)
+        Button(bg="#469683", highlightbackground="#469683", padx=5, text="+",
+               command=lambda: self.addToMapGrabvarList(self.mapgrabvars.get())).grid(row=14, column=3)
+        self.dendrogrammapgrabvars = self.createEntry("DendrogramMap Grabvars", 12, 4)
+        Button(bg="#469683", highlightbackground="#469683", padx=5, text="+",
+               command=lambda: self.addToMapGrabvarList(self.dendrogrammapgrabvars.get())).grid(row=14, column=4)
+
+        Label(text="", padx=15).grid(row=7, column=8)
+        Button(bg="#469683", highlightbackground="#469683", padx=33, pady=5, text="Run",
+               command=lambda: self.runModule(
+                   dataset=self.dataset.get(),
+                   dims=helpers.convertStringToIntList(self.dims.get()),
+                   epochs=int(self.epochs.get()),
+                   lrate=float(self.lrate.get().replace(",", ".")),
+                   mbs=int(self.mbs.get()),
+                   cfrac=float(self.cfrac.get().replace(",", ".")),
+                   vfrac=float(self.vfrac.get().replace(",", ".")),
+                   tfrac=float(self.tfrac.get().replace(",", ".")),
+                   vint=int(self.vint.get()),
+                   showint=int(self.showint.get()),
+                   haf=self.haf.get(),
+                   oaf=self.oaf.get(),
+                   costfunc=self.costfunc.get(),
+                   sm=self.stringToBool(self.softmax.get()),
+                   bounds=helpers.convertStringToFloatList(self.weightrange.get()),
+                   mapThatShit=self.stringToBool(self.mapThatShit.get()),
+                   mapBatchSize=int(self.mapbatchsize.get()),
+               )).grid(row=7, column=9)
 
     def stringToBool(self, strng):
         return bool(strtobool(strng))
