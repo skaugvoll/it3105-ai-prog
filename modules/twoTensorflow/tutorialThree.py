@@ -11,7 +11,7 @@ import time
 class Gann():
 
     def __init__(self, dims, cman,lrate=.1,showint=None,mbs=10,vint=None,softmax=False, hiddenLayerActivationFunction = None,
-                 outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1], lossFunction="MSE", mapBatchSize=0, wantedMapGrabvars=[]):
+                 outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1], lossFunction="MSE", mapBatchSize=0, wantedMapGrabvars=[], dendrogramLayers=[[1,'out']]):
         self.learning_rate = lrate
         self.layer_sizes = dims # Sizes of each layer of neurons
         self.show_interval = showint # Frequency of showing grabbed variables
@@ -31,6 +31,7 @@ class Gann():
         self.lossFunction = lossFunction
         self.mapBatchSize = mapBatchSize
         self.wantedMapGrabvars = wantedMapGrabvars
+        self.dendrogramLayers = dendrogramLayers
         self.build()
 
     # Probed variables are to be displayed in the Tensorboard.
@@ -170,7 +171,8 @@ class Gann():
         else:
             results = sess.run([operators, grabbed_vars], feed_dict=feed_dict)
         if show_interval and (step % show_interval == 0):
-            self.display_grabvars(results[1], grabbed_vars, step=step)
+            if len(self.dendrogramLayers) >= 1: self.display_grabvars(results[1], grabbed_vars[:len(self.wantedMapGrabvars)], step=step)
+            else: self.display_grabvars(results[1], grabbed_vars, step=step)
         return results[0], results[1], sess
 
     def display_grabvars(self, grabbed_vals, grabbed_vars,step=1):
@@ -243,6 +245,7 @@ class Gann():
         cases = self.caseman.getMappingCases(self.mapBatchSize)
         self.grabvars.clear()
         helpers.add_grabvars(self, self.wantedMapGrabvars)
+        helpers.add_grabvars(self, self.dendrogramLayers)
         inputs = [c[0] for c in cases]
         targets = [c[1] for c in cases]
 
@@ -267,7 +270,7 @@ class Gann():
         print("grabvals")
         print(grabvals)
 
-        for hiddenactivation in grabvals:
+        for hiddenactivation in grabvals[len(self.wantedMapGrabvars):]:
             # index, type
             TFT.dendrogram(hiddenactivation, targets)
 
