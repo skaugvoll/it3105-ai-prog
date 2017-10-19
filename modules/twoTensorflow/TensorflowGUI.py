@@ -64,26 +64,36 @@ class TensorflowGUI:
                command=lambda: self.runModule(
                    dataset=self.dataset.get(),
                    dims=helpers.convertStringToIntList(self.dims.get()),
-                   epochs=int(self.epochs.get()),
-                   lrate=float(self.lrate.get().replace(",", ".")),
+                   epochs=self.castToInt(self.epochs.get()),
+                   lrate=self.castToFloat(self.lrate.get().replace(",", ".")),
                    mbs=int(self.mbs.get()),
-                   cfrac=float(self.cfrac.get().replace(",", ".")),
-                   vfrac=float(self.vfrac.get().replace(",", ".")),
-                   tfrac=float(self.tfrac.get().replace(",", ".")),
+                   cfrac=self.castToFloat(self.cfrac.get().replace(",", ".")),
+                   vfrac=self.castToFloat(self.vfrac.get().replace(",", ".")),
+                   tfrac=self.castToFloat(self.tfrac.get().replace(",", ".")),
                    vint=int(self.vint.get()),
-                   showint=int(self.showint.get()),
+                   showint=self.castToInt(self.showint.get()),
                    haf=self.haf.get(),
                    oaf=self.oaf.get(),
                    costfunc=self.costfunc.get(),
                    sm=self.stringToBool(self.softmax.get()),
                    bounds=helpers.convertStringToFloatList(self.weightrange.get()),
                    mapThatShit=self.stringToBool(self.mapThatShit.get()),
-                   mapBatchSize=int(self.mapbatchsize.get()),
+                   mapBatchSize= self.castToInt(self.mapbatchsize.get()),
                    bestk=self.getCorrectBestKValue(self.bestk.get())
                )).grid(row=7, column=9)
 
     def stringToBool(self, strng):
         return bool(strtobool(strng))
+
+    def castToInt(self, value):
+        if value:
+            return int(value)
+        return None
+
+    def castToFloat(self, value):
+        if value:
+            return float(value)
+        return None
 
     def getCorrectBestKValue(self, bestk):
         if bestk == "Off": return None
