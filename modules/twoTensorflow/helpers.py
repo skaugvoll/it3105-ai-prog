@@ -1,6 +1,11 @@
 import os
 import re
 
+import os, sys
+cwd = os.getcwd()
+sys.path.append(cwd + "/mnist/")
+
+import mnist_basics as MNIST
 
 
 def convertStringToIntList(string):
@@ -46,6 +51,18 @@ def converteDatasetTo2d(datapath, numberOfClasses):
             cases2d.append(case)
 
     return cases2d[:]
+
+
+def converteFlatMnistTo2D():
+    cases2D = []
+    cases = MNIST.load_all_flat_cases() # returns [ [cases] , [targets] ] --> cases = [ [features...] ]
+
+    for f, t in zip(cases[0], cases[1]):
+        f = [feature / 255 for feature in f]
+        t = converteLabelToBitVector([t], 10)
+        case = [f,t]
+        cases2D.append(case)
+    return cases2D
 
 def getCostFunction(name=""):
     # lager learings operator.
@@ -100,7 +117,7 @@ def get_case_generator(
     if data_name == 'dense': return "(lambda: TFT.gen_dense_autoencoder_cases("+ str(nbits) +","+ str(size) +","+ str(density) +"))"
     if data_name == 'bit': return "(lambda: TFT.gen_vector_count_cases("+ str(nbits) +","+ str(size) +","+ str(density) +","+ str(random) +","+ str(poptarg) +"))"
     if data_name == 'segment': return "(lambda: TFT.gen_segmented_vector_cases("+ str(nbits) +","+ str(size) +","+ str(minsegs) +","+ str(maxsegs) +","+ str(poptarg) +"))"
-    if data_name == 'mnist': return "(lambda: MNIST.load_all_flat_cases())"
+    if data_name == 'mnist': return "(lambda: helpers.converteFlatMnistTo2D())"
     # if non of above, must have typed in another one or chosen hackers_choice
     return "(lambda: helpers.converteDatasetTo2d("+data_name+", "+ str(numberOfClasses) +"))"
 

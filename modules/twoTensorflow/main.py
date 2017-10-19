@@ -2,13 +2,11 @@ from tutorialThree import Gann, autoex, Caseman
 import helpers
 import tflowtools as TFT
 
-
-
-def runModule(dataset="autoencoder", epochs=100 ,lrate=0.175,showint=15,mbs=87,vfrac=0.1,tfrac=0.1,vint=80,sm=False):
+def runModule(dataset="mnist", epochs=100 ,lrate=0.175,showint=15,mbs=87,vfrac=0.1,tfrac=0.1,vint=80,sm=False):
     # size = 2**nbits I autoex, så gir denne 16, som er så mange elementer i hver liste / features
 
-    numberOfFeatures = 16 # g = 9, w = 11, y = 8, autoencoder = 2**nbits == 2**4 == 16
-    numberOfClasses = 16 # g = 7, w = 6, y = 10, autoencoder = 2**nbits == 2**4 == 16
+    numberOfFeatures = 784 # g = 9, w = 11, y = 8, autoencoder = 2**nbits == 2**4 == 16
+    numberOfClasses = 10 # g = 7, w = 6, y = 10, autoencoder = 2**nbits == 2**4 == 16
     # wantedRunGrabvars = [[0, 'in'], [1, 'wgt'], [0, 'out'], [-1, 'out']]
     # wantedProbeGrabvars = [[0, 'wgt', ('hist', 'avg')], [1, 'wgt', ('hist', 'avg')]]
 
@@ -39,10 +37,10 @@ def runModule(dataset="autoencoder", epochs=100 ,lrate=0.175,showint=15,mbs=87,v
 
     case_generator = eval(helpers.get_case_generator(dataset))
 
-    cman = Caseman(cfunc=case_generator,vfrac=vfrac,tfrac=tfrac, cfrac=1)
+    cman = Caseman(cfunc=case_generator,vfrac=vfrac,tfrac=tfrac, cfrac=0.1)
 
     # dims = [features, hidden layer,...,hidden layer n-1, hidden layer n, labels]
-    dims = [numberOfFeatures, 7, 7, 8, numberOfClasses]
+    dims = [numberOfFeatures, 8, numberOfClasses]
 
     ann = Gann(
         dims=dims,
@@ -54,7 +52,7 @@ def runModule(dataset="autoencoder", epochs=100 ,lrate=0.175,showint=15,mbs=87,v
         softmax=sm,
         hiddenLayerActivationFunction="sigmoid",
         outputActivationFunction="sigmoid",
-        bounds=[-0.5, 0.5],
+        bounds=[-1, 1],
         lossFunction="MSE",
         mapBatchSize = 5,
         wantedMapGrabvars = [[0,'out'], [1,'out']],
@@ -70,7 +68,7 @@ def runModule(dataset="autoencoder", epochs=100 ,lrate=0.175,showint=15,mbs=87,v
 
     # ann.add_grabvar(-1, 'out')  # Add a grabvar (to be displayed in its own matplotlib window). # get the last module / layer in the network. this is the output layer
 
-    ann.run(epochs, mapThatShit=True)
+    ann.run(epochs, mapThatShit=False)
     ann.runmore(epochs*2)
 
 
