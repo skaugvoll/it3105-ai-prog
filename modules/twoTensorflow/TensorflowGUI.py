@@ -64,7 +64,7 @@ class TensorflowGUI:
 
         Label(text="").grid(row=14, column=0)
         self.mapThatShit = self.createDropDown("Mapping?", "False", "True", "False", row=15, column=0)
-        self.mapbatchsize= self.createEntry("MapBatch Sixze", 15,1)
+        self.mapbatchsize= self.createEntry("MapBatch Size", 15,1)
         self.mapplot= self.createEntry("Map Plot", 15,2)
         self.mapgrabvars= self.createEntry("Map Grabvars", 15,3)
         Button(bg="#469683", highlightbackground="#469683", padx=5, text="+",
@@ -97,7 +97,9 @@ class TensorflowGUI:
                )).grid(row=10, column=6)
 
     def stringToBool(self, strng):
-        return bool(strtobool(strng))
+        if strng:
+            return bool(strtobool(strng))
+        return None
 
     def castToInt(self, value):
         if value:
@@ -108,6 +110,12 @@ class TensorflowGUI:
         if value:
             return float(value)
         return None
+
+    def convertStringToIntTuple(self,string):
+        if string:
+            return eval("("+string+")")
+        return None
+
 
     def getCorrectBestKValue(self, bestk):
         if bestk == "Off": return None
@@ -164,7 +172,20 @@ class TensorflowGUI:
 
         mbs = mbs if mbs else 10
 
-        case_generator = eval(helpers.get_case_generator(data_name=dataset))
+        case_generator = eval(helpers.get_case_generator(
+            data_name=dataset,
+            # TODO IMPLEMENT :: numberOfCases=self.castToInt(self.numberOfCases),
+            nbits=self.castToInt(self.nbits.get()),
+            size=self.castToInt(self.size.get()),
+            density=self.convertStringToIntTuple(self.density.get()),
+            double=self.stringToBool(self.double.get()),
+            random=self.stringToBool(self.random.get()),
+            minsegs=self.castToInt(self.minseg.get()),
+            maxsegs=self.castToInt(self.maxseg.get()),
+        ))
+
+
+
         cman = Caseman(cfunc=case_generator, vfrac=vfrac, tfrac=tfrac, cfrac=cfrac)
 
 
@@ -185,22 +206,15 @@ class TensorflowGUI:
             wantedMapGrabvars=self.mapgrabvarList,
         )
 
-        # helpers.add_prob_grabvars(ann,self.probeList)
-        # ann.gen_probe(0,'wgt',('hist','avg'))  # Plot a histogram and avg of the incoming weights to module 0. : first hidden layer ?
-        # ann.gen_probe(1,'wgt',('hist','avg'))  # Plot average and max value of module 1's output vector : second hidden layer
+        # helpers.add_prob_grabvars(ann,self.probeList)  # add PROB_vars
+        helpers.add_grabvars(ann, self.grabvarList)  # add GRAB_vars
 
-
-        # ann.add_grabvar(0,'in') # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
-        # ann.add_grabvar(1, 'wgt')  # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
-        # ann.add_grabvar(0, 'out')  # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
-
-        # ann.add_grabvar(-1, 'out')  # Add a grabvar (to be displayed in its own matplotlib window). # get the last module / layer in the network. this is the output layer
-
-        helpers.add_grabvars(ann, self.grabvarList)
         ann.run(epochs, mapThatShit=mapThatShit, bestk=bestk) # bestk = nonetype or 1 int
         ann.runmore(epochs * 2, bestk=bestk)
 
+        # clear the lists that hold vars to be grabed, so that the next run does not include the same grabvars, without beeing explicitly stated
         self.grabvarList.clear()
+        self.mapgrabvarList.clear()
 
         return ann
 
