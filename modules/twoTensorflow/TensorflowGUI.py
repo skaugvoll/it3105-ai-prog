@@ -45,7 +45,7 @@ class TensorflowGUI:
         # self.probegrabvars= self.createEntry("Probe Grabvars", 9,1)
         # Button(bg="#469683", highlightbackground="#469683", padx=10, pady=5, text="+",
         #        command=lambda: self.addToProbeList(self.probegrabvars.get())).grid(row=10, column=2)
-        self.bestk = self.createDropDown("Bestk","Off","Off","On",row=9, column=1)
+        self.bestk = self.createDropDown("Bestk","Off","Off","On",row=9, column=2)
 
 
         Label(text="").grid(row=11, column=0)
