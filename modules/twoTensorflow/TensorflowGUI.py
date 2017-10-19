@@ -18,12 +18,12 @@ class TensorflowGUI:
         self.dataset = self.createDropDown("Dataset", "autoencoder", "glass", "wine", "yeast", "one-hot-vector", "hackers-choice", "autoencoder", "parity", "dense", "bit", "segment", "mnist", row=0, column=0)
         self.nbits = self.createEntry("nBits", row=0, column=1)
         self.size = self.createEntry("Size", row=0, column=2)
-        self.poptarg = self.createDropDown("PopTarg", "False", "True", "False", row=0, column=3)
+        self.poptarg = self.createDropDown("PopTarg", "True", "True", "False", row=0, column=3)
         self.minseg = self.createEntry("MinSeg", row=0, column=4)
         self.maxseg = self.createEntry("MaxSeg", row=0, column=5)
         self.density= self.createEntry("Density", row=0, column=6) # TODO: Should be touple
-        self.double = self.createDropDown("Double", "False", "True", "False", row=0, column=7)
-        self.random = self.createDropDown("Random", "False", "True", "False", row=0, column=8)
+        self.double = self.createDropDown("Double", "True", "True", "False", row=0, column=7)
+        self.random = self.createDropDown("Random", "True", "True", "False", row=0, column=8)
 
         Label(text="").grid(row=2, column=0)
         self.dims = self.createEntry("Dims", 3, 0)
