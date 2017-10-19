@@ -99,7 +99,7 @@ def add_prob_grabvars(ann, newGrabvars):
 
 def get_case_generator(
         data_name="autoencoder",
-        numberOfClasses=None,
+        numberOfClasses=2,
         nbits=4,
         size= None,
         density = (0,1),
@@ -119,6 +119,6 @@ def get_case_generator(
     if data_name == 'segment': return "(lambda: TFT.gen_segmented_vector_cases("+ str(nbits) +","+ str(size) +","+ str(minsegs) +","+ str(maxsegs) +","+ str(poptarg) +"))"
     if data_name == 'mnist': return "(lambda: helpers.converteFlatMnistTo2D())"
     # if non of above, must have typed in another one or chosen hackers_choice
-    return "(lambda: helpers.converteDatasetTo2d("+data_name+", "+ str(numberOfClasses) +"))"
+    return "(lambda: helpers.converteDatasetTo2d('"+str(data_name)+".txt', "+ str(numberOfClasses) +"))"
 
 

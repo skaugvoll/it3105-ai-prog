@@ -16,7 +16,7 @@ class TensorflowGUI:
 
         self.gui.minsize(width=1000, height=550)
 
-        self.dataset = self.createDropDown("Dataset", "autoencoder", "glass", "wine", "yeast", "one-hot-vector", "hackers-choice", "autoencoder", "parity", "dense", "bit", "segment", "mnist", row=0, column=0)
+        self.dataset = self.createDropDown("Dataset", "autoencoder", "glass", "wine", "yeast", "one-hot-vector", "breast_cancer", "autoencoder", "parity", "dense", "bit", "segment", "mnist", row=0, column=0)
         self.nbits = self.createEntry("nBits", row=0, column=1)
         self.size = self.createEntry("Size", row=0, column=2)
         self.density= self.createEntry("Density", row=0, column=3) # TODO: Should be touple
