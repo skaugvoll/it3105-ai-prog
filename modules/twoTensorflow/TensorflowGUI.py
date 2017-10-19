@@ -7,6 +7,7 @@ import tflowtools as TFT
 class TensorflowGUI:
     def __init__(self):
         self.gui = Tk()
+        self.ann = None
         self.probeList = []
         self.grabvarList = []
         self.mapgrabvarList = []
@@ -95,6 +96,11 @@ class TensorflowGUI:
                    mapBatchSize= self.castToInt(self.mapbatchsize.get()),
                    bestk=self.getCorrectBestKValue(self.bestk.get())
                )).grid(row=10, column=6)
+
+        Button(bg="#469683", highlightbackground="#469683", padx=33, pady=5, text="Run",
+               command=lambda: self.runModuleMore(self.castToInt(self.epochs.get()))).grid(row=10, column=7)
+
+
 
     def stringToBool(self, strng):
         if strng:
@@ -189,7 +195,7 @@ class TensorflowGUI:
         cman = Caseman(cfunc=case_generator, vfrac=vfrac, tfrac=tfrac, cfrac=cfrac)
 
 
-        ann = Gann(
+        self.ann = Gann(
             # dims = [features, hidden layer,...,hidden layer n-1, hidden layer n, labels]
             cman=cman,
             dims=dims,
@@ -207,21 +213,26 @@ class TensorflowGUI:
         )
 
         # helpers.add_prob_grabvars(ann,self.probeList)  # add PROB_vars
-        helpers.add_grabvars(ann, self.grabvarList)  # add GRAB_vars
+        helpers.add_grabvars(self.ann, self.grabvarList)  # add GRAB_vars
 
-        ann.run(epochs, mapThatShit=mapThatShit, bestk=bestk) # bestk = nonetype or 1 int
-        ann.runmore(epochs * 2, bestk=bestk)
+        self.ann.run(epochs, mapThatShit=mapThatShit, bestk=bestk) # bestk = nonetype or 1 int
+        # self.ann.runmore(epochs * 2, bestk=bestk)
 
         # clear the lists that hold vars to be grabed, so that the next run does not include the same grabvars, without beeing explicitly stated
         self.grabvarList.clear()
         self.mapgrabvarList.clear()
 
-        return ann
+        return self.ann
 
 
+    def runModuleMore(self, epochs):
+        self.ann.runmore(epochs * 2)
 
     def show(self):
         self.gui.mainloop()
+
+
+
 
 
 if __name__ == "__main__":
