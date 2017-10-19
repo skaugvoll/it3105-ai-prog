@@ -14,67 +14,64 @@ class TensorflowGUI:
 
         self.entryWidth = 15
 
-        self.gui.minsize(width=1000, height=500)
+        self.gui.minsize(width=1000, height=550)
 
         self.dataset = self.createDropDown("Dataset", "autoencoder", "glass", "wine", "yeast", "one-hot-vector", "hackers-choice", "autoencoder", "parity", "dense", "bit", "segment", "mnist", row=0, column=0)
         self.nbits = self.createEntry("nBits", row=0, column=1)
         self.size = self.createEntry("Size", row=0, column=2)
-        self.poptarg = self.createDropDown("PopTarg", "True", "True", "False", row=0, column=3)
-        self.minseg = self.createEntry("MinSeg", row=0, column=4)
-        self.maxseg = self.createEntry("MaxSeg", row=0, column=5)
-        self.density= self.createEntry("Density", row=0, column=6) # TODO: Should be touple
-        self.double = self.createDropDown("Double", "True", "True", "False", row=0, column=7)
-        self.random = self.createDropDown("Random", "True", "True", "False", row=0, column=8)
+        self.density= self.createEntry("Density", row=0, column=3) # TODO: Should be touple
 
         Label(text="").grid(row=2, column=0)
-        self.dims = self.createEntry("Dims", 3, 0)
-        self.epochs = self.createEntry("Epochs", 3, 1)
-        self.lrate = self.createEntry("Learning Rate", 3, 2)
-        self.mbs = self.createEntry("Minibatch Size", 3, 3)
-        self.weightrange = self.createEntry("Weight Range", 3, 4)
+        self.minseg = self.createEntry("MinSeg", row=3, column=0)
+        self.maxseg = self.createEntry("MaxSeg", row=3, column=1)
+        self.poptarg = self.createDropDown("PopTarg", "True", "True", "False", row=3, column=2)
+        self.double = self.createDropDown("Double", "True", "True", "False", row=3, column=3)
+        self.random = self.createDropDown("Random", "True", "True", "False", row=3, column=4)
 
         Label(text="").grid(row=5, column=0)
-        self.cfrac = self.createEntry("Case Fraction", 6, 0)
-        self.vfrac = self.createEntry("Validation Fraction", 6, 1)
-        self.tfrac = self.createEntry("Test Fraction", 6, 2)
-        self.vint = self.createEntry("Validation interval", 6, 3)
-        self.showint = self.createEntry("Show interval", 6, 4)
+        self.dims = self.createEntry("Dims", 6, 0)
+        self.epochs = self.createEntry("Epochs", 6, 1)
+        self.lrate = self.createEntry("Learning Rate", 6, 2)
+        self.mbs = self.createEntry("Minibatch Size", 6, 3)
+        self.weightrange = self.createEntry("Weight Range", 6, 4)
 
         Label(text="").grid(row=8, column=0)
-        self.haf = self.createDropDown("Hidden Activation Func", "sigmoid", "sigmoid", "tanh", "softmax", "relu",
-                                       "relu6", row=9, column=0)
-        self.oaf = self.createDropDown("Output Activation Func", "sigmoid", "sigmoid", "tanh", "softmax", "relu",
-                                       "relu6", row=9, column=1)
-        self.costfunc = self.createDropDown("Cost function", "MSE", "MSE", "SCE", "AD", row=9, column=2)
-        self.softmax = self.createDropDown("Softmax", "False", "True", "False", row=9, column=3)
-        self.bestk = self.createDropDown("Bestk", "Off", "Off", "On", row=9, column=4)
-
-
-
-
+        self.cfrac = self.createEntry("Case Fraction", 9, 0)
+        self.vfrac = self.createEntry("Validation Fraction", 9, 1)
+        self.tfrac = self.createEntry("Test Fraction", 9, 2)
+        self.vint = self.createEntry("Validation interval", 9, 3)
+        self.showint = self.createEntry("Show interval", 9, 4)
 
         Label(text="").grid(row=11, column=0)
-        self.rungrabvars = self.createEntry("Run Grabvars", 12, 0)
+        self.haf = self.createDropDown("Hidden Activation Func", "sigmoid", "sigmoid", "tanh", "softmax", "relu",
+                                       "relu6", row=12, column=0)
+        self.oaf = self.createDropDown("Output Activation Func", "sigmoid", "sigmoid", "tanh", "softmax", "relu",
+                                       "relu6", row=12, column=1)
+        self.costfunc = self.createDropDown("Cost function", "MSE", "MSE", "SCE", "AD", row=12, column=2)
+        self.softmax = self.createDropDown("Softmax", "False", "True", "False", row=12, column=3)
+        self.bestk = self.createDropDown("Bestk", "Off", "Off", "On", row=12, column=4)
+
+        Label(text="").grid(row=14, column=0)
+        self.rungrabvars = self.createEntry("Run Grabvars", 15, 0)
         Button(bg="#469683", highlightbackground="#469683", padx=5, text="+",
-               command=lambda: self.addToGrabvarList(self.rungrabvars.get())).grid(row=13, column=1, sticky=W)
+               command=lambda: self.addToGrabvarList(self.rungrabvars.get())).grid(row=16, column=1, sticky=W)
         # self.probegrabvars= self.createEntry("Probe Grabvars", 9,1)
         # Button(bg="#469683", highlightbackground="#469683", padx=10, pady=5, text="+",
         #        command=lambda: self.addToProbeList(self.probegrabvars.get())).grid(row=10, column=2)
 
-
-
-        Label(text="").grid(row=14, column=0)
-        self.mapThatShit = self.createDropDown("Mapping?", "False", "True", "False", row=15, column=0)
-        self.mapbatchsize= self.createEntry("MapBatch Size", 15,1)
-        self.mapplot= self.createEntry("Map Plot", 15,2)
-        self.mapgrabvars= self.createEntry("Map Grabvars", 15,3)
+        Label(text="").grid(row=17, column=0)
+        self.mapThatShit = self.createDropDown("Mapping?", "False", "True", "False", row=18, column=0)
+        self.mapbatchsize= self.createEntry("MapBatch Size", 18,1)
+        self.mapplot= self.createEntry("Map Plot", 18,2)
+        self.mapgrabvars= self.createEntry("Map Grabvars", 18,3)
         Button(bg="#469683", highlightbackground="#469683", padx=5, text="+",
-               command=lambda: self.addToMapGrabvarList(self.mapgrabvars.get())).grid(row=17, column=3)
-        self.dendrogrammapgrabvars = self.createEntry("DendrogramMap Grabvars", 15, 4)
+               command=lambda: self.addToMapGrabvarList(self.mapgrabvars.get())).grid(row=20, column=3)
+        self.dendrogrammapgrabvars = self.createEntry("DendrogramMap Grabvars", 18, 4)
         Button(bg="#469683", highlightbackground="#469683", padx=5, text="+",
-               command=lambda: self.addToMapGrabvarList(self.dendrogrammapgrabvars.get())).grid(row=17, column=4)
+               command=lambda: self.addToMapGrabvarList(self.dendrogrammapgrabvars.get())).grid(row=20, column=4)
 
 
+        Label(text="       ").grid(row=0, column=5)
         Button(bg="#469683", highlightbackground="#469683", padx=33, pady=5, text="Run",
                command=lambda: self.runModule(
                    dataset=self.dataset.get(),
@@ -95,20 +92,23 @@ class TensorflowGUI:
                    mapThatShit=self.stringToBool(self.mapThatShit.get()),
                    mapBatchSize= self.castToInt(self.mapbatchsize.get()),
                    bestk=self.getCorrectBestKValue(self.bestk.get())
-               )).grid(row=16, column=6)
+               )).grid(row=13, column=6)
 
         Button(bg="#469683", highlightbackground="#469683", padx=33, pady=5, text="Run more",
-               command=lambda: self.runModuleMore(self.castToInt(self.epochs.get()))).grid(row=16, column=7)
+               command=lambda: self.runModuleMore(self.castToInt(self.epochs.get()))).grid(row=13, column=7)
+
+        self.datasetText = Label(text="", padx=10, font=("Courier", 20))
+        self.datasetText.grid(row=4, column=6, columnspan=2)
 
         self.correctText = Label(text="Correct:", padx=10, font=("Courier", 20))
-        self.correctText.grid(row=10, column=6)
+        self.correctText.grid(row=7, column=6)
         self.correctInfoText = Label(text="", padx=10, font=("Courier", 20))
-        self.correctInfoText.grid(row=11, column=6)
+        self.correctInfoText.grid(row=8, column=6)
 
         self.errorText = Label(text="Error:", padx=10, font=("Courier", 20))
-        self.errorText.grid(row=10, column=7)
+        self.errorText.grid(row=7, column=7)
         self.errorInfoText = Label(text="", padx=10, font=("Courier", 20))
-        self.errorInfoText.grid(row=11, column=7)
+        self.errorInfoText.grid(row=8, column=7)
 
 
     def stringToBool(self, strng):
@@ -179,6 +179,11 @@ class TensorflowGUI:
     def runModule(self, dataset="autoencoder", dims=None, epochs=500, lrate=None, mbs=None, cfrac=None, vfrac=None, tfrac=None, vint=None, showint=None,
                   haf=None, oaf=None, costfunc=None, sm=False, bounds=None, mapThatShit=None, mapBatchSize=0, bestk=None):
 
+        set = dataset.upper()
+        self.datasetText.configure(text=str(set))
+        self.correctInfoText.configure(text="")
+        self.errorInfoText.configure(text="")
+        self.gui.update()
         # size = 2**nbits I autoex, så gir denne 16, som er så mange elementer i hver liste / features
         # numberOfFeatures = 8 # g = 9, w = 11, y = 8, autoencoder = 2**nbits (2**4 = 16)
         # numberOfClasses = 10  # g = 7, w = 6, y = 10, autoencoder = 2**nbits (2**4 = 16)
