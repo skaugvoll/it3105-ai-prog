@@ -99,7 +99,7 @@ def add_prob_grabvars(ann, newGrabvars):
 
 def get_case_generator(
         data_name="autoencoder",
-        numberOfClasses=2,
+        numberOfClasses=6,
         nbits=4,
         size= None,
         density = (0,1),
