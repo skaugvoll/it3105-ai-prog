@@ -15,7 +15,7 @@ class TensorflowGUI:
 
         self.gui.minsize(width=1000, height=400)
 
-        self.dataset = self.createDropDown("Dataset", " "*20, "glass", "wine", "yeast", "one-hot-vector", "hackers-choice", "autoencoder", "parity", "dense", "bit", "segment", "mnist", row=0, column=0)
+        self.dataset = self.createDropDown("Dataset", "autoencoder", "glass", "wine", "yeast", "one-hot-vector", "hackers-choice", "autoencoder", "parity", "dense", "bit", "segment", "mnist", row=0, column=0)
         self.dims = self.createEntry("Dims", 0,1)
         self.epochs = self.createEntry("Epochs", 0,2)
         self.lrate = self.createEntry("Learning Rate", 0,3)
@@ -45,6 +45,7 @@ class TensorflowGUI:
         # self.probegrabvars= self.createEntry("Probe Grabvars", 9,1)
         # Button(bg="#469683", highlightbackground="#469683", padx=10, pady=5, text="+",
         #        command=lambda: self.addToProbeList(self.probegrabvars.get())).grid(row=10, column=2)
+        self.bestk = self.createDropDown("Bestk","Off","Off","On",row=9, column=1)
 
 
         Label(text="").grid(row=11, column=0)
@@ -78,10 +79,16 @@ class TensorflowGUI:
                    bounds=helpers.convertStringToFloatList(self.weightrange.get()),
                    mapThatShit=self.stringToBool(self.mapThatShit.get()),
                    mapBatchSize=int(self.mapbatchsize.get()),
+                   bestk=self.getCorrectBestKValue(self.bestk.get())
                )).grid(row=7, column=9)
 
     def stringToBool(self, strng):
         return bool(strtobool(strng))
+
+    def getCorrectBestKValue(self, bestk):
+        if bestk == "Off": return None
+        if bestk == "On": return 1
+        return None
 
     def createEntry(self, name, row, column):
         temp = StringVar()
@@ -123,7 +130,7 @@ class TensorflowGUI:
 
 
     def runModule(self, dataset="autoencoder", dims=None, epochs=500, lrate=None, mbs=None, cfrac=None, vfrac=None, tfrac=None, vint=None, showint=None,
-                  haf=None, oaf=None, costfunc=None, sm=False, bounds=None, mapThatShit=None, mapBatchSize=None):
+                  haf=None, oaf=None, costfunc=None, sm=False, bounds=None, mapThatShit=None, mapBatchSize=None, bestk=None):
 
         # size = 2**nbits I autoex, så gir denne 16, som er så mange elementer i hver liste / features
         # numberOfFeatures = 8 # g = 9, w = 11, y = 8, autoencoder = 2**nbits (2**4 = 16)
@@ -151,7 +158,7 @@ class TensorflowGUI:
             softmax=sm,
             bounds=bounds,
             mapBatchSize=mapBatchSize,
-            wantedMapGrabvars=self.mapgrabvarList
+            wantedMapGrabvars=self.mapgrabvarList,
         )
 
         # helpers.add_prob_grabvars(ann,self.probeList)
@@ -166,8 +173,8 @@ class TensorflowGUI:
         # ann.add_grabvar(-1, 'out')  # Add a grabvar (to be displayed in its own matplotlib window). # get the last module / layer in the network. this is the output layer
 
         helpers.add_grabvars(ann, self.grabvarList)
-        ann.run(epochs, mapThatShit=mapThatShit)
-        ann.runmore(epochs * 2)
+        ann.run(epochs, mapThatShit=mapThatShit, bestk=bestk) # bestk = nonetype or 1 int
+        ann.runmore(epochs * 2, bestk=bestk)
 
         self.grabvarList.clear()
 
