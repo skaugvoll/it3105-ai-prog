@@ -97,7 +97,7 @@ class TensorflowGUI:
                    bestk=self.getCorrectBestKValue(self.bestk.get())
                )).grid(row=10, column=6)
 
-        Button(bg="#469683", highlightbackground="#469683", padx=33, pady=5, text="Run",
+        Button(bg="#469683", highlightbackground="#469683", padx=33, pady=5, text="Run more",
                command=lambda: self.runModuleMore(self.castToInt(self.epochs.get()))).grid(row=10, column=7)
 
 
