@@ -95,11 +95,20 @@ class TensorflowGUI:
                    mapThatShit=self.stringToBool(self.mapThatShit.get()),
                    mapBatchSize= self.castToInt(self.mapbatchsize.get()),
                    bestk=self.getCorrectBestKValue(self.bestk.get())
-               )).grid(row=10, column=6)
+               )).grid(row=16, column=6)
 
         Button(bg="#469683", highlightbackground="#469683", padx=33, pady=5, text="Run more",
-               command=lambda: self.runModuleMore(self.castToInt(self.epochs.get()))).grid(row=10, column=7)
+               command=lambda: self.runModuleMore(self.castToInt(self.epochs.get()))).grid(row=16, column=7)
 
+        self.correctText = Label(text="Correct:", padx=10, font=("Courier", 20))
+        self.correctText.grid(row=10, column=6)
+        self.correctInfoText = Label(text="", padx=10, font=("Courier", 20))
+        self.correctInfoText.grid(row=11, column=6)
+
+        self.errorText = Label(text="Error:", padx=10, font=("Courier", 20))
+        self.errorText.grid(row=10, column=7)
+        self.errorInfoText = Label(text="", padx=10, font=("Courier", 20))
+        self.errorInfoText.grid(row=11, column=7)
 
 
     def stringToBool(self, strng):
@@ -216,7 +225,12 @@ class TensorflowGUI:
         helpers.add_grabvars(self.ann, self.grabvarList)  # add GRAB_vars
 
         self.ann.run(epochs, mapThatShit=mapThatShit, bestk=bestk) # bestk = nonetype or 1 int
-        # self.ann.runmore(epochs * 2, bestk=bestk)
+        self.ann.runmore(epochs * 2, bestk=bestk)
+
+        errorres = self.ann.testres
+        correctres = (1 - self.ann.testres) * 100
+        self.correctInfoText.configure(text="%.3f" % (correctres) + "%")
+        self.errorInfoText.configure(text="%.4f" % (errorres) + "%")
 
         # clear the lists that hold vars to be grabed, so that the next run does not include the same grabvars, without beeing explicitly stated
         self.grabvarList.clear()
