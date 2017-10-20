@@ -100,12 +100,12 @@ class TensorflowGUI:
         self.datasetText = Label(text="", padx=10, font=("Courier", 20))
         self.datasetText.grid(row=4, column=6, columnspan=2)
 
-        self.correctText = Label(text="Correct:", padx=10, font=("Courier", 20))
+        self.correctText = Label(text="Correct", padx=10, font=("Courier", 20))
         self.correctText.grid(row=7, column=6)
         self.correctInfoText = Label(text="", padx=10, font=("Courier", 20))
         self.correctInfoText.grid(row=8, column=6)
 
-        self.errorText = Label(text="Error:", padx=10, font=("Courier", 20))
+        self.errorText = Label(text="Error", padx=10, font=("Courier", 20))
         self.errorText.grid(row=7, column=7)
         self.errorInfoText = Label(text="", padx=10, font=("Courier", 20))
         self.errorInfoText.grid(row=8, column=7)

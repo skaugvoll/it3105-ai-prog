@@ -99,7 +99,7 @@ def add_prob_grabvars(ann, newGrabvars):
 
 def get_case_generator(
         data_name="autoencoder",
-        numberOfClasses=2,
+        numberOfClasses=6,
         nbits=4,
         size= None,
         density = (0,1),
@@ -112,6 +112,7 @@ def get_case_generator(
     if data_name == 'yeast': return "(lambda: helpers.converteDatasetTo2d('yeast.txt', 10))"
     if data_name == 'glass': return "(lambda: helpers.converteDatasetTo2d('glass.txt', 7))"
     if data_name == 'wine': return "(lambda : helpers.converteDatasetTo2d('winequality_red.txt', 6))"
+    if data_name == 'breast_cancer': return "(lambda : helpers.converteDatasetTo2d('breast_cancer.txt', 6))"
     if data_name == 'autoencoder': return "(lambda: TFT.gen_all_one_hot_cases(2 ** "+ str(nbits) +"))"
     if data_name == 'parity': return "(lambda: TFT.gen_all_parity_cases("+ str(nbits) +","+ str(double) +"))"
     if data_name == 'dense': return "(lambda: TFT.gen_dense_autoencoder_cases("+ str(nbits) +","+ str(size) +","+ str(density) +"))"
