@@ -11,6 +11,7 @@ class TensorflowGUI:
         self.probeList = []
         self.grabvarList = []
         self.mapgrabvarList = []
+        self.dendrogrammapgrabvarList = []
 
         self.entryWidth = 15
 
@@ -68,7 +69,7 @@ class TensorflowGUI:
                command=lambda: self.addToMapGrabvarList(self.mapgrabvars.get())).grid(row=20, column=3)
         self.dendrogrammapgrabvars = self.createEntry("DendrogramMap Grabvars", 18, 4)
         Button(bg="#469683", highlightbackground="#469683", padx=5, text="+",
-               command=lambda: self.addToMapGrabvarList(self.dendrogrammapgrabvars.get())).grid(row=20, column=4)
+               command=lambda: self.addToDendroGrabvarList(self.dendrogrammapgrabvars.get())).grid(row=20, column=4)
 
 
         Label(text="       ").grid(row=0, column=5)
@@ -175,6 +176,13 @@ class TensorflowGUI:
         listString = [module, type]
         self.mapgrabvarList.append(listString)
 
+    def addToDendroGrabvarList(self, listString):
+        x = listString.split(",")
+        module = int(x[0])
+        type = str(x[1])
+        listString = [module, type]
+        self.dendrogrammapgrabvarList.append(listString)
+
 
     def runModule(self, dataset="autoencoder", dims=None, epochs=500, lrate=None, mbs=None, cfrac=None, vfrac=None, tfrac=None, vint=None, showint=None,
                   haf=None, oaf=None, costfunc=None, sm=False, bounds=None, mapThatShit=None, mapBatchSize=0, bestk=None):
@@ -224,13 +232,19 @@ class TensorflowGUI:
             bounds=bounds,
             mapBatchSize=mapBatchSize,
             wantedMapGrabvars=self.mapgrabvarList,
+            dendrogramLayers=self.dendrogrammapgrabvarList,
         )
+
+        # self.ann.add_grabvar(0,'in') # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
+        # self.ann.add_grabvar(-1,'wgt') # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
+        # self.ann.add_grabvar(-1,'bias') # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
+
 
         # helpers.add_prob_grabvars(ann,self.probeList)  # add PROB_vars
         helpers.add_grabvars(self.ann, self.grabvarList)  # add GRAB_vars
 
         self.ann.run(epochs, mapThatShit=mapThatShit, bestk=bestk) # bestk = nonetype or 1 int
-        self.ann.runmore(epochs * 2, bestk=bestk)
+        self.ann.runmore(epochs * 2, bestk=bestk, mapThatShit=self.mapThatShit.get())
 
         errorres = self.ann.testres
         correctres = (1 - self.ann.testres) * 100

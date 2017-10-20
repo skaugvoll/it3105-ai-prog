@@ -200,9 +200,8 @@ class Gann():
         self.test_on_trains(sess=self.current_session,bestk=bestk)
         self.testing_session(sess=self.current_session,bestk=bestk)
         self.close_current_session(view=False)
-        if(mapThatShit):
+        if (mapThatShit):
             self.do_mapping(msg="Mapping", bestk=None)
-
 
         PLT.ioff()
 
@@ -210,9 +209,9 @@ class Gann():
     # left off after the last call to run (or runmore).  Use of the "continued" parameter (along with
     # global_training_step) allows easy updating of the error graph to account for the additional run(s).
 
-    def runmore(self,epochs=100,bestk=None):
+    def runmore(self,epochs=100,bestk=None, mapThatShit=False):
         self.reopen_current_session()
-        self.run(epochs,sess=self.current_session,continued=True,bestk=bestk)
+        self.run(epochs,sess=self.current_session,continued=True,bestk=bestk, mapThatShit=mapThatShit)
 
     #   ******* Saving GANN Parameters (weights and biases) *******************
     # This is useful when you want to use "runmore" to do additional training on a network.
@@ -246,7 +245,7 @@ class Gann():
         TFT.close_session(self.current_session, view=view)
 
 
-    def do_mapping(self, msg="Mapping", bestk=None, plot="display"):
+    def do_mapping(self, msg="Mapping", bestk=None, plot=""):
         self.reopen_current_session()
         cases = self.caseman.getMappingCases(self.mapBatchSize)
         self.grabvars.clear()
