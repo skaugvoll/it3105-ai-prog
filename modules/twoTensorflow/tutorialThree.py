@@ -11,7 +11,7 @@ import helpers
 class Gann():
 
     def __init__(self, dims, cman,lrate=.1,showint=None,mbs=10,vint=None,softmax=False, hiddenLayerActivationFunction = None,
-                 outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1], lossFunction="MSE", mapBatchSize=0, wantedMapGrabvars=[], dendrogramLayers=[]):
+                 outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1], lossFunction="MSE", mapBatchSize=0, wantedMapGrabvars=[], dendrogramLayers=[], mapplot=None):
         self.learning_rate = lrate
         self.layer_sizes = dims # Sizes of each layer of neurons
         self.show_interval = showint # Frequency of showing grabbed variables
@@ -32,6 +32,7 @@ class Gann():
         self.mapBatchSize = mapBatchSize
         self.wantedMapGrabvars = wantedMapGrabvars
         self.dendrogramLayers = dendrogramLayers
+        self.mapplot=mapplot
         self.build()
         self.testres = None
 
@@ -264,9 +265,9 @@ class Gann():
                                                  feed_dict=feeder, show_interval=None)
 
 
-        if (plot == 'display'):
+        if (self.mapplot == 'display'):
             eval("TFT.display_matrix(testres)")
-        elif (plot =="hinton"):
+        elif (self.mapplot =="hinton"):
             eval("TFT.hinton_plot(testres)")
         elif (plot == "dendrogram"):
             eval("TFT.dendrogram(inputs, targets)")

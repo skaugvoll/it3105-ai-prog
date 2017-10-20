@@ -233,6 +233,7 @@ class TensorflowGUI:
             mapBatchSize=mapBatchSize,
             wantedMapGrabvars=self.mapgrabvarList,
             dendrogramLayers=self.dendrogrammapgrabvarList,
+            mapplot=self.mapplot.get()
         )
 
         # self.ann.add_grabvar(0,'in') # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
@@ -244,16 +245,20 @@ class TensorflowGUI:
         helpers.add_grabvars(self.ann, self.grabvarList)  # add GRAB_vars
 
         self.ann.run(epochs, mapThatShit=mapThatShit, bestk=bestk) # bestk = nonetype or 1 int
-        self.ann.runmore(epochs * 2, bestk=bestk, mapThatShit=self.mapThatShit.get())
+        self.ann.runmore(epochs * 2, bestk=bestk)
 
         errorres = self.ann.testres
         correctres = (1 - self.ann.testres) * 100
         self.correctInfoText.configure(text="%.3f" % (correctres) + "%")
         self.errorInfoText.configure(text="%.4f" % (errorres) + "%")
 
+        if(self.mapThatShit.get()):
+            self.ann.do_mapping(msg="Mapping", bestk=self.getCorrectBestKValue(self.bestk.get()))
+
         # clear the lists that hold vars to be grabed, so that the next run does not include the same grabvars, without beeing explicitly stated
         self.grabvarList.clear()
         self.mapgrabvarList.clear()
+        self.dendrogrammapgrabvarList.clear()
 
         return self.ann
 
