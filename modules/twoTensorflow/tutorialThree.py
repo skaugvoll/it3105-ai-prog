@@ -127,6 +127,7 @@ class Gann():
                 self.testres = testres
             print('%s Set Error = %f ' % (msg, testres))
         else:
+            if "Training" in msg: self.testres = 100*(testres/len(cases))
             print('%s Set Correct Classifications = %f %%' % (msg, 100*(testres/len(cases))))
         return testres  # self.error uses MSE, so this is a per-case value when bestk=None
 

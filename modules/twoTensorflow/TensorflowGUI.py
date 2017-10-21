@@ -250,8 +250,13 @@ class TensorflowGUI:
         self.ann.run(epochs, mapThatShit=mapThatShit, bestk=bestk) # bestk = nonetype or 1 int
         self.ann.runmore(epochs * 2, bestk=bestk)
 
-        errorres = self.ann.testres
-        correctres = (1 - self.ann.testres) * 100
+        bestk = self.stringToBool(self.bestk.get())
+        if bestk:
+            errorres = (100 - self.ann.testres)
+            correctres = self.ann.testres
+        else:
+            errorres = self.ann.testres
+            correctres = (1 - errorres) * 100
         self.correctInfoText.configure(text="%.3f" % (correctres) + "%")
         self.errorInfoText.configure(text="%.4f" % (errorres) + "%")
 
