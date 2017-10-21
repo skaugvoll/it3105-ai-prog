@@ -11,7 +11,7 @@ import helpers
 class Gann():
 
     def __init__(self, dims, cman,lrate=.1,showint=None,mbs=10,vint=None,softmax=False, hiddenLayerActivationFunction = None,
-                 outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1], lossFunction="MSE", mapBatchSize=0, wantedMapGrabvars=[], dendrogramLayers=[], mapplot=None):
+                 outputActivationFunction= None, errorFunction=None, bounds=[-.1,.1], lossFunction="MSE", mapBatchSize=0, wantedMapGrabvars=[], dendrogramLayers=[], mapplot=None, wgtMatrix=False):
         self.learning_rate = lrate
         self.layer_sizes = dims # Sizes of each layer of neurons
         self.show_interval = showint # Frequency of showing grabbed variables
@@ -33,6 +33,7 @@ class Gann():
         self.wantedMapGrabvars = wantedMapGrabvars
         self.dendrogramLayers = dendrogramLayers
         self.mapplot=mapplot
+        self.wgtMatrix = wgtMatrix
         self.build()
         self.testres = None
 
@@ -190,7 +191,8 @@ class Gann():
         for i, v in enumerate(grabbed_vals):
             if names: print("   " + names[i] + " = ", end="\n")
             if type(v) == np.ndarray and len(v.shape) > 1: # If v is a matrix, use hinton plotting
-                TFT.hinton_plot(v,fig=self.grabvar_figures[fig_index],title= names[i]+ ' at step '+ str(step))
+                if 'wgt' in names[i] and self.wgtMatrix: TFT.display_matrix(v,fig=self.grabvar_figures[fig_index],title= names[i]+ ' at step '+ str(step))
+                else: TFT.hinton_plot(v,fig=self.grabvar_figures[fig_index],title= names[i]+ ' at step '+ str(step))
                 fig_index += 1
             else:
                 print(v, end="\n\n")

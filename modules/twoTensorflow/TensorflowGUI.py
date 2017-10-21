@@ -59,6 +59,8 @@ class TensorflowGUI:
         # self.probegrabvars= self.createEntry("Probe Grabvars", 9,1)
         # Button(bg="#469683", highlightbackground="#469683", padx=10, pady=5, text="+",
         #        command=lambda: self.addToProbeList(self.probegrabvars.get())).grid(row=10, column=2)
+        self.showWgtmatrix = self.createDropDown("Weight Matrix?", "False", "True", "False", row=15, column=1)
+
 
         Label(text="").grid(row=17, column=0)
         self.mapThatShit = self.createDropDown("Mapping?", "False", "True", "False", row=18, column=0)
@@ -233,7 +235,8 @@ class TensorflowGUI:
             mapBatchSize=mapBatchSize,
             wantedMapGrabvars=self.mapgrabvarList,
             dendrogramLayers=self.dendrogrammapgrabvarList,
-            mapplot=self.mapplot.get()
+            mapplot=self.mapplot.get(),
+            wgtMatrix=self.stringToBool(self.showWgtmatrix.get())
         )
 
         # self.ann.add_grabvar(0,'in') # Add a grabvar (to be displayed in its own matplotlib window). # grab second hidden layer ?
