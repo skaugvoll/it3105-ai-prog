@@ -17,7 +17,7 @@ class TensorflowGUI:
 
         self.gui.minsize(width=1000, height=550)
 
-        self.dataset = self.createDropDown("Dataset", "autoencoder", "glass", "wine", "yeast", "one-hot-vector", "breast_cancer", "autoencoder", "parity", "dense", "bit", "segment", "mnist", row=0, column=0)
+        self.dataset = self.createDropDown("Dataset", "autoencoder", "glass", "wine", "yeast", "breast_cancer", "autoencoder", "parity", "dense", "bit", "segment", "mnist", row=0, column=0)
         self.nbits = self.createEntry("nBits", row=0, column=1)
         self.size = self.createEntry("Size", row=0, column=2)
         self.density= self.createEntry("Density", row=0, column=3) # TODO: Should be touple
@@ -250,8 +250,13 @@ class TensorflowGUI:
         self.ann.run(epochs, mapThatShit=mapThatShit, bestk=bestk) # bestk = nonetype or 1 int
         self.ann.runmore(epochs * 2, bestk=bestk)
 
-        errorres = self.ann.testres
-        correctres = (1 - self.ann.testres) * 100
+        bestk = self.stringToBool(self.bestk.get())
+        if bestk:
+            errorres = (100 - self.ann.testres)
+            correctres = self.ann.testres
+        else:
+            errorres = self.ann.testres
+            correctres = (1 - errorres) * 100
         self.correctInfoText.configure(text="%.3f" % (correctres) + "%")
         self.errorInfoText.configure(text="%.4f" % (errorres) + "%")
 
