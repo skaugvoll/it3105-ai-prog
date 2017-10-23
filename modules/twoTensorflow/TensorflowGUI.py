@@ -191,8 +191,8 @@ class TensorflowGUI:
 
         set = dataset.upper()
         self.datasetText.configure(text=str(set))
-        self.correctInfoText.configure(text="")
-        self.errorInfoText.configure(text="")
+        self.correctInfoText.configure(text="running..")
+        self.errorInfoText.configure(text="running..")
         self.gui.update()
         # size = 2**nbits I autoex, så gir denne 16, som er så mange elementer i hver liste / features
         # numberOfFeatures = 8 # g = 9, w = 11, y = 8, autoencoder = 2**nbits (2**4 = 16)

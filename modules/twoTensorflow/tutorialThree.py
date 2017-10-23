@@ -285,6 +285,7 @@ class Gann():
             # TFT.dendrogram(feature, labels) --> mappe input og hidden activation patterns ... waht are the input, and what is the labels ? I see that labels are suppose to be string..
             # TFT.dendrogram(testres, targets, ax=None) # ser ut til å funke, men er jo feile verdier ?
 
+        self.close_current_session(view=False)
         # if bestk is None:
         #     print('%s Set Error = %f ' % (msg, np.concatenate(testres)))
         # else:
