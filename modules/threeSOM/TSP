@@ -90,30 +90,3 @@ def run():
 
 
 run()
-
-
-#
-# def main():
-#     points = readFile()
-#     neurons = generateNeurons(points)
-#
-#     fig = plt.figure()
-#
-#     maxVal = np.amax(points)  # Find the biggest value in the array to use for scaling
-#     inputs = np.array(points) / maxVal  # Make np.array and scale the values (between 0 and 1)
-#     px, py = inputs.T
-#     plt.ylim([-0.02, 1.02])
-#     plt.xlim([-0.02, 1.02])
-#     scat = plt.scatter(px, py)
-#
-#     animation.FuncAnimation(fig, update_plot, frames=3, fargs=(inputs, scat))
-#     plt.show()
-#
-#
-# def update_plot(inputs, scat):
-#     inputs[1][1] = 1
-#     scat.set_array(inputs)
-#     return scat,
-#
-#
-# # main()
