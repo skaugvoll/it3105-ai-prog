@@ -8,6 +8,7 @@ from scipy.spatial import distance
 import matplotlib.animation as animation
 
 
+# Read all input points from file and makes a 2d array. [[x,y], [x,y]]
 def readFile():
     filepath = os.getcwd() + "/Data/1.txt"
 
@@ -25,7 +26,7 @@ def readFile():
 
     return points
 
-
+# Generates a circle of neurons in the middle og the plot.
 def generateNeurons(points):
     neurons = []
     slice = 2 * math.pi / (len(points) * 2);
@@ -37,7 +38,7 @@ def generateNeurons(points):
 
     return neurons
 
-
+# For each iteration, this funktion plots input points and neurons into matplotlib
 def plotPoints(inputs, neurons):
     plt.clf()
     nx, ny = neurons.T
@@ -50,9 +51,9 @@ def plotPoints(inputs, neurons):
     plt.scatter(px, py)
 
     plt.draw()
-    plt.pause(0.03)
+    plt.pause(0.00000003)
 
-
+# Finds the closest neuron with weuqlidian distance.
 def findAndUpdateWinnerNeuron(inputPoint, neurons):
     winnerNeuronIndex = None
     lowestDist = math.inf
@@ -64,6 +65,7 @@ def findAndUpdateWinnerNeuron(inputPoint, neurons):
 
     return updateNeuron(inputPoint, neurons, winnerNeuronIndex)
 
+# updates the closest neuron and moves it towards the input point.
 def updateNeuron(inputPoint, neurons, winnerIndex):
     lr = 0.3
     dirX = lr * (neurons[winnerIndex][0] - inputPoint[0])
@@ -88,5 +90,7 @@ def run():
         neurons = findAndUpdateWinnerNeuron(inputs[randInput], neurons)
         plotPoints(inputs, neurons)
 
+# TODO: oppdatere naboene til vinner-neuron og flytte disse mot input point som bli sjekket. Skal ikke flyttes like langt som vinner-neuron. Tror man kan regne ut naboer med euqlidian distance for å finne de to nærmeste
+# Litt usikker på hva mer som må gjøres. Sjekk link jeg sendte deg på messenger
 
 run()
