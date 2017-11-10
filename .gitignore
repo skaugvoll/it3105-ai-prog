@@ -5,7 +5,8 @@
 mnist/
 probeview/
 netsaver/
-
+modules/threeSOM/som-notes.md
+modules/threeSOM/weight-adjust.png
 
 #Byte-compiled / optimized / DLL files
 __pycache__/
