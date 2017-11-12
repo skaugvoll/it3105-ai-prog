@@ -11,7 +11,7 @@ import matplotlib.animation as animation
 
 # Read all input points from file and makes a 2d array. [[x,y], [x,y]]
 def readFile():
-    filepath = os.getcwd() + "/Data/1.txt"
+    filepath = os.getcwd() + "/Data/2.txt"
 
     points = []
 
@@ -40,7 +40,7 @@ def generateNeurons(points):
     return neurons
 
 # For each iteration, this function plots input points and neurons into matplotlib
-def plotPoints(inputs, neurons, step=''):
+def plotPoints(inputs, neurons, epoch='',step='', lr=0.5, nbhd=10):
     plt.clf()
     nx, ny = neurons.T
     plt.scatter(nx, ny, color='red')
@@ -51,7 +51,7 @@ def plotPoints(inputs, neurons, step=''):
     # plt.xlim([-0.02, 1.02])
     plt.scatter(px, py)
 
-    plt.figtext(0.02, 0.02, "Step: " + str(step))
+    plt.figtext(0.02, 0.02, "Epoch: {:d}  Step: {:d}    LR: {:.2f}    Nbhd: {:.2f}".format(epoch, step, lr, nbhd))
     plt.draw()
     plt.pause(0.00000003)
 
@@ -68,10 +68,9 @@ def findWinnerNeuron(inputPoint, neurons):
 
 # updates the closest neuron and moves it towards the input point.
 def updateNeuron(inputPoint, neurons, winnerIndex, neighborhoodShip=None, lr=0.3, decay=1):
-    dirX = lr * (neurons[winnerIndex][0] - inputPoint[0]) * decay
-    dirY = lr * (neurons[winnerIndex][1] - inputPoint[1]) * decay
-    # dirX = neurons(winnerIndex)[0] + lr * neighborhoodShip * (inputPoint[0] - neurons[winnerIndex][0])
-    # dirY = neurons(winnerIndex)[1] + lr * neighborhoodShip * (inputPoint[1] - neurons[winnerIndex][1])
+    dirX = lr * (inputPoint[0] - neurons[winnerIndex][0]) * decay
+    dirY = lr * (inputPoint[1] - neurons[winnerIndex][1]) * decay
+
     neurons[winnerIndex][0] -= dirX
     neurons[winnerIndex][1] -= dirY
 
@@ -80,13 +79,13 @@ def updateNeuron(inputPoint, neurons, winnerIndex, neighborhoodShip=None, lr=0.3
 
 def run():
     points = readFile()
-    # maxVal = np.amax(points)  # Find the biggest value in the array to use for scaling
-    inputs = np.array(points)  # Make np.array and scale the values (between 0 and 1) (removed scaling to get correct distance)
+    maxVal = np.amax(points)  # Find the biggest value in the array to use for scaling
+    inputs = np.array(points) / maxVal  # Make np.array and scale the values (between 0 and 1)
 
     neurons = generateNeurons(points * 1)
     neurons = np.array(neurons)
 
-    plotPoints(inputs, neurons)
+    plotPoints(inputs, neurons, epoch=0, step=0)
 
     i = 1
     viewInterval = 1
@@ -109,25 +108,24 @@ def run():
 
             for idx in range(len(neurons)):
                 #### Wrapper for å finne korteste vei i sirkelen (type wraparound list)
-                distClockwise = abs(idx - winnerIndex)
-                distCounterClockwise = abs(len(neurons)  - distClockwise)
-                dist = min(distClockwise, distCounterClockwise)
+                distClockwise = np.abs(idx - winnerIndex)
+                distCounterClockwise = np.abs(len(neurons)  - distClockwise)
+                dist = np.minimum(distClockwise, distCounterClockwise)
                 ####
                 neighborhoodMembership = np.exp(-dist ** 2 / neighborhoodSize ** 2)
-                neurons[idx][0] = neurons[idx][0] + learningRate * neighborhoodMembership * (inputs[c][0] - neurons[idx][0])
-                neurons[idx][1] = neurons[idx][1] + learningRate * neighborhoodMembership * (inputs[c][1] - neurons[idx][1])
+                neurons[idx][0] = np.add(neurons[idx][0], np.prod([learningRate,neighborhoodMembership,(inputs[c][0] - neurons[idx][0])]))
+                neurons[idx][1] = np.add(neurons[idx][1], np.prod([learningRate,neighborhoodMembership,(inputs[c][1] - neurons[idx][1])]))
 
 
         if i % viewInterval == 0:
-            print("LR: ",learningRate)
-            print("Mbrs: ", neighborhoodSize)
-            plotPoints(inputs, neurons, step=i)
+            plotPoints(inputs, neurons, epoch=i, step=c, lr=learningRate, nbhd=neighborhoodSize)
+
+        # TODO: fix at den sjekker om vi har funent convergens
 
 
         i += 1
-        # TODO: fix at den sjekker om vi har funent convergens
 
-    # TODO : Gå gjennom alle byer, og finn nærmeste neuron. Så må vi mappe det på en måte, slik at vi får neuron: by, Så gå gjennom neuronene i den ringrekkefølgen de ligger i, og sjekker om de har en by, isåfall legg til avstanden mellom dette nehronet og neste neuron
+
     paths = {}
     for city in range(len(inputs)):
         nearestNeuron = findWinnerNeuron(inputs[city], neurons)
@@ -143,13 +141,13 @@ def run():
                firstCity = city
                previousCity = city
            else:
-               dist += distance.euclidean(inputs[city], inputs[previousCity])
+               dist += distance.euclidean(inputs[city], inputs[previousCity]) * maxVal
                previousCity = city
 
     dist += distance.euclidean(inputs[firstCity], inputs[previousCity])
 
 
-    print('Path dist: {:.2f}km\nOptimal dist: {:.2f}km\n= {:.2f}%'.format(dist, 7542, (dist/7542)))
+    print('Path dist: {:.2f}km\nOptimal dist: {:.2f}km\n= {:.2f}%'.format(dist, 6110, (dist/6110)))
     sleep(10)
 
 
