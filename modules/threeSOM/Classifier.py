@@ -11,10 +11,18 @@ sys.path.append(cwd + "/mnist/")
 
 import mnist_basics as MNIST
 
+def converteFlatMnistTo2D():
+    cases2D = []
+    cases = MNIST.load_all_flat_cases() # returns [ [cases] , [targets] ] --> cases = [ [features...] ]
 
+    for f, t in zip(cases[0], cases[1]):
+        # f = [feature / 255 for feature in f]
+        case = [f,t]
+        cases2D.append(case)
+    return cases2D
 
 def loadData():
-    ca = np.array(MNIST.load_all_flat_cases()[0])
+    ca = converteFlatMnistTo2D()
     np.random.shuffle(ca)
     return ca[:500]
 
@@ -87,7 +95,9 @@ def run():
     gui = Tk()
     canvas = Canvas(gui, width=900, height=900)
     canvas.pack()
-    data = loadData() # input data
+    rawData = loadData()
+    data = rawData[0] #input data only. no labels. Labels can be found in rawData
+    print(rawData)
 
     neurons = generateNeurons() # randomly initialize 100 neruons with 784 pixlers each.
     draw(canvas, neurons)
