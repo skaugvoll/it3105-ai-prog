@@ -1,6 +1,7 @@
 from tkinter import *
 import os
 import numpy as np
+import math
 import time
 from Neuron import Neuron
 
@@ -21,29 +22,42 @@ def generateNeurons(numberOfNeurons=100, pixler=784):
 
 
 
-def draw(root, neurons):
-    can = Canvas(root, width=560, height=560)
+def draw(root, neurons, dim=10):
+    can = Canvas(root, width=900, height=900)
     can.pack()
 
-    neuron = neurons[0]
     # one neuron = one picture, one picture has 784 pixels / rectangles
     # print(neuron)
-    for neuron in neurons:
-        drawOneNeuron(can, neuron)
+    # drawOneNeuron(can, neuron, 0, 0, "red")
+    # drawOneNeuron(can, neuron, 84, 0, "red")
+    # drawOneNeuron(can, neuron, 0, 0, "red")
+    # drawOneNeuron(can, neuron, 0, 0, "red")
+    offsettRow = 0
+    offsettCol = 0
+    for n in range(len(neurons)):
+        neuron = neurons[n]
+        if n % dim == 0:
+            offsettRow += 84
+            offsettCol = 0
+        else:
+            offsettCol += 84
+        drawOneNeuron(can, neuron, offsettRow, offsettCol, "black")
 
-def drawOneNeuron(can, neuron):
+
+def drawOneNeuron(can, neuron, row, col, color):
     idx = 0
-    row = 0
-    column = 0
+    row = row
+    column = col
     pixelsize = 2
     for p in neuron:
+        pixelValue = str(int(p*255))*3 #Gives RGB p = 255, --> 2552555255
         if idx == 28:
-            row += pixelsize + 1  # + 1 gives spacing
-            column = 0
+            row += pixelsize  # + 1 gives spacing
+            column = col
             idx = 0
-        can.create_rectangle(column, row, column + pixelsize, row + pixelsize, fill="#FFF")
+        can.create_rectangle(column, row, column + pixelsize, row + pixelsize, fill="#"+pixelValue)
         idx += 1
-        column += pixelsize + 1  # + 1 gives spacing
+        column += pixelsize  # + 1 gives spacing
 
 
 def run():
