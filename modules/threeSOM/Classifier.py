@@ -74,12 +74,14 @@ def drawOneNeuron(can, neuron, row, col):
 
 def findWinnerNeuron(case, neurons):
     winnerNeuronIndex = None
+    idx = 0
     lowestDist = math.inf
-    for i in range(len(neurons)):
-        dist = np.linalg.norm(case - neurons[i])
+    for neuron in np.nditer(neurons):
+        dist = np.linalg.norm(case - neuron)
         if dist < lowestDist:
             lowestDist = dist
-            winnerNeuronIndex = i
+            winnerNeuronIndex = idx
+        idx += 1
     return winnerNeuronIndex
 
 
@@ -122,8 +124,6 @@ def run():
 
         ### STEPS
         for case in range(len(data)):
-            print("LR: ",learningRate)
-            print("NbhdSize: ",neighborhoodSize)
             winnerNeuron = findWinnerNeuron(data[case][0], neurons)
             winnerCoordinates = getCoordinates(winnerNeuron)
 
