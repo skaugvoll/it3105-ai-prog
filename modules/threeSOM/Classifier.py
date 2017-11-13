@@ -22,28 +22,35 @@ def generateNeurons(numberOfNeurons=100, pixler=784):
 
 
 def draw(root, neurons):
-    w = Canvas(root, width=560, height=560)
-    w.pack()
+    can = Canvas(root, width=560, height=560)
+    can.pack()
 
+    neuron = neurons[0]
     # one neuron = one picture, one picture has 784 pixels / rectangles
-    pixelSize = 20
-    for n in range(len(neurons)):
-        neuron = neurons[n]
-        for pixel in range(len(neuron)):
-            pixelValue = neuron[pixel]
-            row = 0
+    # print(neuron)
+    for neuron in neurons:
+        drawOneNeuron(can, neuron)
+
+def drawOneNeuron(can, neuron):
+    idx = 0
+    row = 0
+    column = 0
+    pixelsize = 2
+    for p in neuron:
+        if idx == 28:
+            row += pixelsize + 1  # + 1 gives spacing
             column = 0
-            if pixel % 28 == 0:
-                row += 1
-                column = 0
-            w.create_rectangle(row, column, row + pixelSize, column + pixelSize, fill='#606060')
-            column += pixelSize
-            row += pixelSize
+            idx = 0
+        can.create_rectangle(column, row, column + pixelsize, row + pixelsize, fill="#FFF")
+        idx += 1
+        column += pixelsize + 1  # + 1 gives spacing
 
 
 def run():
     gui = Tk()
     # data = loadData() # input data
+    # draw(gui, data)
+
 
     neurons = generateNeurons() # randomly initialize 100 neruons with 784 pixlers each.
     draw(gui, neurons)
