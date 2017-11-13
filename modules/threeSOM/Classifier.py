@@ -23,9 +23,8 @@ def generateNeurons(numberOfNeurons=100, pixler=784):
 
 
 
-def draw(root, neurons, dim=100):
-    can = Canvas(root, width=900, height=900)
-    can.pack()
+def draw(canvas, neurons, dim=100):
+    can = canvas
 
     # one neuron = one picture, one picture has 784 pixels / rectangles
 
@@ -42,8 +41,9 @@ def draw(root, neurons, dim=100):
         elif i != 1:
             offsettCol += 84
         drawOneNeuron(can, neuron, offsettRow, offsettCol)
-        root.update_idletasks()
-        root.update()
+
+        can.update_idletasks()
+        can.update()
 
         i += 1
 
@@ -85,18 +85,21 @@ def getCoordinates(idx):
 
 def run():
     gui = Tk()
+    canvas = Canvas(gui, width=900, height=900)
+    canvas.pack()
     data = loadData() # input data
 
     neurons = generateNeurons() # randomly initialize 100 neruons with 784 pixlers each.
-    draw(gui, neurons)
+    draw(canvas, neurons)
 
 
     maxEpoc = 100
     converged = False
     epoc = 1
     viewInterval = 10
+    classificationInterval = 10
     neighborhoodSize = 10
-    ### EPOCS
+    ###  TRAINING EPOCS
     while epoc < maxEpoc and not converged:
         learningRate = 1 / (epoc ** (1 / 4))
 
@@ -120,12 +123,14 @@ def run():
                 neurons[idx] = np.add(neurons[idx], (learningRate * neighborhoodMembership * np.subtract(data[case], neurons[idx])))
 
         if epoc % viewInterval == 0:
-            draw(gui, neurons)
-
+            draw(canvas, neurons)
 
         epoc += 1
 
+    ### TODO: CLASSIFY EACH FUCKING NEURON
 
+
+    ### TODO: CLASSIFY IMAGES
 
 
 run()
