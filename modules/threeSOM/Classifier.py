@@ -2,7 +2,7 @@ from tkinter import *
 import os
 import numpy as np
 import math
-import time
+from time import sleep
 from Neuron import Neuron
 
 cwd = os.getcwd()
@@ -59,18 +59,48 @@ def drawOneNeuron(can, neuron, row, col, color):
         idx += 1
         column += pixelsize  # + 1 gives spacing
 
+def findWinnerNeuron(case, neurons):
+    winnerNeuronIndex = None
+    lowestDist = math.inf
+    for i in range(len(neurons)):
+        dist = np.linalg.norm(case, neurons[i])
+        if dist < lowestDist:
+            lowestDist = dist
+            winnerNeuronIndex = i
+    return winnerNeuronIndex
+
+
+
 
 def run():
     gui = Tk()
-    # data = loadData() # input data
-    # draw(gui, data)
-
+    data = loadData() # input data
 
     neurons = generateNeurons() # randomly initialize 100 neruons with 784 pixlers each.
     draw(gui, neurons)
-    mainloop()
+    gui.update()
+    sleep(5)
 
+    maxEpoc = 100
+    converged = False
+    epoc = 1
+    viewInterval = 10
+    neighborhoodSize = 10
+    ### EPOCS
+    while epoc < maxEpoc and not converged:
+        learningRate = 1 / (epoc ** (1 / 4))
 
+        if epoc == 1:
+            neighborhoodSize = 10
+        else:
+            neighborhoodSize = neighborhoodSize * (1 - 0.01 * epoc)
+
+        ### STEPS
+        for case in range(len(data)):
+            winnerNeuron = findWinnerNeuron(case, neurons)
+
+            ## UPDATE ALL NEURONS ? or update Winner and some Neighbours
+            
 
 
 
