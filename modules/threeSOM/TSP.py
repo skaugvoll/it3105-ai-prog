@@ -60,7 +60,8 @@ def findWinnerNeuron(inputPoint, neurons):
     winnerNeuronIndex = None
     lowestDist = math.inf
     for i in range(len(neurons)):
-        dist = distance.euclidean(inputPoint, neurons[i])
+        dist = np.linalg.norm(inputPoint - neurons[i])
+        # dist = distance.euclidean(inputPoint, neurons[i])
         if dist < lowestDist:
             lowestDist = dist
             winnerNeuronIndex = i
