@@ -64,7 +64,7 @@ def findWinnerNeuron(case, neurons):
     winnerNeuronIndex = None
     lowestDist = math.inf
     for i in range(len(neurons)):
-        dist = np.linalg.norm(case, neurons[i])
+        dist = np.linalg.norm(case - neurons[i])
         if dist < lowestDist:
             lowestDist = dist
             winnerNeuronIndex = i
@@ -101,7 +101,17 @@ def run():
             winnerNeuron = findWinnerNeuron(case, neurons)
 
             ## UPDATE ALL NEURONS ? or update Winner and some Neighbours
-            
+            for idx in range(len(neurons)):
+                #### Wrapper for å finne korteste vei i sirkelen (type wraparound list)
+
+                #distance = distasen i grid og ikke bilder. så x og y kordinater i grid.
+                dist = None
+                ####
+
+                neighborhoodMembership = np.exp(-dist ** 2 / neighborhoodSize ** 2)
+                neurons[idx][0] = np.add(neurons[idx][0], np.prod([learningRate,neighborhoodMembership,(inputs[c][0] - neurons[idx][0])]))
+                neurons[idx][1] = np.add(neurons[idx][1], np.prod([learningRate,neighborhoodMembership,(inputs[c][1] - neurons[idx][1])]))
+
 
 
 
