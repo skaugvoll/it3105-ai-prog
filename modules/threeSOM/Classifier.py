@@ -50,14 +50,15 @@ def drawOneNeuron(can, neuron, row, col, color):
     column = col
     pixelsize = 2
     for p in neuron:
-        pixelValue = str(int(p*255))*3 #Gives RGB p = 255, --> 2552555255
+        # pixelValue = str(int(p*255))*3 #Gives RGB p = 255, --> 2552555255
+        colorval = "#%02x%02x%02x" % (math.floor(p*255), math.floor(p*255), math.floor(p*255))
         if idx == 28:
-            row += pixelsize  # + 1 gives spacing
+            row += pixelsize +1  # + 1 gives spacing
             column = col
             idx = 0
-        can.create_rectangle(column, row, column + pixelsize, row + pixelsize, fill="#"+pixelValue)
+        can.create_rectangle(column, row, column + pixelsize, row + pixelsize, fill=colorval)
         idx += 1
-        column += pixelsize  # + 1 gives spacing
+        column += pixelsize + 1  # + 1 gives spacing
 
 def findWinnerNeuron(case, neurons):
     winnerNeuronIndex = None
