@@ -30,8 +30,8 @@ def readFile():
 # Generates a circle of neurons in the middle of the plot.
 def generateNeurons(points):
     neurons = []
-    slice =  2 * math.pi / (len(points) * 2)
-    for i in range(len(points) * 2):
+    slice =  2 * math.pi / (points * 2)
+    for i in range(points * 2):
         angle = slice * i
         newX = 0.5 + (0.2 * math.cos(angle))
         newY = 0.5 + (0.2 * math.sin(angle))
@@ -82,7 +82,7 @@ def run():
     maxVal = np.amax(points)  # Find the biggest value in the array to use for scaling
     inputs = np.array(points) / maxVal  # Make np.array and scale the values (between 0 and 1)
 
-    neurons = generateNeurons(points * 1)
+    neurons = generateNeurons(len(points) * 1)
     neurons = np.array(neurons)
 
     plotPoints(inputs, neurons, epoch=0, step=0)
