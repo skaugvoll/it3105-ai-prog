@@ -16,7 +16,7 @@ def converteFlatMnistTo2D():
     cases = MNIST.load_all_flat_cases() # returns [ [cases] , [targets] ] --> cases = [ [features...] ]
 
     for f, t in zip(cases[0], cases[1]):
-        # f = [feature / 255 for feature in f]
+        f = [feature / 255 for feature in f]
         case = [f,t]
         cases2D.append(case)
     return cases2D
@@ -39,14 +39,14 @@ def draw(canvas, neurons, dim=100):
     offsettRow = 0
     offsettCol = 0
     split = np.floor(np.sqrt(dim))
-    i = 1
+    i = 0
     for n in range(len(neurons)):
         neuron = neurons[n]
         if i == split:
             offsettRow += 84
             offsettCol = 0
-            i = 1
-        elif i != 1:
+            i = 0
+        elif i != 0:
             offsettCol += 84
         drawOneNeuron(can, neuron, offsettRow, offsettCol)
 
@@ -95,9 +95,8 @@ def run():
     gui = Tk()
     canvas = Canvas(gui, width=900, height=900)
     canvas.pack()
-    rawData = loadData()
-    data = rawData[0] #input data only. no labels. Labels can be found in rawData
-    print(rawData)
+    data = loadData() #input data only. no labels. Labels can be found in rawData
+
 
     neurons = generateNeurons() # randomly initialize 100 neruons with 784 pixlers each.
     draw(canvas, neurons)
@@ -111,26 +110,30 @@ def run():
     neighborhoodSize = 10
     ###  TRAINING EPOCS
     while epoc < maxEpoc and not converged:
-        learningRate = 1 / (epoc ** (1 / 4))
-
+        # learningRate = 1 / (epoc ** (1 / 4))
+        learningRate = np.exp(-epoc / 16)
         if epoc == 1:
             neighborhoodSize = 10
         else:
-            neighborhoodSize = neighborhoodSize * (1 - 0.01 * epoc)
+            # neighborhoodSize = neighborhoodSize * (1 - 0.01 * epoc)
+            neighborhoodSize = 10 * np.exp(-epoc / 10)
 
         ### STEPS
         for case in range(len(data)):
-            winnerNeuron = findWinnerNeuron(data[case], neurons)
+            print("LR: ",learningRate)
+            print("NbhdSize: ",neighborhoodSize)
+            winnerNeuron = findWinnerNeuron(data[case][0], neurons)
             winnerCoordinates = getCoordinates(winnerNeuron)
 
             ## UPDATE ALL NEURONS ? or update Winner and some Neighbours
             for idx in range(len(neurons)):
                 #distance = distansen i grid og ikke bilder. så x og y kordinater i grid.
                 neuronCoord = getCoordinates(idx)
-                dist = distance.euclidean(winnerCoordinates, neuronCoord)
+                # dist = distance.euclidean(winnerCoordinates, neuronCoord)
+                dist = abs(neuronCoord[0] - winnerCoordinates[0]) + abs(neuronCoord[1] - winnerCoordinates[1])
 
                 neighborhoodMembership = np.exp(-dist ** 2 / neighborhoodSize ** 2)
-                neurons[idx] = np.add(neurons[idx], (learningRate * neighborhoodMembership * np.subtract(data[case], neurons[idx])))
+                neurons[idx] = np.add(neurons[idx], (learningRate * neighborhoodMembership * np.subtract(data[case][0], neurons[idx])))
 
         if epoc % viewInterval == 0:
             draw(canvas, neurons)
