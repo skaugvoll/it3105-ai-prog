@@ -110,7 +110,7 @@ def run():
 
         ### STEPS
         for case in range(len(data)):
-            winnerNeuron = findWinnerNeuron(case, neurons)
+            winnerNeuron = findWinnerNeuron(data[case], neurons)
             winnerCoordinates = getCoordinates(winnerNeuron)
 
             ## UPDATE ALL NEURONS ? or update Winner and some Neighbours
