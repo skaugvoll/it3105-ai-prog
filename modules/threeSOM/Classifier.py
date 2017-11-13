@@ -94,7 +94,9 @@ def getCoordinates(idx):
 def run():
     gui = Tk()
     canvas = Canvas(gui, width=900, height=900)
-    canvas.pack()
+    canvas.grid(row=0, column=0)
+    Label(text="Her kan du sette inn litt tekst").grid(row=1, column=0)
+    # canvas.pack()
     data = loadData() #input data only. no labels. Labels can be found in rawData
 
 
