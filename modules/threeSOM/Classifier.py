@@ -95,13 +95,14 @@ def run():
     gui = Tk()
     canvas = Canvas(gui, width=900, height=900)
     canvas.grid(row=0, column=0)
-    Label(text="Her kan du sette inn litt tekst").grid(row=1, column=0)
+    infoText = Label(text="Her kan du sette inn litt tekst")
+    infoText.grid(row=1, column=0)
     # canvas.pack()
     data = loadData() #input data only. no labels. Labels can be found in rawData
 
-
-    neurons = generateNeurons() # randomly initialize 100 neruons with 784 pixlers each.
-    draw(canvas, neurons)
+    numberOfNeurons = 100
+    neurons = generateNeurons(numberOfNeurons=numberOfNeurons) # randomly initialize 100 neruons with 784 pixlers each.
+    draw(canvas, neurons, dim=numberOfNeurons)
 
 
     maxEpoc = 100
@@ -122,8 +123,6 @@ def run():
 
         ### STEPS
         for case in range(len(data)):
-            print("LR: ",learningRate)
-            print("NbhdSize: ",neighborhoodSize)
             winnerNeuron = findWinnerNeuron(data[case][0], neurons)
             winnerCoordinates = getCoordinates(winnerNeuron)
 
@@ -136,7 +135,8 @@ def run():
 
                 neighborhoodMembership = np.exp(-dist ** 2 / neighborhoodSize ** 2)
                 neurons[idx] = np.add(neurons[idx], (learningRate * neighborhoodMembership * np.subtract(data[case][0], neurons[idx])))
-
+            infoText.config(text='Epoc: {:d}   Step: {:d}  LR: {:.2f}  NBSize: {:.2f}'.format(epoc, case, learningRate, neighborhoodSize))
+            infoText.update()
         if epoc % viewInterval == 0:
             draw(canvas, neurons)
 
