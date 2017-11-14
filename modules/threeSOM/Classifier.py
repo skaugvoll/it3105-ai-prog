@@ -182,8 +182,9 @@ def run():
         if correctLabel == predictedLabel: correct += 1
 
     s6 = time.time()
-    print('Number of seen test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(numberOfCases,correct,correct / numberOfCases))
+    print('\nNumber of seen test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(numberOfCases,correct,correct / numberOfCases))
 
+    print()
     print(s2-s1)
     print(s4 - s3)
     print(s6-s5)
