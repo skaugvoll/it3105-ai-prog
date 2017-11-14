@@ -114,7 +114,7 @@ def run():
     converged = False
     epoc = 1
     viewInterval = 5
-    classificationInterval = 5
+    classificationInterval = 10
     initneighborhoodSize = 10
     ###  TRAINING EPOCS
     while epoc < maxEpoc and not converged:
@@ -144,7 +144,7 @@ def run():
                 neuron.weights = np.add(neuron.weights, (learningRate * neighborhoodMembership * np.subtract(data[case][0], neuron.weights)))
             infoText.config(text='Epoc: {:d}   Step: {:d}  LR: {:.2f}  NBSize: {:.2f}'.format(epoc, case, learningRate, neighborhoodSize))
             infoText.update()
-
+        
         if epoc % classificationInterval == 0:
             # print('########### Kth Epoc')
             for neuron in neurons:
@@ -169,10 +169,18 @@ def run():
 
     print('Number of test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(numberOfCases, correct, correct/numberOfCases))
 
+    correct = 0
+    for case in range(0,100):
+        winnerNeuron = findWinnerNeuron(data[case][0], neurons)
+        correctLabel = data[case][1]
+        predictedLabel = winnerNeuron.currentLabel
+        # print("C: {:d} & P: {:d}".format(correctLabel, predictedLabel))
+        if correctLabel == predictedLabel: correct += 1
 
-
-
-
+    print(
+        'Number of seen test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(numberOfCases,
+                                                                                                         correct,
+                                                                                                         correct / numberOfCases))
 
 
 run()
