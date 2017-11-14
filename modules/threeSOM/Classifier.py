@@ -159,10 +159,9 @@ def run():
 
         epoc += 1
 
-    ### TODO: CLASSIFY EACH FUCKING NEURON
 
+    ### TODO: CLASSIFY IMAGES --> Turn of learning, see if the winenr neuron is the same "class" as the image / input target
 
-    ### TODO: CLASSIFY IMAGES
 
 
 run()
