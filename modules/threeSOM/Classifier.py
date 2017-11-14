@@ -132,11 +132,11 @@ def run():
             neighborhoodSize = initneighborhoodSize * np.exp(-epoc / 10) # 10 = constant
 
         ### STEPS
-        for case in range(len(data)):
-            winnerNeuron = findWinnerNeuron(data[case][0], neurons)
+        for case in data:
+            winnerNeuron = findWinnerNeuron(case[0], neurons)
 
             if epoc % classificationInterval == 0:
-                label = data[case][1]
+                label = case[1]
                 winnerNeuron.winnerlabels[label] += 1
 
             ## UPDATE ALL NEURONS ? or update Winner and some Neighbours
@@ -147,7 +147,7 @@ def run():
                 dist = abs(neuron.x - winnerNeuron.x) + abs(neuron.y - winnerNeuron.y)
 
                 neighborhoodMembership = np.exp(-dist ** 2 / neighborhoodSize ** 2)
-                neuron.weights = np.add(neuron.weights, np.prod([np.array([learningRate]), np.array([neighborhoodMembership]), np.subtract(data[case][0], neuron.weights)]))
+                neuron.weights = np.add(neuron.weights, np.prod([np.array([learningRate]), np.array([neighborhoodMembership]), np.subtract(case[0], neuron.weights)]))
             # infoText.config(text='Epoc: {:d}   Step: {:d}  LR: {:.2f}  NBSize: {:.2f}'.format(epoc, case, learningRate, neighborhoodSize))
             # infoText.update()
         
