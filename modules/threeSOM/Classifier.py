@@ -26,8 +26,24 @@ def loadData():
     np.random.shuffle(ca)
     return ca[:500]
 
-def generateNeurons(numberOfNeurons=100, pixler=784):
-    return np.random.rand(numberOfNeurons, pixler)
+def generateNeurons(numberOfNeurons=17, pixler=784):
+    neurons = []
+    split = np.floor(np.sqrt(numberOfNeurons))
+    i = 1
+    row = 0
+    column = 0
+    while i <= numberOfNeurons:
+        if i % split == 0:
+            row += 1
+            column = 0
+        neurons.append(Neuron(x=column, y=row))
+        column += 1
+        i += 1
+    return neurons
+
+
+
+
 
 
 
@@ -35,13 +51,12 @@ def draw(canvas, neurons, dim=100):
     can = canvas
 
     # one neuron = one picture, one picture has 784 pixels / rectangles
-
     offsettRow = 0
     offsettCol = 0
     split = np.floor(np.sqrt(dim))
     i = 0
     for n in range(len(neurons)):
-        neuron = neurons[n]
+        neuron = neurons[n].weights
         if i == split:
             offsettRow += 84
             offsettCol = 0
@@ -73,22 +88,16 @@ def drawOneNeuron(can, neuron, row, col):
         column += pixelsize + 1  # + 1 gives spacing
 
 def findWinnerNeuron(case, neurons):
-    winnerNeuronIndex = None
+    winnerNeuron = None
     lowestDist = math.inf
-    for i in range(len(neurons)):
-        dist = np.linalg.norm(case - neurons[i])
+    for neuron in neurons:
+        dist = np.linalg.norm(case - neuron.weights)
         if dist < lowestDist:
             lowestDist = dist
-            winnerNeuronIndex = i
-    return winnerNeuronIndex
+            winnerNeuron = neuron
+    return winnerNeuron
 
 
-def getCoordinates(idx):
-    if idx < 10:
-        return [0, idx]
-    else:
-        num = str(idx)
-        return [int(num[:1]), int(num[1:])]
 
 
 def run():
@@ -97,7 +106,6 @@ def run():
     canvas.grid(row=0, column=0)
     infoText = Label(text="Her kan du sette inn litt tekst")
     infoText.grid(row=1, column=0)
-    # canvas.pack()
     data = loadData() #input data only. no labels. Labels can be found in rawData
 
     numberOfNeurons = 100
@@ -108,35 +116,44 @@ def run():
     maxEpoc = 100
     converged = False
     epoc = 1
-    viewInterval = 10
-    classificationInterval = 10
-    neighborhoodSize = 10
+    viewInterval = 5
+    classificationInterval = 5
+    initneighborhoodSize = 10
     ###  TRAINING EPOCS
     while epoc < maxEpoc and not converged:
         # learningRate = 1 / (epoc ** (1 / 4))
         learningRate = np.exp(-epoc / 16)
         if epoc == 1:
-            neighborhoodSize = 10
+            neighborhoodSize = initneighborhoodSize
         else:
             # neighborhoodSize = neighborhoodSize * (1 - 0.01 * epoc)
-            neighborhoodSize = 10 * np.exp(-epoc / 10)
+            neighborhoodSize = initneighborhoodSize * np.exp(-epoc / 10) # 10 = constant
 
         ### STEPS
         for case in range(len(data)):
             winnerNeuron = findWinnerNeuron(data[case][0], neurons)
-            winnerCoordinates = getCoordinates(winnerNeuron)
+
+            if epoc % classificationInterval == 0:
+                label = data[case][1]
+                winnerNeuron.winnerlabels[label] += 1
 
             ## UPDATE ALL NEURONS ? or update Winner and some Neighbours
-            for idx in range(len(neurons)):
+            for neuron in neurons:
                 #distance = distansen i grid og ikke bilder. så x og y kordinater i grid.
-                neuronCoord = getCoordinates(idx)
                 # dist = distance.euclidean(winnerCoordinates, neuronCoord)
-                dist = abs(neuronCoord[0] - winnerCoordinates[0]) + abs(neuronCoord[1] - winnerCoordinates[1])
+                dist = abs(neuron.x - winnerNeuron.x) + abs(neuron.y - winnerNeuron.y)
 
                 neighborhoodMembership = np.exp(-dist ** 2 / neighborhoodSize ** 2)
-                neurons[idx] = np.add(neurons[idx], (learningRate * neighborhoodMembership * np.subtract(data[case][0], neurons[idx])))
+                neuron.weights = np.add(neuron.weights, (learningRate * neighborhoodMembership * np.subtract(data[case][0], neuron.weights)))
             infoText.config(text='Epoc: {:d}   Step: {:d}  LR: {:.2f}  NBSize: {:.2f}'.format(epoc, case, learningRate, neighborhoodSize))
             infoText.update()
+
+        if epoc % classificationInterval == 0:
+            # print('########### Kth Epoc')
+            for neuron in neurons:
+                neuron.currentLabel = np.where(neuron.winnerlabels == neuron.winnerlabels.max())[0][0]
+                # print("Neuron x:{:d},y:{:d} = {:d} number".format(neuron.x, neuron.y, neuron.currentLabel))
+
         if epoc % viewInterval == 0:
             draw(canvas, neurons)
 
