@@ -2,7 +2,7 @@ from tkinter import *
 import os
 import numpy as np
 import math
-from time import sleep
+import time
 from Neuron import Neuron
 from scipy.spatial import distance
 
@@ -109,14 +109,15 @@ def run():
     neurons = generateNeurons(numberOfNeurons=numberOfNeurons, numberOfPixels=numberOfPixels, numberOfClasses=numberOfClasses) # randomly initialize 100 neruons with 784 pixlers each.
     draw(canvas, neurons, dim=numberOfNeurons)
 
-
-    maxEpoc = 50 
+    maxEpoc = 50
     converged = False
     epoc = 1
     viewInterval = 5
     classificationInterval = 10
     initneighborhoodSize = 10
     ###  TRAINING EPOCS
+    s1 = time.time()
+
     while epoc < maxEpoc and not converged:
         # learningRate = 1 / (epoc ** (1 / 4))
         learningRate = np.exp(-epoc / 16)
@@ -156,7 +157,10 @@ def run():
 
         epoc += 1
 
+    ### TODO: Look for convergens : if we under training had 60 % correct, and now we still have 60%, then convergence... ?? --> da må vi sjekke hvor mange vi har rette
 
+    s2 = time.time()
+    s3 = time.time()
     ### TODO: CLASSIFY IMAGES / TESTING --> Turn of learning, see if the winenr neuron is the same "class" as the image / input target
     numberOfCases = len(testData)
     correct = 0
@@ -164,11 +168,11 @@ def run():
         winnerNeuron = findWinnerNeuron(testData[case][0], neurons)
         correctLabel = testData[case][1]
         predictedLabel = winnerNeuron.currentLabel
-        # print("C: {:d} & P: {:d}".format(correctLabel, predictedLabel))
         if correctLabel == predictedLabel: correct += 1
 
+    s4 = time.time()
     print('Number of test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(numberOfCases, correct, correct/numberOfCases))
-
+    s5 = time.time()
     correct = 0
     for case in range(0,100):
         winnerNeuron = findWinnerNeuron(data[case][0], neurons)
@@ -177,10 +181,13 @@ def run():
         # print("C: {:d} & P: {:d}".format(correctLabel, predictedLabel))
         if correctLabel == predictedLabel: correct += 1
 
-    print(
-        'Number of seen test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(numberOfCases,
-                                                                                                         correct,
-                                                                                                         correct / numberOfCases))
+    s6 = time.time()
+    print('Number of seen test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(numberOfCases,correct,correct / numberOfCases))
+
+    print(s2-s1)
+    print(s4 - s3)
+    print(s6-s5)
 
 
 run()
+
