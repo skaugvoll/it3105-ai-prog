@@ -24,9 +24,9 @@ def converteFlatMnistTo2D():
 def loadData():
     ca = converteFlatMnistTo2D()
     np.random.shuffle(ca)
-    return ca[:500]
+    return [ca[:500], ca[500:600]]
 
-def generateNeurons(numberOfNeurons=17, pixler=784):
+def generateNeurons(numberOfNeurons=100, numberOfPixels=784, numberOfClasses=10):
     neurons = []
     split = np.floor(np.sqrt(numberOfNeurons))
     i = 1
@@ -36,15 +36,10 @@ def generateNeurons(numberOfNeurons=17, pixler=784):
         if i % split == 0:
             row += 1
             column = 0
-        neurons.append(Neuron(x=column, y=row))
+        neurons.append(Neuron(x=column, y=row, numberOfPixels=numberOfPixels, numberOfClasses=numberOfClasses))
         column += 1
         i += 1
     return neurons
-
-
-
-
-
 
 
 def draw(canvas, neurons, dim=100):
@@ -98,8 +93,6 @@ def findWinnerNeuron(case, neurons):
     return winnerNeuron
 
 
-
-
 def run():
     gui = Tk()
     canvas = Canvas(gui, width=900, height=900)
@@ -107,13 +100,17 @@ def run():
     infoText = Label(text="Her kan du sette inn litt tekst")
     infoText.grid(row=1, column=0)
     data = loadData() #input data only. no labels. Labels can be found in rawData
+    testData = data[1]
+    data = data[0]
 
     numberOfNeurons = 100
-    neurons = generateNeurons(numberOfNeurons=numberOfNeurons) # randomly initialize 100 neruons with 784 pixlers each.
+    numberOfPixels = 784
+    numberOfClasses = 10
+    neurons = generateNeurons(numberOfNeurons=numberOfNeurons, numberOfPixels=numberOfPixels, numberOfClasses=numberOfClasses) # randomly initialize 100 neruons with 784 pixlers each.
     draw(canvas, neurons, dim=numberOfNeurons)
 
 
-    maxEpoc = 100
+    maxEpoc = 50 
     converged = False
     epoc = 1
     viewInterval = 5
@@ -160,7 +157,21 @@ def run():
         epoc += 1
 
 
-    ### TODO: CLASSIFY IMAGES --> Turn of learning, see if the winenr neuron is the same "class" as the image / input target
+    ### TODO: CLASSIFY IMAGES / TESTING --> Turn of learning, see if the winenr neuron is the same "class" as the image / input target
+    numberOfCases = len(testData)
+    correct = 0
+    for case in range(numberOfCases):
+        winnerNeuron = findWinnerNeuron(testData[case][0], neurons)
+        correctLabel = testData[case][1]
+        predictedLabel = winnerNeuron.currentLabel
+        # print("C: {:d} & P: {:d}".format(correctLabel, predictedLabel))
+        if correctLabel == predictedLabel: correct += 1
+
+    print('Number of test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(numberOfCases, correct, correct/numberOfCases))
+
+
+
+
 
 
 
