@@ -11,7 +11,7 @@ import matplotlib.animation as animation
 
 # Read all input points from file and makes a 2d array. [[x,y], [x,y]]
 def readFile():
-    filepath = os.getcwd() + "/Data/2.txt"
+    filepath = os.getcwd() + "/Data/test.txt"
 
     points = []
 
@@ -43,8 +43,12 @@ def generateNeurons(points):
 def plotPoints(inputs, neurons, epoch='',step='', lr=0.5, nbhd=10):
     plt.clf()
     nx, ny = neurons.T
+    connectionX = [neurons[0][0],neurons[0][0]]
+    connectionY = [neurons[0][1],neurons[-1][1]]
     plt.scatter(nx, ny, color='red')
-    plt.plot(nx, ny, color="black")
+    plt.plot(nx,ny, color="black")
+    plt.plot(connectionX, connectionY, color="green")
+
 
     px, py = inputs.T
     # plt.ylim([-0.02, 1.02])
@@ -68,7 +72,7 @@ def findWinnerNeuron(inputPoint, neurons):
     return winnerNeuronIndex
 
 # updates the closest neuron and moves it towards the input point.
-def updateNeuron(inputPoint, neurons, winnerIndex, neighborhoodShip=None, lr=0.3, decay=1):
+def updateNeuron(inputPoint, neurons, winnerIndex, lr=0.3, decay=1):
     dirX = lr * (inputPoint[0] - neurons[winnerIndex][0]) * decay
     dirY = lr * (inputPoint[1] - neurons[winnerIndex][1]) * decay
 
