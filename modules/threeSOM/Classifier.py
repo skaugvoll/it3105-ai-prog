@@ -116,7 +116,7 @@ def run():
     neurons = np.array(generateNeurons(numberOfNeurons=numberOfNeurons, numberOfPixels=numberOfPixels, numberOfClasses=numberOfClasses)) # randomly initialize 100 neruons with 784 pixlers each.
     draw(canvas, neurons, dim=numberOfNeurons)
 
-    maxEpoc = 20
+    maxEpoc = 30
     converged = False
     epoc = 1
     viewInterval = 5
