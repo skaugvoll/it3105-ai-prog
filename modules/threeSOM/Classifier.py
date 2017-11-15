@@ -53,11 +53,11 @@ def draw(canvas, neurons, dim=100):
     for neuron in np.nditer(neurons, flags=["refs_ok"]):
         neuron = neuron.item()
         if i == split:
-            offsettRow += 84
+            offsettRow += 42
             offsettCol = 0
             i = 0
         elif i != 0:
-            offsettCol += 84
+            offsettCol += 42
         drawOneNeuron(can, neuron.weights, offsettRow, offsettCol)
 
         # can.update_idletasks()
@@ -71,17 +71,17 @@ def drawOneNeuron(can, neuron, row, col):
     idx = 0
     row = row
     column = col
-    pixelsize = 2
+    pixelsize = 1.5
     for p in np.nditer(neuron):
         # pixelValue = str(int(p*255))*3 #Gives RGB p = 255, --> 2552555255
         colorval = "#%02x%02x%02x" % (math.floor(p*255), math.floor(p*255), math.floor(p*255))
         if idx == 28:
-            row += pixelsize +1  # + 1 gives spacing
+            row += pixelsize  # + 1 gives spacing
             column = col
             idx = 0
         can.create_rectangle(column, row, column + pixelsize, row + pixelsize, fill=colorval)
         idx += 1
-        column += pixelsize + 1  # + 1 gives spacing
+        column += pixelsize  # + 1 gives spacing
 
 def findWinnerNeuron(case, neurons):
     winnerNeuron = None
