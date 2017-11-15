@@ -115,7 +115,7 @@ def run():
     gui = Tk()
     canvas = Canvas(gui, width=900, height=900)
     canvas.grid(row=0, column=0)
-    infoText = Label(text='Epoc:     Step:    LR:    NBSize:  ')
+    infoText = Label(text='Epoc:    LR:    NBSize:  ')
     infoText.grid(row=1, column=0)
 
     numberOfTraningCases = 1000
@@ -169,8 +169,7 @@ def run():
 
                 neighborhoodMembership = np.exp(-dist ** 2 / neighborhoodSize ** 2)
                 neuron.weights = np.add(neuron.weights, np.prod([np.array([learningRate]), np.array([neighborhoodMembership]), np.subtract(case[0], neuron.weights)]))
-            # infoText.config(text='Epoc: {:d}   Step: {:d}  LR: {:.2f}  NBSize: {:.2f}'.format(epoc, case, learningRate, neighborhoodSize))
-            # infoText.update()
+
 
         if epoc % classificationInterval == 0:
             # print('########### Kth Epoc')
@@ -181,7 +180,9 @@ def run():
                 # print("Neuron x:{:d},y:{:d} = {:d} number".format(neuron.x, neuron.y, neuron.currentLabel))
 
         if epoc % viewInterval == 0:
+            infoText.config(text='Epoc: {:d}  LR: {:.2f}  NBSize: {:.2f}'.format(epoc, learningRate, neighborhoodSize))
             draw(canvas, neurons, dim=numberOfNeurons)
+
             # pass
 
         # epoc += 1
