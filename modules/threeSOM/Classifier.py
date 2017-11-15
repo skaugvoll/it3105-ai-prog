@@ -122,18 +122,20 @@ def run():
     viewInterval = 5
     classificationInterval = 10
     initneighborhoodSize = 10
+    learningConstant = 16
+    neighborConstant = 10
     ###  TRAINING EPOCS
     s1 = time.time()
 
     # while epoc < maxEpoc and not converged:
     for epoc in range(1,maxEpoc+1):
         # learningRate = 1 / (epoc ** (1 / 4))
-        learningRate = np.exp(-epoc / 16)
+        learningRate = np.exp(-epoc / learningConstant)
         if epoc == 1:
             neighborhoodSize = initneighborhoodSize
         else:
             # neighborhoodSize = neighborhoodSize * (1 - 0.01 * epoc)
-            neighborhoodSize = initneighborhoodSize * np.exp(-epoc / 10) # 10 = constant
+            neighborhoodSize = initneighborhoodSize * np.exp(-epoc / neighborConstant) # 10 = constant
 
         ### STEPS
         for case in data:
