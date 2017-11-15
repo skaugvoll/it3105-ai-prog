@@ -2,33 +2,51 @@ from tkinter import *
 import os
 import numpy as np
 import math
-import ast
 import time
 from Neuron import Neuron
-from scipy.spatial import distance
 
 cwd = os.getcwd()
 sys.path.append(cwd + "/mnist/")
 
 import mnist_basics as MNIST
 
-class ClassifierClass:
+class Classifier:
+
+    def __init__(self, gui, cases, numNeurons, maxEpochs, vint, cint, ins, nc, lc):
+        self.gui = gui
+        self.cases = cases
+        self.numNeurons = numNeurons
+        self.maxEpochs = maxEpochs
+        self.vint = vint
+        self.cint = cint
+        self.ins = ins
+        self.nc = nc
+        self.lc = lc
+        self.run()
 
 
-    def __init__(self):
-        self.i = 0
+    def converteFlatMnistTo2D(self):
+        cases2D = []
+        cases = MNIST.load_all_flat_cases()  # returns [ [cases] , [targets] ] --> cases = [ [features...] ]
+
+        for f, t in zip(cases[0], cases[1]):
+            f = [feature / 255 for feature in f]
+            case = [f, t]
+            cases2D.append(case)
+        return cases2D
+
+    def writeCasesToFile(self):
+        ca = self.converteFlatMnistTo2D(self)
+        np.random.shuffle(ca)
+        ca = ca[:3000]
+
+        with open("som_cases.txt", 'w') as file_handler:
+            for case in ca[:-1]:
+                file_handler.write("{}\n".format(case))
+            file_handler.write("{}".format(ca[-1]))
 
 
-
-    def loadData(self, numTrain, numTest):
-        ca = []
-        with open("som_cases.txt") as FileObj:
-            for caseline in FileObj:
-                caseline = caseline.rstrip()  # remove newline character
-                ca.append(ast.literal_eval(caseline))
-        return [ca[:numTrain], ca[numTrain:numTrain + numTest]]
-
-    def generateNeurons(self, numberOfNeurons=100, numberOfPixels=784, numberOfClasses=10):
+    def generateNeurons(self, numberOfNeurons, numberOfPixels=784, numberOfClasses=10):
         neurons = []
         split = np.floor(np.sqrt(numberOfNeurons))
         i = 1
@@ -43,48 +61,7 @@ class ClassifierClass:
             i += 1
         return neurons
 
-    def draw(self, canvas, neurons, dim=100):
-        can = canvas
-
-        # one neuron = one picture, one picture has 784 pixels / rectangles
-        offsettRow = 0
-        offsettCol = 0
-        split = np.floor(np.sqrt(dim))
-        i = 0
-        for neuron in np.nditer(neurons, flags=["refs_ok"]):
-            neuron = neuron.item()
-            if i == split:
-                offsettRow += 57
-                offsettCol = 0
-                i = 0
-            elif i != 0:
-                offsettCol += 57
-            self.drawOneNeuron(self, can, neuron.weights, offsettRow, offsettCol)
-
-            # can.update_idletasks()
-            # can.update()
-
-            i += 1
-        can.update_idletasks()
-        can.update()
-
-    def drawOneNeuron(self, can, neuron, row, col):
-        idx = 0
-        row = row
-        column = col
-        pixelsize = 2
-        for p in np.nditer(neuron):
-            p = int(p * 255)
-            colorval = '#%02x%02x%02x' % (p, p, p)
-            if idx == 28:
-                row += pixelsize
-                column = col
-                idx = 0
-            can.create_rectangle(column, row, column + pixelsize, row + pixelsize, fill=colorval)
-            idx += 1
-            column += pixelsize
-
-    def findWinnerNeuron(self, case, neurons):
+    def findWinnerNeuron(self,case, neurons):
         winnerNeuron = None
         lowestDist = math.inf
         # for neuron in neurons:
@@ -97,62 +74,42 @@ class ClassifierClass:
         return winnerNeuron
 
     def run(self):
-        gui = Tk()
-        canvas = Canvas(gui, width=900, height=900)
-        canvas.grid(row=0, column=1)
+        # infoText = Label(text='Epoc:     Step:    LR:    NBSize:  ')
+        # infoText.grid(row=1, column=0)
 
-        infoText = Label(text='Epoc:     Step:    LR:    NBSize:  ')
-        infoText.grid(row=1, column=0)
-
-        numberOfTraningCases = 1000
-        numberOfTestingCases = 100
-
-        data = self.loadData(numberOfTraningCases,
-                        numberOfTestingCases)  # input data only. no labels. Labels can be found in rawData
+        data = self.cases
         testData = data[1]
         data = data[0]
 
-        numberOfNeurons = 200
         numberOfPixels = 784
         numberOfClasses = 10
-        neurons = np.array(self.generateNeurons(numberOfNeurons=numberOfNeurons, numberOfPixels=numberOfPixels,
+        neurons = np.array(self.generateNeurons(numberOfNeurons=self.numNeurons, numberOfPixels=numberOfPixels,
                                            numberOfClasses=numberOfClasses))  # randomly initialize 100 neruons with 784 pixlers each.
-        self.draw(canvas, neurons, dim=numberOfNeurons)
+        self.gui.draw(neurons)
 
-        maxEpoc = 50
         converged = False
-        epoc = 1
-        viewInterval = 5
-        classificationInterval = 10
-        initneighborhoodSize = 10
-        learningConstant = 16
-        neighborConstant = 10
         ###  TRAINING EPOCS
         s1 = time.time()
 
         # while epoc < maxEpoc and not converged:
-        for epoc in range(1, maxEpoc + 1):
-            # learningRate = 1 / (epoc ** (1 / 4))
-            learningRate = np.exp(-epoc / learningConstant)
+        for epoc in range(1, self.maxEpochs + 1):
+            learningRate = np.exp(-epoc / self.lc)
             if epoc == 1:
-                neighborhoodSize = initneighborhoodSize
+                neighborhoodSize = self.ins
             else:
-                # neighborhoodSize = neighborhoodSize * (1 - 0.01 * epoc)
-                neighborhoodSize = initneighborhoodSize * np.exp(-epoc / neighborConstant)  # 10 = constant
+                neighborhoodSize = self.ins * np.exp(-epoc / self.nc)  # 10 = constant
 
             ### STEPS
             for case in data:
                 winnerNeuron = self.findWinnerNeuron(case[0], neurons)
 
-                if epoc % classificationInterval == 0:
+                if epoc % self.cint == 0:
                     label = case[1]
                     winnerNeuron.winnerlabels[label] += 1
 
                 ## UPDATE ALL NEURONS ? or update Winner and some Neighbours
                 for neuron in np.nditer(neurons, flags=["refs_ok"]):
                     neuron = neuron.item()
-                    # distance = distansen i grid og ikke bilder. så x og y kordinater i grid.
-                    # dist = distance.euclidean(winnerCoordinates, neuronCoord)
                     dist = abs(neuron.x - winnerNeuron.x) + abs(neuron.y - winnerNeuron.y)
 
                     neighborhoodMembership = np.exp(-dist ** 2 / neighborhoodSize ** 2)
@@ -162,18 +119,14 @@ class ClassifierClass:
                     # infoText.config(text='Epoc: {:d}   Step: {:d}  LR: {:.2f}  NBSize: {:.2f}'.format(epoc, case, learningRate, neighborhoodSize))
                     # infoText.update()
 
-            if epoc % classificationInterval == 0:
-                # print('########### Kth Epoc')
+            if epoc % self.cint == 0:
                 for neuron in np.nditer(neurons, flags=["refs_ok"]):
                     neuron = neuron.item()
                     neuron.currentLabel = np.where(neuron.winnerlabels == neuron.winnerlabels.max())[0][0]
-                    # print("Neuron x:{:d},y:{:d} = {:d} number".format(neuron.x, neuron.y, neuron.currentLabel))
+                    neuron.winnerlabels = np.zeros((1, numberOfClasses))[0]
 
-            if epoc % viewInterval == 0:
-                self.draw(canvas, neurons, dim=numberOfNeurons)
-                # pass
-
-                # epoc += 1
+            if epoc % self.vint == 0:
+                self.gui.draw(neurons)
 
         ### TODO: Look for convergens : if we under training had 60 % correct, and now we still have 60%, then convergence... ?? --> da må vi sjekke hvor mange vi har rette
 
@@ -183,7 +136,7 @@ class ClassifierClass:
         ### TODO: CLASSIFY IMAGES / TESTING --> Turn of learning, see if the winenr neuron is the same "class" as the image / input target
 
         correct = 0
-        for case in range(numberOfTestingCases):
+        for case in range(int(self.gui.testingVar.get())):
             winnerNeuron = self.findWinnerNeuron(testData[case][0], neurons)
             correctLabel = testData[case][1]
             predictedLabel = winnerNeuron.currentLabel
@@ -191,10 +144,10 @@ class ClassifierClass:
 
         s4 = time.time()
         print('Number of test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(
-            numberOfTestingCases, correct, correct / numberOfTestingCases))
+            int(self.gui.testingVar.get()), correct, correct / int(self.gui.testingVar.get())))
         s5 = time.time()
         correct = 0
-        for case in range(numberOfTestingCases):
+        for case in range(int(self.gui.testingVar.get())):
             winnerNeuron = self.findWinnerNeuron(data[case][0], neurons)
             correctLabel = data[case][1]
             predictedLabel = winnerNeuron.currentLabel
@@ -203,7 +156,7 @@ class ClassifierClass:
         s6 = time.time()
         print(
             '\nNumber of seen training cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(
-                numberOfTestingCases, correct, correct / numberOfTestingCases))
+                int(self.gui.testingVar.get()), correct, correct / int(self.gui.testingVar.get())))
 
         print()
         print(s2 - s1, ' seconds -->', (s2 - s1) / 60, 'minutes')
@@ -213,7 +166,7 @@ class ClassifierClass:
         dump = False
         if dump:
             with open('weights.txt', 'w') as file:
-                file.write(str(numberOfNeurons) + " " + str(numberOfPixels) + '\n')
+                file.write(str(self.numNeurons) + " " + str(numberOfPixels) + '\n')
                 for neuron in np.nditer(neurons, flags=["refs_ok"]):
                     neuron = neuron.item().weights
                     file.write(str(neuron) + '\n')
