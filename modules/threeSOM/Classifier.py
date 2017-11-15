@@ -21,12 +21,10 @@ def converteFlatMnistTo2D():
         cases2D.append(case)
     return cases2D
 
-
-
-def loadData():
+def loadData(numTrain, numTest):
     ca = converteFlatMnistTo2D()
     np.random.shuffle(ca)
-    return [ca[:500], ca[500:600]]
+    return [ca[:numTrain], ca[numTrain:numTrain+numTest]]
 
 def generateNeurons(numberOfNeurons=100, numberOfPixels=784, numberOfClasses=10):
     neurons = []
@@ -104,7 +102,11 @@ def run():
     canvas.grid(row=0, column=0)
     infoText = Label(text='Epoc:     Step:    LR:    NBSize:  ')
     infoText.grid(row=1, column=0)
-    data = loadData() #input data only. no labels. Labels can be found in rawData
+
+    numberOfTraningCases = 1000
+    numberOfTestingCases = 100
+
+    data = loadData(numberOfTraningCases, numberOfTestingCases) #input data only. no labels. Labels can be found in rawData
     testData = data[1]
     data = data[0]
 
@@ -114,7 +116,7 @@ def run():
     neurons = np.array(generateNeurons(numberOfNeurons=numberOfNeurons, numberOfPixels=numberOfPixels, numberOfClasses=numberOfClasses)) # randomly initialize 100 neruons with 784 pixlers each.
     draw(canvas, neurons, dim=numberOfNeurons)
 
-    maxEpoc = 50
+    maxEpoc = 20
     converged = False
     epoc = 1
     viewInterval = 5
@@ -169,32 +171,41 @@ def run():
 
     s2 = time.time()
     s3 = time.time()
+
     ### TODO: CLASSIFY IMAGES / TESTING --> Turn of learning, see if the winenr neuron is the same "class" as the image / input target
-    numberOfCases = len(testData)
+
     correct = 0
-    for case in range(numberOfCases):
+    for case in range(numberOfTestingCases):
         winnerNeuron = findWinnerNeuron(testData[case][0], neurons)
         correctLabel = testData[case][1]
         predictedLabel = winnerNeuron.currentLabel
         if correctLabel == predictedLabel: correct += 1
 
     s4 = time.time()
-    print('Number of test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(numberOfCases, correct, correct/numberOfCases))
+    print('Number of test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(numberOfTestingCases, correct, correct/numberOfTestingCases))
     s5 = time.time()
     correct = 0
-    for case in range(0,100):
+    for case in range(numberOfTestingCases):
         winnerNeuron = findWinnerNeuron(data[case][0], neurons)
         correctLabel = data[case][1]
         predictedLabel = winnerNeuron.currentLabel
         if correctLabel == predictedLabel: correct += 1
 
     s6 = time.time()
-    print('\nNumber of seen training cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(numberOfCases,correct,correct / numberOfCases))
+    print('\nNumber of seen training cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(numberOfTestingCases,correct,correct / numberOfTestingCases))
 
     print()
     print(s2-s1, ' seconds -->', (s2-s1)/60,'minutes')
     print(s4 - s3)
     print(s6-s5)
+
+    dump = False
+    if dump:
+        with open('weights.txt','w') as file:
+            file.write(str(numberOfNeurons) + " " + str(numberOfPixels)+'\n')
+            for neuron in np.nditer(neurons, flags=["refs_ok"]):
+                neuron = neuron.item().weights
+                file.write(str(neuron)+'\n')
 
 
 run()
