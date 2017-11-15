@@ -2,12 +2,14 @@ from tkinter import *
 import numpy as np
 import ast
 from ClassifierClass import Classifier
+from TSP import TSP
 
 
 class SomGUI:
     def __init__(self):
         self.cases = None
         self.classifier = None
+        self.tsp = None
 
         self.gui = Tk()
         self.gui.minsize(width=1000, height=550)
@@ -81,7 +83,7 @@ class SomGUI:
         self.gui.mainloop()
 
     def runTSP(self):
-        pass
+        self.tsp = TSP(self.filenameVar.get())
 
     def runModule(self):
         self.cases = self.loadData()
