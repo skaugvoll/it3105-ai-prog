@@ -2,6 +2,7 @@ from tkinter import *
 import os
 import numpy as np
 import math
+import ast
 import time
 from Neuron import Neuron
 from scipy.spatial import distance
@@ -21,9 +22,23 @@ def converteFlatMnistTo2D():
         cases2D.append(case)
     return cases2D
 
-def loadData(numTrain, numTest):
+def writeCasesToFile():
     ca = converteFlatMnistTo2D()
     np.random.shuffle(ca)
+    ca = ca[:3000]
+
+    with open("som_cases.txt", 'w') as file_handler:
+        for case in ca[:-1]:
+            file_handler.write("{}\n".format(case))
+        file_handler.write("{}".format(ca[-1]))
+
+
+def loadData(numTrain, numTest):
+    ca = []
+    with open("som_cases.txt") as FileObj:
+        for caseline in FileObj:
+            caseline = caseline.rstrip()  # remove newline character
+            ca.append(ast.literal_eval(caseline))
     return [ca[:numTrain], ca[numTrain:numTrain+numTest]]
 
 def generateNeurons(numberOfNeurons=100, numberOfPixels=784, numberOfClasses=10):
@@ -53,11 +68,11 @@ def draw(canvas, neurons, dim=100):
     for neuron in np.nditer(neurons, flags=["refs_ok"]):
         neuron = neuron.item()
         if i == split:
-            offsettRow += 42
+            offsettRow += 57
             offsettCol = 0
             i = 0
         elif i != 0:
-            offsettCol += 42
+            offsettCol += 57
         drawOneNeuron(can, neuron.weights, offsettRow, offsettCol)
 
         # can.update_idletasks()
@@ -71,17 +86,17 @@ def drawOneNeuron(can, neuron, row, col):
     idx = 0
     row = row
     column = col
-    pixelsize = 1.5
+    pixelsize = 2
     for p in np.nditer(neuron):
-        # pixelValue = str(int(p*255))*3 #Gives RGB p = 255, --> 2552555255
-        colorval = "#%02x%02x%02x" % (math.floor(p*255), math.floor(p*255), math.floor(p*255))
+        p = int(p*255)
+        colorval = '#%02x%02x%02x' % (p, p, p)
         if idx == 28:
-            row += pixelsize  # + 1 gives spacing
+            row += pixelsize
             column = col
             idx = 0
         can.create_rectangle(column, row, column + pixelsize, row + pixelsize, fill=colorval)
         idx += 1
-        column += pixelsize  # + 1 gives spacing
+        column += pixelsize 
 
 def findWinnerNeuron(case, neurons):
     winnerNeuron = None
@@ -156,7 +171,7 @@ def run():
                 neuron.weights = np.add(neuron.weights, np.prod([np.array([learningRate]), np.array([neighborhoodMembership]), np.subtract(case[0], neuron.weights)]))
             # infoText.config(text='Epoc: {:d}   Step: {:d}  LR: {:.2f}  NBSize: {:.2f}'.format(epoc, case, learningRate, neighborhoodSize))
             # infoText.update()
-        
+
         if epoc % classificationInterval == 0:
             # print('########### Kth Epoc')
             for neuron in np.nditer(neurons, flags=["refs_ok"]):
@@ -210,7 +225,6 @@ def run():
             for neuron in np.nditer(neurons, flags=["refs_ok"]):
                 neuron = neuron.item().weights
                 file.write(str(neuron)+'\n')
-
 
 run()
 
