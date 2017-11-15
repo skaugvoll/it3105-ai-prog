@@ -108,15 +108,18 @@ class Classifier:
                     winnerNeuron.winnerlabels[label] += 1
 
                 ## UPDATE ALL NEURONS ? or update Winner and some Neighbours
+                tempNeighborhoodSize = np.ceil(neighborhoodSize)
                 for neuron in np.nditer(neurons, flags=["refs_ok"]):
                     neuron = neuron.item()
-                    dist = abs(neuron.x - winnerNeuron.x) + abs(neuron.y - winnerNeuron.y)
+                    dist = np.abs(neuron.x - winnerNeuron.x) + np.abs(neuron.y - winnerNeuron.y)
 
-                    neighborhoodMembership = np.exp(-dist ** 2 / neighborhoodSize ** 2)
-                    neuron.weights = np.add(neuron.weights, np.prod(
-                        [np.array([learningRate]), np.array([neighborhoodMembership]),
-                         np.subtract(case[0], neuron.weights)]))
-                    # infoText.config(text='Epoc: {:d}   Step: {:d}  LR: {:.2f}  NBSize: {:.2f}'.format(epoc, case, learningRate, neighborhoodSize))
+                    if (dist <= tempNeighborhoodSize):
+                        neighborhoodMembership = np.exp(-dist ** 2 / neighborhoodSize ** 2)
+                        neuron.weights = np.add(neuron.weights, np.prod(
+                            [np.array([learningRate]), np.array([neighborhoodMembership]),
+                             np.subtract(case[0], neuron.weights)]))
+
+                        # infoText.config(text='Epoc: {:d}   Step: {:d}  LR: {:.2f}  NBSize: {:.2f}'.format(epoc, case, learningRate, neighborhoodSize))
                     # infoText.update()
 
             if epoc % self.cint == 0:
