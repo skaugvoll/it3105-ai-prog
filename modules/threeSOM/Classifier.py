@@ -137,8 +137,8 @@ def run():
     viewInterval = 5
     classificationInterval = 10
     initneighborhoodSize = 10
-    learningConstant = 16
     neighborConstant = 10
+    learningConstant = 16
     ###  TRAINING EPOCS
     s1 = time.time()
 
@@ -177,6 +177,7 @@ def run():
             for neuron in np.nditer(neurons, flags=["refs_ok"]):
                 neuron = neuron.item()
                 neuron.currentLabel = np.where(neuron.winnerlabels == neuron.winnerlabels.max())[0][0]
+                neuron.winnerlabels = np.zeros((1,numberOfClasses))[0]
                 # print("Neuron x:{:d},y:{:d} = {:d} number".format(neuron.x, neuron.y, neuron.currentLabel))
 
         if epoc % viewInterval == 0:
