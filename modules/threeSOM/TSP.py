@@ -33,6 +33,7 @@ class TSP:
 
         return points
 
+
     # Generates a circle of neurons in the middle of the plot.
     def generateNeurons(self, points):
         neurons = []
@@ -49,15 +50,18 @@ class TSP:
     def plotPoints(self, inputs, neurons, epoch='',step='', lr=0.5, nbhd=10):
         plt.clf()
         nx, ny = neurons.T
+        connectionX = [neurons[0][0], neurons[-1][0]]
+        connectionY = [neurons[0][1], neurons[-1][1]]
         plt.scatter(nx, ny, color='red')
         plt.plot(nx, ny, color="black")
+        plt.plot(connectionX, connectionY, color="green")
 
         px, py = inputs.T
         # plt.ylim([-0.02, 1.02])
         # plt.xlim([-0.02, 1.02])
         plt.scatter(px, py)
 
-        plt.figtext(0.02, 0.02, "Epoch: {:d}  Step: {:d}    LR: {:.2f}    Nbhd: {:.2f}".format(epoch, step, lr, nbhd))
+        plt.figtext(0.02, 0.02, "Epoch: {:d}  LR: {:.2f}    Nbhd: {:.2f}".format(epoch, lr, nbhd))
         plt.draw()
         plt.pause(0.00000003)
 
@@ -71,7 +75,7 @@ class TSP:
             if dist < lowestDist:
                 lowestDist = dist
                 winnerNeuronIndex = i
-        if lowestDist < 0.00000:
+        if lowestDist < 0.00001:
             self.numLowChange += 1
         return winnerNeuronIndex
 
@@ -113,6 +117,8 @@ class TSP:
             for c in range(len(inputs)):
                 # randInput = random.randint(0, len(points) - 1)
                 winnerIndex = self.findWinnerNeuron(inputs[c], neurons)
+                if self.numLowChange > 2:
+                    converged = True
 
 
                 for idx in range(len(neurons)):
@@ -156,7 +162,7 @@ class TSP:
         dist += distance.euclidean(inputs[firstCity], inputs[previousCity])
 
         print("LOWCHANGE", self.numLowChange)
-        print('Path dist: {:.2f}km\nOptimal dist: {:.2f}km\n= {:.2f}%'.format(dist, 6110, (dist/6110)))
+        print('Path dist: {:.2f}km\nOptimal dist: {:.2f}km\n= {:.2f}%'.format(dist, 108159, (dist/108159)))
         sleep(10)
 
 if __name__ == "__main__":
