@@ -12,6 +12,7 @@ class TSP:
 
     def __init__(self, filename):
         self.filename = filename
+        self.optimalDist = self.findOptimalDist(filename)
         self.numLowChange = 0
         self.run()
 
@@ -33,6 +34,16 @@ class TSP:
 
         return points
 
+    def findOptimalDist(self, filename):
+        filepath = os.getcwd() + "/Data/optimal.txt"
+
+        with open(filepath) as FileObj:
+            for caseline in FileObj:
+                caseline = caseline.rstrip()  # remove newline character
+
+                c = re.split(": ", caseline)  # make a list out of line
+                if c[0] == filename:
+                    return int(c[1])
 
     # Generates a circle of neurons in the middle of the plot.
     def generateNeurons(self, points):
@@ -162,7 +173,7 @@ class TSP:
         dist += distance.euclidean(inputs[firstCity], inputs[previousCity])
 
         print("LOWCHANGE", self.numLowChange)
-        print('Path dist: {:.2f}km\nOptimal dist: {:.2f}km\n= {:.2f}%'.format(dist, 108159, (dist/108159)))
+        print('Path dist: {:.2f}km\nOptimal dist: {:.2f}km\n= {:.2f}%'.format(dist, self.optimalDist, (dist/self.optimalDist)))
         sleep(10)
 
 if __name__ == "__main__":
