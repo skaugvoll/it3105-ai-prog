@@ -131,7 +131,12 @@ class SomGUI:
             cint=int(self.cintVar.get()),
             ins=int(self.insVar.get()),
             nc=int(self.ncVar.get()),
-            lc=int(self.lcVar.get()),)
+            lc=int(self.lcVar.get()))
+
+        self.classifier.run()
+
+        # del self.classifier
+
         # self.training.delete(0, END)
         # self.testing.delete(0, END)
         # self.neurons.delete(0, END)
