@@ -155,9 +155,9 @@ class Classifier:
             if correctLabel == predictedLabel: correct += 1
 
         s6 = time.time()
-        self.gui.infoText2.config(text ='Correct Training = {:.5f}%'.format(correct / int(self.gui.testingVar.get())))
+        self.gui.infoText2.config(text ='Correct Training = {:.5f}%'.format(correct / int(self.gui.trainingVar.get())))
         print('Number of seen training cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(
-                int(self.gui.trainingVar.get()), correct, correct / int(self.gui.testingVar.get())))
+                int(self.gui.trainingVar.get()), correct, correct / int(self.gui.trainingVar.get())))
 
         print()
         print(s2 - s1, ' seconds -->', (s2 - s1) / 60, 'minutes')
