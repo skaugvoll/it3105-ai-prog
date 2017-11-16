@@ -24,7 +24,6 @@ class Classifier:
         self.lc = lc
         self.run()
 
-
     def converteFlatMnistTo2D(self):
         cases2D = []
         cases = MNIST.load_all_flat_cases()  # returns [ [cases] , [targets] ] --> cases = [ [features...] ]
@@ -74,9 +73,6 @@ class Classifier:
         return winnerNeuron
 
     def run(self):
-        # infoText = Label(text='Epoc:     Step:    LR:    NBSize:  ')
-        # infoText.grid(row=1, column=0)
-
         data = self.cases
         testData = data[1]
         data = data[0]
@@ -86,6 +82,7 @@ class Classifier:
         neurons = np.array(self.generateNeurons(numberOfNeurons=self.numNeurons, numberOfPixels=numberOfPixels,
                                            numberOfClasses=numberOfClasses))  # randomly initialize 100 neruons with 784 pixlers each.
         self.gui.draw(neurons)
+
 
         converged = False
         ###  TRAINING EPOCS
@@ -119,8 +116,6 @@ class Classifier:
                             [np.array([learningRate]), np.array([neighborhoodMembership]),
                              np.subtract(case[0], neuron.weights)]))
 
-                        # infoText.config(text='Epoc: {:d}   Step: {:d}  LR: {:.2f}  NBSize: {:.2f}'.format(epoc, case, learningRate, neighborhoodSize))
-                    # infoText.update()
 
             if epoc % self.cint == 0:
                 for neuron in np.nditer(neurons, flags=["refs_ok"]):
@@ -129,6 +124,8 @@ class Classifier:
                     neuron.winnerlabels = np.zeros((1, numberOfClasses))[0]
 
             if epoc % self.vint == 0:
+                self.gui.infoText.config(text='Epoc: {:d}   LR: {:.2f}  NBSize: {:.2f}'.format(epoc, learningRate, neighborhoodSize))
+                self.gui.infoText.update()
                 self.gui.draw(neurons)
 
         ### TODO: Look for convergens : if we under training had 60 % correct, and now we still have 60%, then convergence... ?? --> da må vi sjekke hvor mange vi har rette
@@ -146,19 +143,20 @@ class Classifier:
             if correctLabel == predictedLabel: correct += 1
 
         s4 = time.time()
+        self.gui.infoText.config(text='Correct Testing = {:.5f}% '.format(correct / int(self.gui.testingVar.get())))
         print('Number of test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(
             int(self.gui.testingVar.get()), correct, correct / int(self.gui.testingVar.get())))
         s5 = time.time()
         correct = 0
-        for case in range(int(self.gui.testingVar.get())):
+        for case in range(int(self.gui.trainingVar.get())):
             winnerNeuron = self.findWinnerNeuron(data[case][0], neurons)
             correctLabel = data[case][1]
             predictedLabel = winnerNeuron.currentLabel
             if correctLabel == predictedLabel: correct += 1
 
         s6 = time.time()
-        print(
-            '\nNumber of seen training cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(
+        self.gui.infoText2.config(text ='Correct Training = {:.5f}%'.format(correct / int(self.gui.testingVar.get())))
+        print('Number of seen training cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(
                 int(self.gui.testingVar.get()), correct, correct / int(self.gui.testingVar.get())))
 
         print()

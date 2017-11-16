@@ -7,7 +7,7 @@ from TSP import TSP
 
 class SomGUI:
     def __init__(self):
-        self.cases = None
+        self.cases = self.loadData()
         self.classifier = None
         self.tsp = None
 
@@ -20,6 +20,11 @@ class SomGUI:
         # self.canvas = Canvas(self.frame1, width=100, height=900)
         self.canvas = Canvas(width=1000, height=900)
         self.canvas.grid(row=0, column=1, padx=20)
+
+        self.infoText = Label(text='Epoc:    LR:     NBSize:  ')
+        self.infoText.grid(row=1, column=1)
+        self.infoText2 = Label(text='')
+        self.infoText2.grid(row=2, column=1)
 
         self.frame2 = Frame(self.gui)
         self.frame2.grid(row=0, column=0)
@@ -87,9 +92,11 @@ class SomGUI:
 
     def runModule(self):
         self.cases = self.loadData()
+        self.infoText.config(text='Epoc:    LR:     NBSize:  ')
+        self.infoText2.config(text=" ")
         self.classifier = Classifier(
             gui=self,
-            cases=self.cases,
+            cases=self.getTrainingAndTestCases(),
             numNeurons=int(self.neuronsVar.get()),
             maxEpochs=int(self.epochsVar.get()),
             vint=int(self.vintVar.get()),
@@ -121,7 +128,10 @@ class SomGUI:
             for caseline in FileObj:
                 caseline = caseline.rstrip()  # remove newline character
                 ca.append(ast.literal_eval(caseline))
-        return [ca[: int(self.trainingVar.get())], ca[ int(self.trainingVar.get()): int(self.trainingVar.get()) +  int(self.testingVar.get())]]
+        return ca
+
+    def getTrainingAndTestCases(self):
+        return [self.cases[: int(self.trainingVar.get())], self.cases[ int(self.trainingVar.get()): int(self.trainingVar.get()) +  int(self.testingVar.get())]]
 
     def draw(self, neurons):
         can = self.canvas
