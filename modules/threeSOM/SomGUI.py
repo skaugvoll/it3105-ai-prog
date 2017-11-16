@@ -161,14 +161,17 @@ class SomGUI:
             for caseline in FileObj:
                 caseline = caseline.rstrip()  # remove newline character
                 ca.append(ast.literal_eval(caseline))
+        FileObj.close()
         return ca
 
     def getTrainingAndTestCases(self):
-        return [self.cases[: int(self.trainingVar.get())], self.cases[ int(self.trainingVar.get()): int(self.trainingVar.get()) +  int(self.testingVar.get())]]
+        ca = self.cases
+        np.random.shuffle(ca)
+        return [ca[: int(self.trainingVar.get())], ca[ int(self.trainingVar.get()): int(self.trainingVar.get()) +  int(self.testingVar.get())]]
 
     def draw(self, neurons):
         can = self.canvas
-
+        can.delete("all")
         # one neuron = one picture, one picture has 784 pixels / rectangles
         offsettRow = 0
         offsettCol = 0
