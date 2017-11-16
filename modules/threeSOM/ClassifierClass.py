@@ -22,7 +22,7 @@ class Classifier:
         self.ins = ins
         self.nc = nc
         self.lc = lc
-        self.run()
+        # self.run()
 
     def converteFlatMnistTo2D(self):
         cases2D = []
