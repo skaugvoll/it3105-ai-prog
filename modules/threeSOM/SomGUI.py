@@ -83,12 +83,40 @@ class SomGUI:
         self.filenameVar = StringVar()
         self.filename = Entry(self.frame2, textvariable=self.filenameVar, width=self.entryWidth)
         self.filename.grid(row=12, column=1)
-        Button(self.frame2, bg="#469683", highlightbackground="#469683", padx=33, pady=10, text="Plot Values", command=lambda: self.runTSP()).grid(row=13, column=0, columnspan=2, pady=10)
+
+        Label(self.frame2, text="Lrate").grid(row=13, column=0, sticky=E)
+        self.lrateVar = StringVar()
+        self.lrate = Entry(self.frame2, textvariable=self.lrateVar, width=self.entryWidth)
+        self.lrate.grid(row=13, column=1)
+
+        Label(self.frame2, text="Epochs").grid(row=14, column=0, sticky=E, )
+        self.maxepochsVar = StringVar()
+        self.maxepochs = Entry(self.frame2, textvariable=self.maxepochsVar, width=self.entryWidth)
+        self.maxepochs.grid(row=14, column=1)
+
+        Label(self.frame2, text="*Neurons").grid(row=15, column=0, sticky=E, )
+        self.xneuronsVar = StringVar()
+        self.xneurons = Entry(self.frame2, textvariable=self.xneuronsVar, width=self.entryWidth)
+        self.xneurons.grid(row=15, column=1)
+
+        Label(self.frame2, text="NeighbourhoodSize").grid(row=16, column=0, sticky=E, )
+        self.nhsizeVar = StringVar()
+        self.nhsize = Entry(self.frame2, textvariable=self.nhsizeVar, width=self.entryWidth)
+        self.nhsize.grid(row=16, column=1)
+
+
+        Button(self.frame2, bg="#469683", highlightbackground="#469683", padx=33, pady=10, text="Run TSP", command=lambda: self.runTSP()).grid(row=17, column=0, columnspan=2, pady=10)
 
         self.gui.mainloop()
 
     def runTSP(self):
-        self.tsp = TSP(self.filenameVar.get())
+        self.tsp = TSP(
+            filename = self.filenameVar.get(),
+            lrate = int(self.lrateVar.get()),
+            maxepochs = int(self.maxepochsVar.get()),
+            xneurons = int(self.xneuronsVar.get()),
+            nhsize = int(self.nhsize.get())
+        )
 
     def runModule(self):
         self.cases = self.loadData()

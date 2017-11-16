@@ -10,8 +10,12 @@ import matplotlib.animation as animation
 
 class TSP:
 
-    def __init__(self, filename):
+    def __init__(self, filename, lrate, maxepochs, xneurons, nhsize):
         self.filename = filename
+        self.lrate = lrate
+        self.maxepochs = maxepochs
+        self.xneurons = xneurons
+        self.nhsize = nhsize
         self.optimalDist = self.findOptimalDist(filename)
         self.numLowChange = 0
         self.run()
@@ -46,13 +50,15 @@ class TSP:
                     return int(c[1])
 
     # Generates a circle of neurons in the middle of the plot.
-    def generateNeurons(self, points):
+    def generateNeurons(self, points, circleX, circleY):
         neurons = []
-        slice =  2 * math.pi / (points * 2)
-        for i in range(points * 2):
+        slice =  2 * math.pi / (points * self.xneurons)
+        for i in range(points * self.xneurons):
             angle = slice * i
-            newX = 0.5 + (0.2 * math.cos(angle))
-            newY = 0.5 + (0.2 * math.sin(angle))
+            # newX = 0.5 + (0.4 * math.cos(angle))
+            # newY = 0.2 + (0.4 * math.sin(angle))
+            newX = circleX + ((circleX/2) * math.cos(angle))
+            newY = circleY + ((circleY/2) * math.sin(angle))
             neurons.append([newX, newY])
 
         return neurons
@@ -106,21 +112,27 @@ class TSP:
         maxVal = np.amax(points)  # Find the biggest value in the array to use for scaling
         inputs = np.array(points) / maxVal  # Make np.array and scale the values (between 0 and 1)
 
-        neurons = self.generateNeurons(len(points) * 1)
+        ix, iy = inputs.T
+        circleX = np.average(ix)
+        circleY = np.average(iy)
+
+        neurons = self.generateNeurons(len(points) * 1, circleX, circleY)
         neurons = np.array(neurons)
 
         self.plotPoints(inputs, neurons, epoch=0, step=0)
 
+        # sleep(10)
+
         i = 1
         viewInterval = 1
-        neighborhoodSize = 10
+        neighborhoodSize = 20
         converged = False
-        while i < 40 and not converged:
-            learningRate = 1 / (i ** (1 / 4))
+        while i < self.maxepochs and not converged:
+            learningRate = 1 / (i ** (1 / self.lrate))
             # learningRate = np.exp(-1 / 100)
 
             if i == 1:
-                neighborhoodSize = 10
+                neighborhoodSize = self.nhsize
             else:
                 # neighborhoodSize = 10 * (np.exp(-i / 100))
                 neighborhoodSize = neighborhoodSize * (1 - 0.01 * i)
@@ -128,7 +140,7 @@ class TSP:
             for c in range(len(inputs)):
                 # randInput = random.randint(0, len(points) - 1)
                 winnerIndex = self.findWinnerNeuron(inputs[c], neurons)
-                if self.numLowChange > 2:
+                if self.numLowChange > 10:
                     converged = True
 
 
@@ -172,9 +184,8 @@ class TSP:
 
         dist += distance.euclidean(inputs[firstCity], inputs[previousCity])
 
-        print("LOWCHANGE", self.numLowChange)
         print('Path dist: {:.2f}km\nOptimal dist: {:.2f}km\n= {:.2f}%'.format(dist, self.optimalDist, (dist/self.optimalDist)))
-        sleep(10)
+        sleep(3)
 
 if __name__ == "__main__":
-    g = TSP("6")
+    g = TSP("8")
