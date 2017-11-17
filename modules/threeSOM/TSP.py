@@ -10,7 +10,8 @@ import matplotlib.animation as animation
 
 class TSP:
 
-    def __init__(self, filename, lrate, maxepochs, xneurons, nhsize):
+    def __init__(self, gui, filename, lrate, maxepochs, xneurons, nhsize):
+        self.gui = gui
         self.filename = filename
         self.lrate = lrate
         self.maxepochs = maxepochs
@@ -108,6 +109,10 @@ class TSP:
 
 
     def run(self, ):
+        self.gui.infoText.config(text='Board:' + self.filename + ' running...')
+        self.gui.infoText2.config(text=' ')
+        self.gui.infoText.update()
+        self.gui.infoText2.update()
         points = self.readFile()
         maxVal = np.amax(points)  # Find the biggest value in the array to use for scaling
         inputs = np.array(points) / maxVal  # Make np.array and scale the values (between 0 and 1)
@@ -183,7 +188,10 @@ class TSP:
                    previousCity = city
 
         dist += distance.euclidean(inputs[firstCity], inputs[previousCity])
-
+        self.gui.infoText.config(text='Board:' + self.filename)
+        self.gui.infoText2.config(text='Path dist: {:.2f}km\nOptimal dist: {:.2f}km\n= {:.2f}%'.format(dist, self.optimalDist, (dist/self.optimalDist)))
+        self.gui.infoText.update()
+        self.gui.infoText2.update()
         print('Path dist: {:.2f}km\nOptimal dist: {:.2f}km\n= {:.2f}%'.format(dist, self.optimalDist, (dist/self.optimalDist)))
         sleep(3)
 

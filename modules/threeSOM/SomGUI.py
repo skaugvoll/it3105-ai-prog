@@ -111,6 +111,7 @@ class SomGUI:
 
     def runTSP(self):
         self.tsp = TSP(
+            gui = self,
             filename = self.filenameVar.get(),
             lrate = int(self.lrateVar.get()),
             maxepochs = int(self.maxepochsVar.get()),
