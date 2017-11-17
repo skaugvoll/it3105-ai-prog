@@ -143,8 +143,8 @@ class Classifier:
             if correctLabel == predictedLabel: correct += 1
 
         s4 = time.time()
-        self.gui.infoText.config(text='Correct Testing = {:.5f}% '.format(correct / int(self.gui.testingVar.get())))
-        print('Number of test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(
+        self.gui.infoText.config(text='Correct Testing = {:.2f}% '.format((correct / int(self.gui.testingVar.get()))*100))
+        print('Number of test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.2f}% correct '.format(
             int(self.gui.testingVar.get()), correct, (correct / int(self.gui.testingVar.get()))*100))
         s5 = time.time()
         correct = 0
@@ -155,9 +155,9 @@ class Classifier:
             if correctLabel == predictedLabel: correct += 1
 
         s6 = time.time()
-        self.gui.infoText2.config(text ='Correct Training = {:.5f}%'.format(correct / int(self.gui.trainingVar.get())))
-        print('Number of seen training cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(
-                int(self.gui.trainingVar.get()), correct, (correct / int(self.gui.trainingVar.get())*100)))
+        self.gui.infoText2.config(text ='Correct Training = {:.2f}%'.format((correct / int(self.gui.trainingVar.get()))*100))
+        print('Number of seen training cases: {:d}\nNumber of correct classifications: {:d}\n= {:.2f}% correct '.format(
+                int(self.gui.trainingVar.get()), correct, (correct / int(self.gui.trainingVar.get()))*100))
 
         print()
         print(s2 - s1, ' seconds -->', (s2 - s1) / 60, 'minutes')
