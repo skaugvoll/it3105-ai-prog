@@ -129,9 +129,9 @@ class SomGUI:
             maxEpochs=int(self.epochsVar.get()),
             vint=int(self.vintVar.get()),
             cint=int(self.cintVar.get()),
-            ins=int(self.insVar.get()),
-            nc=int(self.ncVar.get()),
-            lc=int(self.lcVar.get()))
+            ins= 0.01 if int(self.insVar.get()) == 0 else int(self.insVar.get()),
+            nc= 0.01 if int(self.ncVar.get()) == 0 else int(self.ncVar.get()),
+            lc= 0.01 if int(self.lcVar.get()) == 0 else int(self.lcVar.get()))
 
         self.classifier.run()
 

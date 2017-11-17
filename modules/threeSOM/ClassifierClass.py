@@ -145,7 +145,7 @@ class Classifier:
         s4 = time.time()
         self.gui.infoText.config(text='Correct Testing = {:.5f}% '.format(correct / int(self.gui.testingVar.get())))
         print('Number of test cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(
-            int(self.gui.testingVar.get()), correct, correct / int(self.gui.testingVar.get())))
+            int(self.gui.testingVar.get()), correct, (correct / int(self.gui.testingVar.get()))*100))
         s5 = time.time()
         correct = 0
         for case in range(int(self.gui.trainingVar.get())):
@@ -157,7 +157,7 @@ class Classifier:
         s6 = time.time()
         self.gui.infoText2.config(text ='Correct Training = {:.5f}%'.format(correct / int(self.gui.trainingVar.get())))
         print('Number of seen training cases: {:d}\nNumber of correct classifications: {:d}\n= {:.5f}% correct '.format(
-                int(self.gui.trainingVar.get()), correct, correct / int(self.gui.trainingVar.get())))
+                int(self.gui.trainingVar.get()), correct, (correct / int(self.gui.trainingVar.get())*100)))
 
         print()
         print(s2 - s1, ' seconds -->', (s2 - s1) / 60, 'minutes')
